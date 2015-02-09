@@ -1,0 +1,79 @@
+<?php
+/**
+ *
+ * The MIT License (MIT)
+
+ * Copyright (c) 2015 Marcel Djaman
+
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+
+ * @author Marcel Djaman <marceldjaman@gmail.com>
+ * @copyright 2015 Marcel Djaman
+ * @license http://www.opensource.org/licenses/MIT MIT License
+ */
+namespace MdjamanCommon\EventManager;
+
+use Zend\EventManager;
+use Zend\ServiceManager;
+
+/**
+ *
+ */
+trait EventManagerAwareTrait
+{
+    use EventManager\EventManagerAwareTrait;
+
+    /**
+     * Retrieve the event manager
+     *
+     * Lazy-loads an EventManager instance if none registered.
+     *
+     * If the class implements ServiceManager, it adds the global dibber shared
+     * event manager to it.
+     *
+     * @return EventManager\EventManagerInterface
+     */
+    public function getEventManager()
+    {
+        if (!$this->events instanceof EventManager\EventManagerInterface) {
+            $this->setEventManager(new EventManager\EventManager());
+            if ($this instanceof ServiceManager\ServiceManagerAwareInterface) {
+                $this->getEventManager()->setSharedManager($this->getServiceManager()->get('ipci_event_manager'));
+            }
+        }
+        return $this->events;
+
+        /* if (!$this->events instanceof EventManagerInterface) {
+        	$identifiers = array(__CLASS__, get_called_class());
+        	if (isset($this->eventIdentifier)) {
+        		if ((is_string($this->eventIdentifier))
+        				|| (is_array($this->eventIdentifier))
+        				|| ($this->eventIdentifier instanceof \Traversable)
+        		) {
+        			$identifiers = array_unique($identifiers + (array) $this->eventIdentifier);
+        		} elseif (is_object($this->eventIdentifier)) {
+        			$identifiers[] = $this->eventIdentifier;
+        		}
+        		// silently ignore invalid eventIdentifier types
+        	}
+        	$this->setEventManager(new EventManager($identifiers));
+        }
+        return $this->events; */
+    }
+}
