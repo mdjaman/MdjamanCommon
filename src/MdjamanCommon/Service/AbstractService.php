@@ -38,6 +38,7 @@ use MdjamanCommon\Provider\ServiceManagerAwareTrait;
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Zend\Stdlib\Hydrator\HydratorInterface;
+use MdjamanCommon\Model\ModelInterface;
 
 abstract class AbstractService
 {
@@ -218,7 +219,7 @@ abstract class AbstractService
      * @param BaseEntity $entity
      * @return void
      */
-    public function getLogEntries(BaseEntity $entity)
+    public function getLogEntries(ModelInterface $entity)
     {
         $logEntryEntity = $this->objectManager->getRepository($this->logEntryEntity);
         return $logEntryEntity->getLogEntries($entity);
