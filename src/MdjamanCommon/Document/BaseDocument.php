@@ -33,12 +33,13 @@ namespace MdjamanCommon\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableDocument;
+use MdjamanCommon\Model\ModelInterface;
 
 /**
  * @ODM\MappedSuperclass
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  */
-abstract class BaseDocument
+abstract class BaseDocument implements ModelInterface
 {
 
     use SoftDeleteableDocument;

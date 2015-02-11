@@ -33,6 +33,7 @@ namespace MdjamanCommon\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use MdjamanCommon\Model\ModelInterface;
 use MdjamanCommon\Traits\SoftDeleteableEntity;
 
 /**
@@ -40,7 +41,7 @@ use MdjamanCommon\Traits\SoftDeleteableEntity;
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
  */
-abstract class BaseEntity
+abstract class BaseEntity implements ModelInterface
 {
     
     use SoftDeleteableEntity;
