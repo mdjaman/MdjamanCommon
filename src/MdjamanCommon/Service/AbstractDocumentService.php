@@ -45,6 +45,7 @@ use MdjamanCommon\Model\ModelInterface;
  */
 abstract class AbstractDocumentService
 {
+    
     use ServiceManagerAwareTrait;
     use EventManagerAwareTrait;
     use TriggerEventTrait;
