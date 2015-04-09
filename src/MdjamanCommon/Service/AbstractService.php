@@ -409,9 +409,9 @@ abstract class AbstractService
     public function enableSoftDeleteableFilter($enable = true)
     {
         if (true === $enable) {
-            $this->objectManager->getFilters()->enable('softDeleteable');
+            $this->objectManager->getFilterCollection()->enable('softDeleteable');
         } else {
-            $this->objectManager->getFilters()->disable('softDeleteable');
+            $this->objectManager->getFilterCollection()->disable('softDeleteable');
         }
     }
 

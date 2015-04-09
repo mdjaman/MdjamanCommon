@@ -7,11 +7,8 @@ return array(
         'aliases' => array(
         ),
         'invokables' => array(
-            'ipci_event_manager'   => 'Zend\EventManager\SharedEventManager',
+            'mdjaman_event_manager'   => 'Zend\EventManager\SharedEventManager',
             'NotificationListener' => 'Application\Listener\NotificationListener',
-            'ExamenListener'       => 'Application\Listener\ExamenListener',
-            'PrescripteurToEtsListener' => 'Application\Listener\PrescripteurToEtsListener',
-            'VisiteStrategy'       => 'Application\View\VisiteStrategy',
         ),
     ),
     'controller_plugins' => array(
