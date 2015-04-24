@@ -142,15 +142,23 @@ abstract class AbstractService
 
     /**
      * @param array|\MdjamanCommon\Entity\BaseEntity $entity
+     * @param string $format
+     * @param array|null $groups
      * @return string
      */
-    public function serialize($entity, $format = 'json')
+    public function serialize($entity, $format = 'json', $groups = null)
     {
         if (!in_array($format, $this->serializerFormat)) {
             throw new Exception\InvalidArgumentException('Format ' . $format . ' is not valid');
         }
         $serializer = $this->getSerializer();
-        $serialize  = $serializer->serialize($entity, $format);
+        
+        $context = null;
+        $groups = (array) $groups;
+        if (count($groups)) {
+            $context = SerializationContext::create()->setGroups($groups);
+        }
+        $serialize  = $serializer->serialize($entity, $format, $context);
 
         if ($format == 'json') {
             $serialize = json_decode($serialize);
