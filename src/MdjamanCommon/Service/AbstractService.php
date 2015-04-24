@@ -34,7 +34,7 @@ use MdjamanCommon\Entity\BaseEntity;
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
 use MdjamanCommon\Provider\ServiceManagerAwareTrait;
-
+use JMS\Serializer\SerializationContext;
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Zend\Stdlib\Hydrator\HydratorInterface;

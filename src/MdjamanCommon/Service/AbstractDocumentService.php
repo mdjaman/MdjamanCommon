@@ -30,15 +30,15 @@
 
 namespace MdjamanCommon\Service;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use JMS\Serializer\SerializationContext;
 use MdjamanCommon\Document\BaseDocument;
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
-use MdjamanCommon\Provider\ServiceManagerAwareTrait;
-
-use Doctrine\Common\Persistence\ObjectManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
-use Zend\Stdlib\Hydrator\HydratorInterface;
 use MdjamanCommon\Model\ModelInterface;
+use MdjamanCommon\Provider\ServiceManagerAwareTrait;
+use Zend\Stdlib\Hydrator\HydratorInterface;
 
 /**
  * Abstract Service for doctrine odm
