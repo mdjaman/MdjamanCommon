@@ -45,8 +45,8 @@ class DoctrineExtensionsListener
 
         if ($authenticationService->hasIdentity()) {
             $identity = $authenticationService->getIdentity();
-            $entityManager = $event->getEntityManager();
-            $evtManager = $entityManager->getEventManager();
+            $objectManager = $event->getObjectManager();
+            $evtManager = $objectManager->getEventManager();
 
             foreach ($evtManager->getListeners() as $listeners) {
                 foreach ($listeners as $listener) {
