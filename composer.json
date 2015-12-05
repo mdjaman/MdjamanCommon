@@ -26,8 +26,8 @@
     "require": {
         "php": ">=5.4",
         "zendframework/zendframework": "2.3.*",
-        "doctrine/doctrine-module": "dev-master",
-        "doctrine/doctrine-orm-module": "dev-master",
+        "doctrine/doctrine-module": "0.*",
+        "doctrine/doctrine-orm-module": "0.*",
         "gedmo/doctrine-extensions": "dev-master",
         "sp/jms-serializer-module": "dev-master"
     },
