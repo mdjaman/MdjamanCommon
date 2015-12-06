@@ -42,34 +42,36 @@ class BaseForm extends Form
     use ServiceManagerAwareTrait;
     use EventManagerAwareTrait;
 
-    public function __construct($name = null, $crsf = false)
+    public function __construct($name = null, $actionsField = false, $crsfField = false)
     {
         parent::__construct($name);
 
         $this->setAttribute('method', 'post');
 
-        $actions = new Fieldset('actions');
-        $actions->add(array(
-            'name' => 'submit',
-            'attributes' => array(
-                'type' => 'submit', 
-                'value' => 'Enregistrer', 
-                'class' => 'btn btn-primary'
-            ),
-            'options' => array('label' => 'Enregistrer')
-        ));
-        $actions->add(array(
-            'name' => 'reset',
-            'attributes' => array(
-                'type' => 'reset', 
-                'value' => 'Annuler', 
-                'class' => 'btn'
-            ),
-            'options' => array('label' => 'Annuler')
-        ));
-        $this->add($actions, array(
-            'priority' => -100,
-        ));
+        if ($actionsField) {
+            $actions = new Fieldset('actions');
+            $actions->add(array(
+                'name' => 'submit',
+                'attributes' => array(
+                    'type' => 'submit', 
+                    'value' => 'Enregistrer', 
+                    'class' => 'btn btn-primary'
+                ),
+                'options' => array('label' => 'Enregistrer')
+            ));
+            $actions->add(array(
+                'name' => 'reset',
+                'attributes' => array(
+                    'type' => 'reset', 
+                    'value' => 'Annuler', 
+                    'class' => 'btn'
+                ),
+                'options' => array('label' => 'Annuler')
+            ));
+            $this->add($actions, array(
+                'priority' => -100,
+            ));
+        }
 
         $this->add(array(
             'name' => 'token',
@@ -79,7 +81,7 @@ class BaseForm extends Form
             ),
         ));
 
-        if ($crsf) {
+        if ($crsfField === true) {
             $csrf = new Element\Csrf('csrf');
             $this->add($csrf);
         }
