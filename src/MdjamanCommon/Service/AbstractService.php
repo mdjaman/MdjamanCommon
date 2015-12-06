@@ -348,7 +348,7 @@ abstract class AbstractService
      * @param string $event Overrides the default event name
      * @return Entity\Base
      */
-    public function save($entity, $flush = false, $event = null)
+    public function save($entity, $flush = true, $event = null)
     {
         # Gives the possibility to change $argv in listeners
         $argv = ['entity' => &$entity, 'flush' => &$flush];

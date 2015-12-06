@@ -42,7 +42,7 @@ class BaseForm extends Form
     use ServiceManagerAwareTrait;
     use EventManagerAwareTrait;
 
-    public function __construct($name = null)
+    public function __construct($name = null, $crsf = false)
     {
         parent::__construct($name);
 
@@ -79,8 +79,10 @@ class BaseForm extends Form
             ),
         ));
 
-        $csrf = new Element\Csrf('csrf');
-        $this->add($csrf);
+        if ($crsf) {
+            $csrf = new Element\Csrf('csrf');
+            $this->add($csrf);
+        }
     }
 
 }
