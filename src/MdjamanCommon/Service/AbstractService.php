@@ -416,7 +416,7 @@ abstract class AbstractService
      */
     public function enableSoftDeleteableFilter($enable = true)
     {
-        if (method_exists($this->objectManager, 'getFilterCollection') {
+        if (method_exists($this->objectManager, 'getFilterCollection')) {
             $filters = $this->objectManager->getFilterCollection();
         } else {
             $filters = $this->objectManager->getFilters();
