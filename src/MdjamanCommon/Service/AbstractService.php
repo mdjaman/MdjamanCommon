@@ -383,7 +383,7 @@ abstract class AbstractService
      * @param bool $flush
      * @return Entity\Base
      */
-    public function delete($entity, $flush = false)
+    public function delete($entity, $flush = true)
     {
         # Gives the possibility to change $argv in listeners
         $argv = ['entity' => &$entity, 'flush' => &$flush];
