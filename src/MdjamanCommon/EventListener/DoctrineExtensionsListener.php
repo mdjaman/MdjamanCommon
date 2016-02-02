@@ -30,15 +30,22 @@ class DoctrineExtensionsListener
      */
     protected $loggableListener = null;
 
-
-    public function __construct(ServiceLocatorInterface $serviceLocator)
+    protected $authServiceName;
+    
+    
+    public function __construct(ServiceLocatorInterface $serviceLocator, $authSceName = 'zfcuser_auth_service')
     {
         $this->sl = $serviceLocator;
+        $this->authServiceName = $authSceName;
     }
 
     public function preFlush(EventArgs $event)
     {
-        $authenticationService = $this->sl->get('zfcuser_auth_service');
+        if (!$this->sl->has($this->serviceName)) {
+            return;
+        }
+        
+        $authenticationService = $this->sl->get($this->authServiceName);
         if (!$authenticationService instanceof \Zend\Authentication\AuthenticationService) {
             return;
         }
