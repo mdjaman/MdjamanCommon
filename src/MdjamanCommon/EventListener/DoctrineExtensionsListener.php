@@ -41,7 +41,7 @@ class DoctrineExtensionsListener
 
     public function preFlush(EventArgs $event)
     {
-        if (!$this->sl->has($this->serviceName)) {
+        if (!$this->sl->has($this->authServiceName)) {
             return;
         }
         
