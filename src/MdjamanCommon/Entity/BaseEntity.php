@@ -37,9 +37,9 @@ use MdjamanCommon\Model\ModelInterface;
 use MdjamanCommon\Traits\SoftDeleteableEntity;
 
 /**
- * Description of AbstractEntity
- *
- * @author Marcel Djaman <marceldjaman@gmail.com>
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 abstract class BaseEntity implements ModelInterface
 {
