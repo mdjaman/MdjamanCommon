@@ -304,9 +304,9 @@ abstract class AbstractDocumentService
 
         $entities = $this->getRepository()->findBy(array(), $orderBy);
 
-        foreach ($entities as $document) {
+        /*foreach ($entities as $document) {
             $this->triggerEvent('find', ['document' => $document]);
-        }
+        }*/
 
         $this->triggerEvent(__FUNCTION__.'.post', ['orderBy' => $orderBy, 'entities' => $entities]);
 
@@ -337,9 +337,9 @@ abstract class AbstractDocumentService
 
         $entities = $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
 
-        foreach ($entities as $document) {
+        /*foreach ($entities as $document) {
             $this->triggerEvent('find', ['document' => $document]);
-        }
+        }*/
 
         $this->triggerEvent(__FUNCTION__ . '.post', array_merge($argv, ['entities' => $entities]));
 

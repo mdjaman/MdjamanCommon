@@ -5,7 +5,9 @@
     "keywords": [
         "zf2",
         "zend",
-        "module"
+        "module",
+        "common",
+        "abstract"
     ],
     "authors": [
         {
@@ -26,13 +28,12 @@
     "require": {
         "php": ">=5.4",
         "zendframework/zendframework": "2.3.*",
-        "doctrine/doctrine-module": "0.*",
         "doctrine/doctrine-orm-module": "0.*",
         "gedmo/doctrine-extensions": "dev-master",
         "sp/jms-serializer-module": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "~3.7",
+        "phpunit/phpunit": "dev-master",
         "zendframework/zftool": "dev-master"
     },
     "suggest": {

@@ -62,8 +62,9 @@ class SearchService
 
     public function search($query, $type = 'patient', $limit = null, $offset = 0)
     {
-        if (empty($query))
+        if (empty($query)) {
             return false;
+        }
 
         $index = $this->index;
 
@@ -121,18 +122,20 @@ class SearchService
 
     	$redis = $this->getPredis();
 
-    	if ($limit == null)
-    		$limit = $redis->llen($r_key);
+    	if ($limit == null) {
+            $limit = $redis->llen($r_key);
+        }
 
-    	$search = $redis->lrange($r_key, $offset, $limit);
+        $search = $redis->lrange($r_key, $offset, $limit);
 
     	return $search;
     }
 
     public function getClient()
     {
-        if (!$this->client)
+        if (!$this->client) {
             $this->client = $this->setClient();
+        }
 
         return $this->client;
     }
@@ -147,8 +150,7 @@ class SearchService
 
     public function setIndex($index)
     {
-        if (isset($index))
-            $this->index = $index;
+        $this->index = $index;
     }
 
     /**

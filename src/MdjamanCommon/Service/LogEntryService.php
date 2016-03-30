@@ -97,13 +97,15 @@ class LogEntryService extends AbstractService
         $sort_df = 'loggedAt';
         $offset = null;
 
-        if (is_array($filters))
+        if (is_array($filters)) {
             extract($filters, EXTR_OVERWRITE);
+        }
 
         $sort = !isset($sort) ? $sort_df : $sort;
 
-        if (!isset($dir) || !in_array($dir, ['asc', 'desc']))
+        if (!isset($dir) || !in_array($dir, ['asc', 'desc'])) {
             $dir = 'desc';
+        }
 
         $orderBy = [$sort => $dir];
 
@@ -115,21 +117,20 @@ class LogEntryService extends AbstractService
             		$criteria = ['objectClass' => get_class(new $class)];
             	}
             	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
-            	return $this->resultWrapper($result);
             	break;
             case 'action':
             	$criteria = ['action' => $value];
             	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
-            	return $this->resultWrapper($result);
             	break;
             default:
                 if ( in_array($filter, $this->allowed_filter) ) {
                     $criteria = [$filter => $value];
                 }
                 $result = $this->findBy($criteria, $orderBy, $limit, $offset);
-                return $this->resultWrapper($result);
                 break;
         }
+        
+        return $this->resultWrapper($result);
     }
 
 }

@@ -11,12 +11,13 @@ namespace MdjamanCommon\EventListener;
 use Doctrine\Common\EventArgs;
 use Gedmo\Blameable\BlameableListener;
 use Gedmo\Loggable\LoggableListener;
+use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class DoctrineExtensionsListener
 {
     /**
-     * @var ServiceLocator
+     * @var ServiceLocatorInterface
      */
     protected $sl;
 
@@ -46,7 +47,7 @@ class DoctrineExtensionsListener
         }
         
         $authenticationService = $this->sl->get($this->authServiceName);
-        if (!$authenticationService instanceof \Zend\Authentication\AuthenticationService) {
+        if (!$authenticationService instanceof AuthenticationService) {
             return;
         }
 
