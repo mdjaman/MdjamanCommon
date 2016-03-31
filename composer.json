@@ -33,7 +33,7 @@
         "sp/jms-serializer-module": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "dev-master",
+        "phpunit/phpunit": "4.8.*",
         "zendframework/zftool": "dev-master"
     },
     "suggest": {

@@ -53,9 +53,14 @@ class DoctrineExtensionsListener
 
         if ($authenticationService->hasIdentity()) {
             $identity = $authenticationService->getIdentity();
-            $objectManager = $event->getObjectManager();
+            
+            if (method_exists($event, 'getEntityManager')) {
+                $objectManager = $event->getEntityManager();
+            } else {
+                $objectManager = $event->getDocumentManager();
+            }
+            
             $evtManager = $objectManager->getEventManager();
-
             foreach ($evtManager->getListeners() as $listeners) {
                 foreach ($listeners as $listener) {
                     if ($listener instanceof BlameableListener) {
