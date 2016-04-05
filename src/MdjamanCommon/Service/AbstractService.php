@@ -182,7 +182,8 @@ abstract class AbstractService
         $this->triggerEvent(__FUNCTION__.'.pre', $argv);
         extract($argv);
 
-        $this->objectManager->getHydratorFactory()->hydrate($entity, $data);
+        $hydrator = new DoctrineObject($this->objectManager);
+        $hydrator->hydrate($entity, $data);
 
         $this->triggerEvent(__FUNCTION__.'.post', $argv);
 
