@@ -449,4 +449,13 @@ abstract class AbstractService
         }
         return $this->logger;
     }
+    
+    /**
+     * @return ObjectManager
+     */
+    public function getObjectManager()
+    {
+        return $this->objectManager;
+    }
+
 }
