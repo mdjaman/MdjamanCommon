@@ -30,6 +30,9 @@
 
 namespace MdjamanCommon\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
  * Blameable Trait, usable with PHP >= 5.4
  *
