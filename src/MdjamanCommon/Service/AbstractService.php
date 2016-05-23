@@ -370,11 +370,14 @@ abstract class AbstractService
 
         $this->objectManager->persist($entity);
 
-        if ($flush == true) {
+        if ($flush === true) {
             $this->objectManager->flush();
         }
 
-        $this->triggerEvent($event ? $event : __FUNCTION__.'.post', array_merge($argv, ['saved' => $entity]));
+        if (null !== $event && $event !== __FUNCTION__) {
+            $this->triggerEvent($event, array_merge($argv, ['saved' => $entity]));
+        }
+        $this->triggerEvent(__FUNCTION__.'.post', array_merge($argv, ['saved' => $entity]));
 
         return $entity;
     }
@@ -401,7 +404,7 @@ abstract class AbstractService
 
         $this->objectManager->remove($entity);
 
-        if ($flush == true) {
+        if ($flush === true) {
             $this->objectManager->flush();
         }
 
