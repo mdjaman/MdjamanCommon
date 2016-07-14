@@ -46,14 +46,32 @@ abstract class AbstractService
     use EventManagerAwareTrait;
     use TriggerEventTrait;
 
-    /* @var Doctrine\Common\Persistence\ObjectManager */
+    /**
+     * @var ObjectManager
+     */
     protected $objectManager;
     protected $entity;
+    
+    /**
+     * @var DoctrineObject 
+     */
     protected $hydrator;
+    
+    /**
+     * @var \JMS\Serializer\Serializer 
+     */
     protected $serializer;
+    
+    /**
+     * @var array 
+     */
     protected $serializerFormat = array('json', 'xml', 'yml');
-    protected $predis;
+    
+    /**
+     * @var string 
+     */
     protected $logEntryEntity = 'Gedmo\\Loggable\\Entity\\LogEntry';
+    
     protected $logger;
 
     public function __construct($entityName = null, ObjectManager $objectManager)
@@ -219,6 +237,21 @@ abstract class AbstractService
     {
         $class = get_class($this->getEntity());
         return $this->objectManager->getRepository($class);
+    }
+
+    /**
+     * Get Entity Reference
+     * 
+     * @param string|int $id
+     * @param string|null $class
+     * @return mixed
+     */
+    public function getReference($id, $class = null)
+    {
+        if (null === $class) {
+            $class = get_class($this->getEntity());
+        }
+        return $this->objectManager->getReference($class, $id);
     }
 
     /**
