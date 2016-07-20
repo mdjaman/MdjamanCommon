@@ -50,6 +50,10 @@ abstract class AbstractService
      * @var ObjectManager
      */
     protected $objectManager;
+
+    /**
+     * @var string
+     */
     protected $entity;
     
     /**
@@ -74,6 +78,11 @@ abstract class AbstractService
     
     protected $logger;
 
+    /**
+     * AbstractService constructor.
+     * @param null $entityName
+     * @param ObjectManager $objectManager
+     */
     public function __construct($entityName = null, ObjectManager $objectManager)
     {
         if (!is_null($entityName)) {
@@ -84,6 +93,9 @@ abstract class AbstractService
         $this->enableSoftDeleteableFilter(true);
     }
 
+    /**
+     * @return mixed
+     */
     public function getEntity()
     {
         return $this->entity;
@@ -91,6 +103,7 @@ abstract class AbstractService
 
     /**
      * @param string $entity
+     * @return $this
      */
     public function setEntity($entity)
     {
@@ -111,7 +124,7 @@ abstract class AbstractService
 
     /**
      * @param HydratorInterface $hydrator
-     * @return AbstractDbMapper
+     * @return $this
      */
     public function setHydrator(HydratorInterface $hydrator)
     {
@@ -171,14 +184,14 @@ abstract class AbstractService
         }
         $serializer = $this->getSerializer();
         
-        $context = null;
+        $context = SerializationContext::create()->enableMaxDepthChecks();
         $groups = (array) $groups;
         if (count($groups)) {
-            $context = SerializationContext::create()->setGroups($groups);
+            $context->setGroups($groups);
         }
         $serialize  = $serializer->serialize($entity, $format, $context);
 
-        if ($format == 'json') {
+        if ($format === 'json') {
             $serialize = json_decode($serialize);
         }
         return $serialize;
@@ -212,12 +225,13 @@ abstract class AbstractService
      * Creates a new instance of the given entityName or of the already known
      * one whose FQDN is stored in the className property.
      *
+     * @param string $entityName
      * @return \MdjamanCommon\Entity\BaseEntity
      * @throws \Exception
      */
     public function createEntity($entityName = null)
     {
-        if (is_null($entityName)) {
+        if (null === $entityName) {
             $entityName = $this->getEntity();
             if ( !$entityName) {
                 // @todo throw good Exception
@@ -258,7 +272,7 @@ abstract class AbstractService
      * Return log entries
      * From Loggable behavioral extension for Gedmo
      *
-     * @param BaseEntity $entity
+     * @param ModelInterface $entity
      * @return void
      */
     public function getLogEntries(ModelInterface $entity)
@@ -292,7 +306,7 @@ abstract class AbstractService
 
     /**
      * @param array $criteria
-     * @return Entity\Base
+     * @return BaseEntity
      *
      * @triggers findOneBy.pre
      * @triggers findOneBy.post
@@ -380,7 +394,7 @@ abstract class AbstractService
      * @param array|BaseEntity $entity
      * @param bool $flush
      * @param string $event Overrides the default event name
-     * @return Entity\Base
+     * @return BaseEntity
      */
     public function save($entity, $flush = true, $event = null)
     {
@@ -418,7 +432,7 @@ abstract class AbstractService
     /**
      * @param string|array|BaseEntity $entity
      * @param bool $flush
-     * @return Entity\Base
+     * @return BaseEntity
      */
     public function delete($entity, $flush = true)
     {
