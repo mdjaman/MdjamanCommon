@@ -33,6 +33,7 @@ namespace MdjamanCommon\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 use MdjamanCommon\Model\ModelInterface;
 use MdjamanCommon\Traits\SoftDeleteableEntity;
 
@@ -52,12 +53,14 @@ abstract class BaseEntity implements ModelInterface
     /**
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
+     * @JMS\Groups({"list", "details"})
      */
     protected $created_at;
 
     /**
      * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
+     * @JMS\Groups({"list", "details"})
      */
     protected $updated_at;
 
@@ -144,7 +147,7 @@ abstract class BaseEntity implements ModelInterface
     /**
      * Set createdAt
      *
-     * @param datetime $createdAt
+     * @param \Datetime $createdAt
      * @return BaseEntity
      */
     public function setCreatedAt($createdAt)
@@ -156,7 +159,7 @@ abstract class BaseEntity implements ModelInterface
     /**
      * Set updatedAt
      *
-     * @param datetime $updatedAt
+     * @param \Datetime $updatedAt
      * @return BaseEntity
      */
     public function setUpdatedAt($updatedAt)
