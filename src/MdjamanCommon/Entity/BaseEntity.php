@@ -60,7 +60,7 @@ abstract class BaseEntity implements ModelInterface
     /**
      * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
-     * @JMS\Groups({"list", "details"})
+     * @JMS\Groups({"details"})
      */
     protected $updated_at;
 
