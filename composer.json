@@ -18,12 +18,6 @@
     ],
     "homepage": "https://github.com/mdjaman/MdjamanCommon",
     "license": "MIT",
-    "keywords": [
-        "framework",
-        "zf2",
-        "module",
-        "zend"
-    ],
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",

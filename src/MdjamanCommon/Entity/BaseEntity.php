@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * The MIT License (MIT)
@@ -74,7 +73,7 @@ abstract class BaseEntity implements ModelInterface
         $vars = $reflection->getDefaultProperties();
         foreach ($vars as $name => $val) {
             if (substr($name, 0, 1) !== '_') {
-                $this->__fields[] = strtolower($name);
+                $this->__fields[] = $name;
             }
         }
     }
