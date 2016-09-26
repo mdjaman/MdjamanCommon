@@ -1,4 +1,7 @@
 <?php
+
+namespace MdjamanCommon;
+
 return array(
     'service_manager' => array(
         'factories' => array(
@@ -6,12 +9,12 @@ return array(
         ),
         'invokables' => array(
             'mdjaman_event_manager'   => 'Zend\EventManager\SharedEventManager',
-            'NotificationListener' => 'Application\Listener\NotificationListener',
+            'Form\Upload'  => Form\UploadForm::class,
         ),
     ),
     'controller_plugins' => array(
         'invokables' => array(
-            'translate' => 'MdjamanCommon\Controller\Plugin\Translate',
+            'translate' => Controller\Plugin\Translate::class,
         ),
     ),
 );
