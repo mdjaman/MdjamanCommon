@@ -31,7 +31,8 @@
         "zendframework/zftool": "dev-master"
     },
     "suggest": {
-        "doctrine/doctrine-mongo-odm-module": "If you want to use Doctrine ODM"
+        "doctrine/doctrine-mongo-odm-module": "If you want to use Doctrine ODM",
+        "imagine/imagine" : "If you need image manipulation after uploading image"
     },
     "autoload": {
         "psr-0": {
