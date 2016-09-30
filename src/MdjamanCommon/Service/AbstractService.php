@@ -249,7 +249,12 @@ abstract class AbstractService
 
     public function getRepository()
     {
-        $class = get_class($this->getEntity());
+        if (is_object($this->getEntity())) {
+            $class = get_class($this->getEntity());
+        } else {
+            $class = $this->getEntity();
+        }
+        
         return $this->objectManager->getRepository($class);
     }
 
