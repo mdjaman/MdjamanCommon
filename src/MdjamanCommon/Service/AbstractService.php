@@ -254,7 +254,7 @@ abstract class AbstractService
         } else {
             $class = $this->getEntity();
         }
-        
+
         return $this->objectManager->getRepository($class);
     }
 
