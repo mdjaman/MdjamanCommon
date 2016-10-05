@@ -92,6 +92,7 @@ class LogEntryService extends AbstractService
     public function filter(array $filters = null)
     {
         $filter = null;
+        $value = null;
         $criteria = [];
         $limit = 20;
         $sort_df = 'loggedAt';
