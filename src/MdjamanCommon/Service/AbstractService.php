@@ -40,7 +40,12 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use MdjamanCommon\Model\ModelInterface;
 
-abstract class AbstractService
+/**
+ * Class AbstractService
+ * @package MdjamanCommon\Service
+ * @author Marcel Djaman <marceldjaman@gmail.com>
+ */
+abstract class AbstractService implements AbstractServiceInterface
 {
     use ServiceManagerAwareTrait;
     use EventManagerAwareTrait;
