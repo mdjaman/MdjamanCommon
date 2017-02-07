@@ -23,8 +23,8 @@
         "php": ">=5.4",
         "zendframework/zendframework": "2.3.*",
         "doctrine/doctrine-module": "~1.0",
-        "gedmo/doctrine-extensions": "dev-master",
-        "sp/jms-serializer-module": "dev-master"
+        "sp/jms-serializer-module": "dev-master",
+        "gedmo/doctrine-extensions": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
