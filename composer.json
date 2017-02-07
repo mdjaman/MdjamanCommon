@@ -22,7 +22,7 @@
     "require": {
         "php": ">=5.4",
         "zendframework/zendframework": "2.3.*",
-        "doctrine/doctrine-orm-module": "0.*",
+        "doctrine/doctrine-module": "~1.0",
         "gedmo/doctrine-extensions": "dev-master",
         "sp/jms-serializer-module": "dev-master"
     },
@@ -31,8 +31,11 @@
         "zendframework/zftool": "dev-master"
     },
     "suggest": {
+        "doctrine/doctrine-orm-module": "If you want to use Doctrine ORM",
         "doctrine/doctrine-mongo-odm-module": "If you want to use Doctrine ODM",
-        "imagine/imagine" : "If you need image manipulation after uploading image"
+        "imagine/imagine" : "If you need image manipulation after uploading image",
+        "ruflin/elastica": "If you want to use elasticsearch as search server",
+        "predis/predis": "If you want to use redis"
     },
     "autoload": {
         "psr-0": {
