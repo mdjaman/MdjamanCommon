@@ -28,10 +28,11 @@ namespace MdjamanCommon\Service;
 use Doctrine\Common\Persistence\ObjectManager;
 use MdjamanCommon\Entity\BaseEntity;
 use MdjamanCommon\Model\ModelInterface;
+use Zend\Log\LoggerInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 /**
- * Class AbstractService
+ * Interface AbstractServiceInterface
  * @package MdjamanCommon\Service
  * @author Marcel Djaman <marceldjaman@gmail.com>
  */
@@ -183,8 +184,30 @@ interface AbstractServiceInterface
      */
     public function enableSoftDeleteableFilter($enable = true);
 
+    /**
+     * @param array $filters
+     * @param array|null $orderBy
+     * @param null $limit
+     * @param null $offset
+     * @return array
+     */
+    public function filters(array $filters, array $orderBy = null, $limit = null, $offset = null);
+
+    /**
+     * @param $filters
+     * @return int
+     */
+    public function countMatchingRecords($filters);
+
+    /**
+     * @param string $logger
+     * @param bool $isService
+     */
     public function setLogger($logger = 'Zend\\Log\\Logger', $isService = true);
 
+    /**
+     * @return LoggerInterface
+     */
     public function getLogger();
 
     /**

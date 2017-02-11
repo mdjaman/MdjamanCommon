@@ -30,6 +30,7 @@
 
 namespace MdjamanCommon\Service;
 
+use Doctrine\Common\Collections\Criteria;
 use MdjamanCommon\Entity\BaseEntity;
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
@@ -37,6 +38,7 @@ use MdjamanCommon\Provider\ServiceManagerAwareTrait;
 use JMS\Serializer\SerializationContext;
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use Zend\Log\LoggerInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use MdjamanCommon\Model\ModelInterface;
 
@@ -490,6 +492,77 @@ abstract class AbstractService implements AbstractServiceInterface
         }
     }
 
+    /**
+     * @param array $filters
+     * @param array|null $orderBy
+     * @param null $limit
+     * @param null $offset
+     * @return array
+     */
+    public function filters(array $filters, array $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->getMatchingRecords($filters, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * @param array $filters
+     * @param array|null $orderBy
+     * @param null|int $limit
+     * @param null|int $offset
+     * @return mixed
+     */
+    protected function getMatchingRecords(array $filters, array $orderBy = null, $limit = null, $offset = null)
+    {
+        $criteria = $this->buildCriteria($filters);
+
+        if (null !== $orderBy && count($orderBy)) {
+            $criteria->orderBy($orderBy);
+        }
+
+        if (null !== $limit) {
+            $criteria->setMaxResults($limit);
+        }
+
+        if (null !== $offset) {
+            $criteria->setFirstResult($offset);
+        }
+
+        return $this->getRepository()->matching($criteria);
+    }
+
+    /**
+     * @param $filters
+     * @return int
+     */
+    public function countMatchingRecords($filters)
+    {
+        $matchings = $this->filters($filters, []);
+        return count($matchings);
+    }
+
+    /**
+     * @param array $filters
+     * @return Criteria
+     */
+    protected function buildCriteria(array $filters)
+    {
+        $entity = $this->hydrate($filters);
+
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        foreach ($filters as $key => $value) {
+            $method = 'get' . ucfirst($key);
+            $criteria->andWhere($expr->eq($key, $entity->{$method}()));
+        }
+
+        return $criteria;
+    }
+
+    /**
+     * @param string $logger
+     * @param bool $isService
+     */
     public function setLogger($logger = 'Zend\\Log\\Logger', $isService = true)
     {
         if ($isService == true) {
@@ -501,7 +574,10 @@ abstract class AbstractService implements AbstractServiceInterface
         
         $this->logger = $logger;
     }
-    
+
+    /**
+     * @return LoggerInterface
+     */
     public function getLogger()
     {
         if (!$this->logger) {
