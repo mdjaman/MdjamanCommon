@@ -27,7 +27,6 @@ namespace MdjamanCommon\Image;
 
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
-use MdjamanCommon\Provider\ServiceManagerAwareTrait;
 
 /**
  * Class Processor
@@ -35,9 +34,9 @@ use MdjamanCommon\Provider\ServiceManagerAwareTrait;
  */
 class Processor
 {
-
-    use ServiceManagerAwareTrait;
-
+    /**
+     * @var array
+     */
     protected $defaultSizes = [
         'mini' => [24, 24],
         'thumb' => [60, 60],
@@ -48,7 +47,6 @@ class Processor
      * Resize and create thumbnail from image source
      * @param string $path
      * @param array $resizes list Dimension of new images in array(width, height)
-     * @return void
      */
     public function __construct($path, $resizes = array())
     {
@@ -56,39 +54,32 @@ class Processor
         $basename = pathinfo($path, PATHINFO_DIRNAME);
         $filename = pathinfo($path, PATHINFO_FILENAME);
         $ext = pathinfo($path, PATHINFO_EXTENSION);
-        $newPath = $path;
-        
+
         $imagine = new Imagine();
 
-        try {
-            $file = $imagine->open($path);
-            $copy = $file->copy();
-            
-            if (!count($resizes)) {
-                $resizes = $this->defaultSizes;
+        $file = $imagine->open($path);
+        $copy = $file->copy();
+
+        if (!count($resizes)) {
+            $resizes = $this->defaultSizes;
+        }
+
+        foreach ($resizes as $key => $value) {
+            if (!count($value) > 1) {
+                continue;
             }
-            
-            foreach ($resizes as $key => $value) {
-                if (!count($value) > 1) {
-                    continue;
-                }
-                
-                if ($key !== 'resize') {
-                    $newFileName = sprintf('%s_%s.%s', $filename, $key, $ext);
-                    $newPath = $basename . '/' . $newFileName;
-                    $resize = new Box($value[0], $value[1]);
-                    $copy->thumbnail($resize)
-                         ->save($newPath);
-                } else {
-                    $resize = new Box($value[0], $value[1]);
-                    $copy->resize($resize)
-                         ->save($path);
-                }
+
+            if ($key !== 'resize') {
+                $newFileName = sprintf('%s_%s.%s', $filename, $key, $ext);
+                $newPath = $basename . '/' . $newFileName;
+                $resize = new Box($value[0], $value[1]);
+                $copy->thumbnail($resize)
+                     ->save($newPath);
+            } else {
+                $resize = new Box($value[0], $value[1]);
+                $copy->resize($resize)
+                     ->save($path);
             }
-            
-            return $newPath;
-        } catch (\Exception $e) {
-            //$this->getServiceManager()->get('Zend\Log\Logger')->err($e->getMessage());
         }
     }
 
