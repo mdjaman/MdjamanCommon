@@ -28,22 +28,36 @@
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
-namespace Application\Service;
+namespace MdjamanCommon\Service;
 
 use Gedmo\Tool\Wrapper\EntityWrapper;
 use Gedmo\Loggable\Entity\LogEntry;
 use Zend\ServiceManager\ServiceManager;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class LogEntryService
+ * @package MdjamanCommon\Service
+ * @author Marcel Djaman <marceldjaman@gmail.com>
+ */
 class LogEntryService extends AbstractService
 {
 
-    protected $allowed_filter = array('patient', 'visite', 'ets', 'prescripteur', 'personnel');
-
+    /**
+     * @var array
+     */
     protected $allowed_method = array('find', 'findAll', 'findBy', 'findOneBy');
 
+    /**
+     * @var string
+     */
     protected $userEntity = 'Identity\\Entity\\User';
 
+    /**
+     * LogEntryService constructor.
+     * @param ServiceManager $serviceManager
+     * @param ObjectManager $om
+     */
     public function __construct(ServiceManager $serviceManager, ObjectManager $om)
     {
         parent::__construct(new LogEntry(), $om);
@@ -51,6 +65,10 @@ class LogEntryService extends AbstractService
         $this->setServiceManager($serviceManager);
     }
 
+    /**
+     * @param $resultset
+     * @return array
+     */
     public function resultWrapper($resultset)
     {
         /*if ($resultset instanceof Cursor) {
@@ -61,12 +79,12 @@ class LogEntryService extends AbstractService
         if ($resultset) {
             $filled = false;
             while (($log = array_pop($resultset)) && !$filled) {
-                $wrapped = new EntityWrapper($log, $this->em);
+                $wrapped = new EntityWrapper($log, $this->objectManager);
                 $objectMeta = $wrapped->getMetadata();
 
                 if ($userData = $log->getUsername()) {
                     $field = 'username';
-                    $userData = $userData ? $this->em->getReference($this->userEntity, $userData) : null;
+                    $userData = $userData ? $this->objectManager->getReference($this->userEntity, $userData) : null;
                     $wrapped->setPropertyValue($field, $userData);
                 }
                 if ($objectClassData = $log->getObjectClass()) {
@@ -111,14 +129,14 @@ class LogEntryService extends AbstractService
         $orderBy = [$sort => $dir];
 
         switch ($filter) {
-            case 'class':
+            /*case 'class':
             	$namespace = '\Application\\Entity';
             	if ( in_array($value, $this->allowed_filter) ) {
             		$class = $namespace . '\\' . ucfirst($value);
             		$criteria = ['objectClass' => get_class(new $class)];
             	}
             	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
-            	break;
+            	break;*/
             case 'action':
             	$criteria = ['action' => $value];
             	$result = $this->findBy($criteria, $orderBy, $limit, $offset);

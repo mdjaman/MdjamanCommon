@@ -30,10 +30,14 @@
 
 namespace MdjamanCommon\Service;
 
-use Identity\Entity\User;
 use Zend\ServiceManager\ServiceManager;
-use Application\Provider\ServiceManagerAwareTrait;
+use MdjamanCommon\Provider\ServiceManagerAwareTrait;
 
+/**
+ * Class SearchService
+ * @package MdjamanCommon\Service
+ * @author Marcel Djaman <marceldjaman@gmail.com>
+ */
 class SearchService
 {
     use ServiceManagerAwareTrait;
@@ -42,18 +46,20 @@ class SearchService
 
     protected $predis;
 
+    /**
+     * @var string
+     */
     protected $index = 'ipciidx';
 
-    protected $types = [
-        'analyse',
-        'ets',
-        'examen',
-        'patient',
-        'personnel',
-        'prescripteur',
-        'visite',
-    ];
+    /**
+     * @var array
+     */
+    protected $types = [];
 
+    /**
+     * SearchService constructor.
+     * @param ServiceManager $serviceManager
+     */
     public function __construct(ServiceManager $serviceManager)
     {
         $this->setServiceManager($serviceManager);
@@ -99,9 +105,9 @@ class SearchService
     /**
      * Save a user search to redis db
      * @param string $query
-     * @param User $user
+     * @param $user
      */
-    public function saveSearch($query, User $user)
+    public function saveSearch($query, $user)
     {
     	$r_key = 'usr_src:' . $user->getId();
 
@@ -111,12 +117,12 @@ class SearchService
 
     /**
      * Get a user saved searches
-     * @param User $user
-     * @param string $limit
+     * @param $user
+     * @param integer|null $limit
      * @param integer $offset
      * @return array
      */
-    public function getUserSearch(User $user, $limit = null, $offset = 0)
+    public function getUserSearch($user, $limit = null, $offset = 0)
     {
     	$r_key = 'usr_src:' . $user->getId();
 
@@ -131,6 +137,9 @@ class SearchService
     	return $search;
     }
 
+    /**
+     *
+     */
     public function getClient()
     {
         if (!$this->client) {
@@ -140,6 +149,9 @@ class SearchService
         return $this->client;
     }
 
+    /**
+     * @param array|null $config
+     */
     public function setClient(array $config = null)
     {
         if (!$config) {
@@ -148,6 +160,9 @@ class SearchService
         $this->client = new \Elastica\Client($config);
     }
 
+    /**
+     * @param $index
+     */
     public function setIndex($index)
     {
         $this->index = $index;
