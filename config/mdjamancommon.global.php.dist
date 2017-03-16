@@ -6,8 +6,9 @@
  * drop this config file in it and change the values as you wish.
  */
 $settings = array(
-    
-
+    'log_entry_entity_class' => 'Gedmo\Loggable\Entity\LogEntry',
+    'user_entity_class'      => 'Identity\Entity\User',
+    'allowed_filter'         => [],
 );
 
 /**

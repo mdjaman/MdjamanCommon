@@ -2,7 +2,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Marcel Djaman
+ * Copyright (c) 2017 Marcel Djaman
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,25 @@
  * SOFTWARE.
  */
 
-namespace MdjamanCommon;
+namespace MdjamanCommon\Service;
 
-return array(
-    'service_manager' => array(
-        'factories' => array(
-            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
-            'MdjamanCommon\Options\ModuleOptions' => Factory\Options\ModuleOptionsFactory::class,
-            'MdjamanCommon\Service\LogEntry' => Factory\Service\LogEntryServiceFactory::class,
-        ),
-        'invokables' => array(
-            'mdjaman_event_manager'   => 'Zend\EventManager\SharedEventManager',
-            'Form\Upload'  => Form\UploadForm::class,
-        ),
-    ),
-    'controller_plugins' => array(
-        'invokables' => array(
-            'translate' => Controller\Plugin\Translate::class,
-        ),
-    ),
-);
+/**
+ * Interface LogEntryServiceInterface
+ * @package MdjamanCommon\Service
+ * @author Marcel Djaman <marceldjaman@gmail.com>
+ */
+interface LogEntryServiceInterface extends AbstractServiceInterface
+{
+    /**
+     * @param $resultset
+     * @return array
+     */
+    public function resultWrapper($resultset);
+
+    /**
+     * Filter
+     * @param array $filters
+     * @return multitype:
+     */
+    public function filter(array $filters = null);
+}

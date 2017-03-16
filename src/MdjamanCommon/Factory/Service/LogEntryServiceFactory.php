@@ -2,7 +2,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Marcel Djaman
+ * Copyright (c) 2017 Marcel Djaman
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,28 @@
  * SOFTWARE.
  */
 
-namespace MdjamanCommon;
+namespace MdjamanCommon\Factory\Service;
 
-return array(
-    'service_manager' => array(
-        'factories' => array(
-            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
-            'MdjamanCommon\Options\ModuleOptions' => Factory\Options\ModuleOptionsFactory::class,
-            'MdjamanCommon\Service\LogEntry' => Factory\Service\LogEntryServiceFactory::class,
-        ),
-        'invokables' => array(
-            'mdjaman_event_manager'   => 'Zend\EventManager\SharedEventManager',
-            'Form\Upload'  => Form\UploadForm::class,
-        ),
-    ),
-    'controller_plugins' => array(
-        'invokables' => array(
-            'translate' => Controller\Plugin\Translate::class,
-        ),
-    ),
-);
+use MdjamanCommon\Service\LogEntryService;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+
+/**
+ * Class LogEntryServiceFactory
+ * @package MdjamanCommon\Factory\Service
+ * @author Marcel Djaman <marceldjaman@gmail.com>
+ */
+class LogEntryServiceFactory implements FactoryInterface
+{
+    /**
+     * @param ServiceLocatorInterface $sl
+     * @return LogEntryService
+     */
+    public function createService(ServiceLocatorInterface $sl)
+    {
+        $om = $sl->get('doctrine.entitymanager.orm_default');
+        $options = $sl->get('MdjamanCommon\Options\ModuleOptions');
+        return new LogEntryService($sl, $om, $options);
+    }
+
+}

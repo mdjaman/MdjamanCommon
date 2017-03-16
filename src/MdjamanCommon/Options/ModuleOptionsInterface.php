@@ -23,27 +23,34 @@
  * SOFTWARE.
  */
 
-namespace MdjamanCommon\Service\Factory;
-
-use MdjamanCommon\Service\LogEntryService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+namespace MdjamanCommon\Options;
 
 /**
- * Class LogEntryServiceFactory
- * @package MdjamanCommon\Service\Factory
+ * Interface ModuleOptionsInterface
+ * @package MdjamanCommon\Options
  * @author Marcel Djaman <marceldjaman@gmail.com>
  */
-class LogEntryServiceFactory implements FactoryInterface
+interface ModuleOptionsInterface
 {
     /**
-     * @param ServiceLocatorInterface $sl
-     * @return LogEntryService
+     * @return string
      */
-    public function createService(ServiceLocatorInterface $sl)
-    {
-        $om = $sl->get('doctrine.entitymanager.orm_default');
-        return new LogEntryService($sl, $om);
-    }
+    public function getLogEntryEntityClass();
 
+    /**
+     * @param string $logEntryEntityClass
+     * @return ModuleOptions
+     */
+    public function setLogEntryEntityClass($logEntryEntityClass);
+
+    /**
+     * @return string
+     */
+    public function getUserEntityClass();
+
+    /**
+     * @param string $userEntityClass
+     * @return ModuleOptions
+     */
+    public function setUserEntityClass($userEntityClass);
 }

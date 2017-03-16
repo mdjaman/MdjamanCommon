@@ -31,7 +31,7 @@
 namespace MdjamanCommon\Service;
 
 use Gedmo\Tool\Wrapper\EntityWrapper;
-use Gedmo\Loggable\Entity\LogEntry;
+use MdjamanCommon\Options\ModuleOptionsInterface;
 use Zend\ServiceManager\ServiceManager;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -40,9 +40,8 @@ use Doctrine\Common\Persistence\ObjectManager;
  * @package MdjamanCommon\Service
  * @author Marcel Djaman <marceldjaman@gmail.com>
  */
-class LogEntryService extends AbstractService
+class LogEntryService extends AbstractService implements LogEntryServiceInterface
 {
-
     /**
      * @var array
      */
@@ -51,16 +50,31 @@ class LogEntryService extends AbstractService
     /**
      * @var string
      */
-    protected $userEntity = 'Identity\\Entity\\User';
+    protected $userEntity;
+
+    /**
+     * @var array
+     */
+    protected $allowed_filter = [];
+
+    /**
+     * @var ModuleOptionsInterface
+     */
+    protected $options;
 
     /**
      * LogEntryService constructor.
      * @param ServiceManager $serviceManager
      * @param ObjectManager $om
+     * @param ModuleOptionsInterface $moduleOptions
      */
-    public function __construct(ServiceManager $serviceManager, ObjectManager $om)
+    public function __construct(ServiceManager $serviceManager, ObjectManager $om, ModuleOptionsInterface $moduleOptions)
     {
-        parent::__construct(new LogEntry(), $om);
+        $entityClass = $moduleOptions->getLogEntryEntityClass();
+        parent::__construct(new $entityClass, $om);
+
+        $this->options = $moduleOptions;
+        $this->userEntity = $moduleOptions->getUserEntityClass();
 
         $this->setServiceManager($serviceManager);
     }
@@ -80,7 +94,7 @@ class LogEntryService extends AbstractService
             $filled = false;
             while (($log = array_pop($resultset)) && !$filled) {
                 $wrapped = new EntityWrapper($log, $this->objectManager);
-                $objectMeta = $wrapped->getMetadata();
+                //$objectMeta = $wrapped->getMetadata();
 
                 if ($userData = $log->getUsername()) {
                     $field = 'username';
@@ -90,7 +104,7 @@ class LogEntryService extends AbstractService
                 if ($objectClassData = $log->getObjectClass()) {
                     $field = 'objectClass';
                     $objectClassData = $objectClassData ?
-                        $this->em->getReference($objectClassData, $log->getObjectId()) : null;
+                        $this->objectManager->getReference($objectClassData, $log->getObjectId()) : null;
                     $wrapped->setPropertyValue($field, $objectClassData);
                 }
 
@@ -105,7 +119,7 @@ class LogEntryService extends AbstractService
     /**
      * Filter
      * @param array $filters
-     * @return multitype:
+     * @return mixed
      */
     public function filter(array $filters = null)
     {
@@ -129,22 +143,21 @@ class LogEntryService extends AbstractService
         $orderBy = [$sort => $dir];
 
         switch ($filter) {
-            /*case 'class':
-            	$namespace = '\Application\\Entity';
-            	if ( in_array($value, $this->allowed_filter) ) {
-            		$class = $namespace . '\\' . ucfirst($value);
-            		$criteria = ['objectClass' => get_class(new $class)];
+            case 'class':
+            	if (array_key_exists($value, $this->allowed_filter) ) {
+            		$class = $this->allowed_filter[$value];
+            		$criteria = ['objectClass' => $class];
             	}
             	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
-            	break;*/
+            	break;
             case 'action':
             	$criteria = ['action' => $value];
             	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
             	break;
             default:
-                if ( in_array($filter, $this->allowed_filter) ) {
+                /*if (in_array($filter, $this->allowed_filter)) {
                     $criteria = [$filter => $value];
-                }
+                }*/
                 $result = $this->findBy($criteria, $orderBy, $limit, $offset);
                 break;
         }
