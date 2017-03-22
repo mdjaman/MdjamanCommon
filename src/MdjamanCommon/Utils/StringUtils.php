@@ -172,4 +172,97 @@ class StringUtils
 
         return $truncate;
     }
+
+    /**
+     * Converts a CamelCase word into snake_case
+     *
+     * @author Exadra37 exadra37 in gmail point com
+     * @since  12/02/2014 - v.1.0.0
+     *
+     * @param  string $input - string to convert to snake_case
+     * @param  string $splitter - splitter to use
+     * @return string        - string converted to snake_case
+     */
+    public static function camelCaseToSnakeCase($input, $splitter = "_")
+    {
+        return ctype_lower($input) ? $input : str_replace(array("-", "_", "{$splitter}{$splitter}"), $splitter, ltrim(strtolower(preg_replace("/[A-Z]/", "{$splitter}$0", $input)), $splitter));
+    }
+
+    /**
+     * Converts camelCase string to have spaces between each.
+     * @param $camelCaseString
+     * @return string
+     */
+    public static function camelCaseToTitle($camelCaseString)
+    {
+        $re = '/(?<=[a-z])(?=[A-Z])/x';
+        $a = preg_split($re, $camelCaseString);
+        return join($a, " ");
+    }
+
+    /**
+     * Returns a camelCase version of the string. Trims surrounding spaces,
+     * capitalizes letters following digits, spaces, dashes and underscores,
+     * and removes spaces, dashes, as well as underscores.
+     *
+     * @param string $string
+     * @param null|string $encoding
+     * @return string
+     */
+    public static function camelize($string, $encoding = null)
+    {
+        $stringy = lcfirst(trim($string));
+        $stringy = preg_replace('/^[-_]+/', '', $stringy);
+        $stringy = preg_replace_callback(
+            '/[-_\s]+(.)?/u',
+            function ($match) use ($encoding) {
+                if (isset($match[1])) {
+                    return \mb_strtoupper($match[1], $encoding);
+                }
+                return '';
+            },
+            $stringy
+        );
+        $stringy = preg_replace_callback(
+            '/[\d]+(.)?/u',
+            function ($match) use ($encoding) {
+                return \mb_strtoupper($match[0], $encoding);
+            },
+            $stringy
+        );
+
+        return $stringy;
+    }
+
+    /**
+     * Slugify text
+     * @param $text
+     * @return mixed|string
+     */
+    public static function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        // trim
+        $text = trim($text, '-');
+
+        // remove duplicate -
+        $text = preg_replace('~-+~', '-', $text);
+
+        // lowercase
+        $text = strtolower($text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
+    }
 }
