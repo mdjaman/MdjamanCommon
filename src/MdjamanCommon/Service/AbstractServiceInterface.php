@@ -114,7 +114,7 @@ interface AbstractServiceInterface
      * @param null $class
      * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
      */
-    public function getClassMetadata($class = null);
+    public function getEntityClassMetadata($class = null);
 
     /**
      * Return log entries
