@@ -111,6 +111,12 @@ interface AbstractServiceInterface
     public function getReference($id, $class = null);
 
     /**
+     * @param null $class
+     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
+     */
+    public function getClassMetadata($class = null);
+
+    /**
      * Return log entries
      * From Loggable behavioral extension for Gedmo
      *

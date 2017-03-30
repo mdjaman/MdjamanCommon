@@ -82,7 +82,10 @@ abstract class AbstractService implements AbstractServiceInterface
      * @var string 
      */
     protected $logEntryEntity = 'Gedmo\\Loggable\\Entity\\LogEntry';
-    
+
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
 
     /**
@@ -160,6 +163,9 @@ abstract class AbstractService implements AbstractServiceInterface
         throw new Exception\InvalidArgumentException('Entity passed to db mapper should be an array or object.');
     }
 
+    /**
+     * @return \JMS\Serializer\Serializer
+     */
     public function getSerializer()
     {
         if (!$this->serializer) {
@@ -169,6 +175,9 @@ abstract class AbstractService implements AbstractServiceInterface
         return $this->serializer;
     }
 
+    /**
+     * @param null $serializer
+     */
     public function setSerializer($serializer = null)
     {
         if (!$serializer) {
@@ -254,14 +263,12 @@ abstract class AbstractService implements AbstractServiceInterface
         return new $entityName;
     }
 
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
     public function getRepository()
     {
-        if (is_object($this->getEntity())) {
-            $class = get_class($this->getEntity());
-        } else {
-            $class = $this->getEntity();
-        }
-
+        $class = $this->getEntityClassName();
         return $this->objectManager->getRepository($class);
     }
 
@@ -275,9 +282,22 @@ abstract class AbstractService implements AbstractServiceInterface
     public function getReference($id, $class = null)
     {
         if (null === $class) {
-            $class = get_class($this->getEntity());
+            $this->getEntityClassName();
         }
         return $this->objectManager->getReference($class, $id);
+    }
+
+    /**
+     * @param null $class
+     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
+     */
+    public function getClassMetadata($class = null)
+    {
+        if (null === $class) {
+            $class = $this->getEntityClassName();
+        }
+
+        return $this->getObjectManager()->getClassMetadata($class);
     }
 
     /**
@@ -557,6 +577,20 @@ abstract class AbstractService implements AbstractServiceInterface
         }
 
         return $criteria;
+    }
+
+    /**
+     * @return string
+     */
+    private function getEntityClassName()
+    {
+        if (is_object($this->getEntity())) {
+            $class = get_class($this->getEntity());
+        } else {
+            $class = $this->getEntity();
+        }
+
+        return $class;
     }
 
     /**
