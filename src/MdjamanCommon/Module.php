@@ -33,10 +33,10 @@ namespace MdjamanCommon;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Events;
 use MdjamanCommon\EventListener\DoctrineExtensionsListener;
+use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\Mvc\MvcEvent;
 
 class Module implements
     ConfigProviderInterface, 
@@ -44,7 +44,7 @@ class Module implements
     BootstrapListenerInterface
 {
 
-    public function onBootstrap(MvcEvent $e)
+    public function onBootstrap(EventInterface $e)
     {
         $application = $e->getApplication();
         $sm = $application->getServiceManager();
