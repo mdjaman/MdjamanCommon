@@ -38,7 +38,6 @@ use MdjamanCommon\Provider\ServiceManagerAwareTrait;
 use JMS\Serializer\SerializationContext;
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
-use Zend\Log\LoggerInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use MdjamanCommon\Model\ModelInterface;
 
@@ -282,7 +281,7 @@ abstract class AbstractService implements AbstractServiceInterface
     public function getReference($id, $class = null)
     {
         if (null === $class) {
-            $this->getEntityClassName();
+            $class = $this->getEntityClassName();
         }
         return $this->objectManager->getReference($class, $id);
     }
@@ -594,12 +593,12 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param string $logger
+     * @param mixed $logger
      * @param bool $isService
      */
     public function setLogger($logger = 'Zend\\Log\\Logger', $isService = true)
     {
-        if ($isService == true) {
+        if ($isService === true) {
             if (!$this->getServiceManager()->has($logger)) {
                 throw new Exception\InvalidArgumentException('Logger service not found!');
             }
@@ -610,7 +609,7 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @return LoggerInterface
+     * @return mixed
      */
     public function getLogger()
     {

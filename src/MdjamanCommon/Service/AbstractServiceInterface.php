@@ -28,7 +28,6 @@ namespace MdjamanCommon\Service;
 use Doctrine\Common\Persistence\ObjectManager;
 use MdjamanCommon\Entity\BaseEntity;
 use MdjamanCommon\Model\ModelInterface;
-use Zend\Log\LoggerInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 /**
@@ -206,13 +205,13 @@ interface AbstractServiceInterface
     public function countMatchingRecords($filters);
 
     /**
-     * @param string $logger
+     * @param mixed $logger
      * @param bool $isService
      */
     public function setLogger($logger = 'Zend\\Log\\Logger', $isService = true);
 
     /**
-     * @return LoggerInterface
+     * @return mixed
      */
     public function getLogger();
 
