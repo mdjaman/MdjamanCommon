@@ -27,8 +27,7 @@
         "gedmo/doctrine-extensions": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.8.*",
-        "zendframework/zftool": "dev-master"
+        "phpunit/phpunit": "4.8.*"
     },
     "suggest": {
         "doctrine/doctrine-orm-module": "If you want to use Doctrine ORM",
