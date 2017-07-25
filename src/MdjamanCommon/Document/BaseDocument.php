@@ -58,9 +58,14 @@ abstract class BaseDocument implements ModelInterface
      */
     private $updatedAt;
 
-
+    /**
+     * @return mixed
+     */
     public abstract function getId();
 
+    /**
+     * BaseDocument constructor.
+     */
     public function __construct()
     {
         $reflection = new \ReflectionClass($this);
@@ -116,17 +121,17 @@ abstract class BaseDocument implements ModelInterface
         }
     }
 
+    /**
+     * @return array
+     */
     public function getArrayCopy()
     {
-        $obj_vars = get_object_vars($this);
-        /* foreach ($obj_vars as $key => $val) {
-            if (in_array($obj_vars[$key], array('datenais', 'datevisite')))
-                $obj_vars[$key] = $obj_vars[$key]->format('Y-m-d');
-        } */
-
-        return $obj_vars;
+        return get_object_vars($this);
     }
 
+    /**
+     * @return array|null
+     */
     public function toArray()
     {
         $data = array();
@@ -136,9 +141,11 @@ abstract class BaseDocument implements ModelInterface
         return (count($data) > 0) ? $data : null;
     }
 
+    /**
+     * @return mixed
+     */
     public function __toString()
     {
-         //return "[" . get_class($this) . " #" . $this->getId() . "]";
          return $this->getId();
     }
 

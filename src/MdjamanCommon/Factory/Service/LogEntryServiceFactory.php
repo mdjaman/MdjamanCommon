@@ -42,7 +42,7 @@ class LogEntryServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $sl)
     {
-        $om = $sl->get('doctrine.entitymanager.orm_default');
+        $om = $sl->has('doctrine.entitymanager.orm_default') ? $sl->get('doctrine.entitymanager.orm_default') : $sl->get('doctrine.documentmanager.odm_default');
         $options = $sl->get('MdjamanCommon\Options\ModuleOptions');
         return new LogEntryService($sl, $om, $options);
     }

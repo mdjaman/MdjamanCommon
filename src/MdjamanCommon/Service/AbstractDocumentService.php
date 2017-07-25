@@ -56,10 +56,14 @@ abstract class AbstractDocumentService
     protected $hydrator;
     protected $serializer;
     protected $serializerFormat = array('json', 'xml', 'yml');
-    protected $predis;
     protected $logEntryDocument = 'Gedmo\\Loggable\\Document\\LogEntry';
     protected $logger;
 
+    /**
+     * AbstractDocumentService constructor.
+     * @param null $documentName
+     * @param ObjectManager $objectManager
+     */
     public function __construct($documentName = null, ObjectManager $objectManager)
     {
         if (!is_null($documentName)) {
@@ -70,6 +74,9 @@ abstract class AbstractDocumentService
         $this->enableSoftDeleteableFilter(true);
     }
 
+    /**
+     * @return mixed
+     */
     public function getDocument()
     {
         return $this->document;
@@ -77,6 +84,7 @@ abstract class AbstractDocumentService
 
     /**
      * @param string $document
+     * @return $this
      */
     public function setDocument($document)
     {
@@ -126,6 +134,9 @@ abstract class AbstractDocumentService
         throw new Exception\InvalidArgumentException('Document passed to db mapper should be an array or object.');
     }
 
+    /**
+     * @return mixed
+     */
     public function getSerializer()
     {
         if (!$this->serializer) {
@@ -135,12 +146,15 @@ abstract class AbstractDocumentService
         return $this->serializer;
     }
 
+    /**
+     * @param null $serializer
+     */
     public function setSerializer($serializer = null)
     {
         if (!$serializer) {
             $serializer = $this->getServiceManager()->get('jms_serializer.serializer');
         }
-        
+
         $this->serializer = $serializer;
     }
 
@@ -157,7 +171,7 @@ abstract class AbstractDocumentService
         }
         $serializer = $this->getSerializer();
         
-        $context = null;
+        $context = SerializationContext::create()->enableMaxDepthChecks();;
         $groups = (array) $groups;
         if (count($groups)) {
             $context = SerializationContext::create()->setGroups($groups);
@@ -186,7 +200,8 @@ abstract class AbstractDocumentService
         $this->triggerEvent(__FUNCTION__.'.pre', $argv);
         extract($argv);
 
-        $this->objectManager->getHydratorFactory()->hydrate($document, $data);
+        $hydrator = new DoctrineObject($this->objectManager);
+        $hydrator->hydrate($data, $document);
 
         $this->triggerEvent(__FUNCTION__.'.post', $argv);
 
@@ -223,6 +238,22 @@ abstract class AbstractDocumentService
         $class = get_class($this->getDocument());
         return $this->objectManager->getRepository($class);
     }
+
+    /**
+     * Get Entity Reference
+     *
+     * @param string|int $id
+     * @param string|null $class
+     * @return mixed
+     */
+    public function getReference($id, $class = null)
+    {
+        if (null === $class) {
+            $class = $this->getDocument();
+        }
+        return $this->objectManager->getReference($class, $id);
+    }
+
 
     /**
      * Return log entries
