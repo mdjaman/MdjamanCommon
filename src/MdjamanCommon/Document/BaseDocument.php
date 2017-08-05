@@ -49,17 +49,19 @@ abstract class BaseDocument implements ModelInterface
     protected $__name;
 
     /**
+     * @var \DateTime
      * @ODM\Field(name="created_at", type="date")
      */
-    private $createdAt;
+    protected $created_at;
 
     /**
+     * @var \DateTime
      * @ODM\Field(name="updated_at", type="date")
      */
-    private $updatedAt;
+    protected $updated_at;
 
     /**
-     * @return mixed
+     * @return string
      */
     public abstract function getId();
 
@@ -82,7 +84,7 @@ abstract class BaseDocument implements ModelInterface
      */
     public function PrePersist()
     {
-        $this->createdAt = new \DateTime("now");
+        $this->created_at = new \DateTime("now");
     }
 
     /**
@@ -90,17 +92,23 @@ abstract class BaseDocument implements ModelInterface
      */
     public function PreUpdate()
     {
-        $this->updatedAt = new \DateTime("now");
+        $this->updated_at = new \DateTime("now");
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getUpdatedAt()
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getCreatedAt()
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
     /**
@@ -142,7 +150,7 @@ abstract class BaseDocument implements ModelInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function __toString()
     {
@@ -152,24 +160,24 @@ abstract class BaseDocument implements ModelInterface
     /**
      * Set createdAt
      *
-     * @param datetime $createdAt
+     * @param \DateTime $created_at
      * @return BaseDocument
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt($created_at)
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
         return $this;
     }
 
     /**
      * Set updatedAt
      *
-     * @param datetime $updatedAt
+     * @param \DateTime $updated_at
      * @return BaseDocument
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt($updated_at)
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated_at = $updated_at;
         return $this;
     }
 
