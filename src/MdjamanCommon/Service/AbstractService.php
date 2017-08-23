@@ -228,8 +228,13 @@ abstract class AbstractService implements AbstractServiceInterface
         $this->triggerEvent(__FUNCTION__.'.pre', $argv);
         extract($argv);
 
-        $hydrator = new DoctrineObject($this->objectManager);
-        $hydrator->hydrate($data, $entity);
+        if (!method_exists($this->objectManager, 'getHydratorFactory')) {
+            $hydrator = new DoctrineObject($this->objectManager);
+            $hydrator->hydrate($data, $entity);
+        } else {
+            $hydrator = $this->objectManager->getHydratorFactory();
+            $hydrator->hydrate($entity, $data);
+        }
 
         $this->triggerEvent(__FUNCTION__.'.post', $argv);
 
