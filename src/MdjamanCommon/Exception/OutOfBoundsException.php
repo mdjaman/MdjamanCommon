@@ -7,8 +7,14 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Application\Exception;
+namespace MdjamanCommon\Exception;
 
-class OutOfBoundsException extends \OutOfBoundsException implements
-    ExceptionInterface
-{}
+/**
+ * Class OutOfBoundsException
+ * @package MdjamanCommon\Exception
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
+class OutOfBoundsException extends \OutOfBoundsException implements ExceptionInterface
+{
+
+}

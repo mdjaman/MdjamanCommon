@@ -31,6 +31,10 @@ namespace MdjamanCommon\Provider;
 
 use Zend\ServiceManager\ServiceManager;
 
+/**
+ * Trait ServiceManagerAwareTrait
+ * @package MdjamanCommon\Provider
+ */
 trait ServiceManagerAwareTrait
 {
     /**

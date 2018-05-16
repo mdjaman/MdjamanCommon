@@ -7,7 +7,14 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Application\Exception;
+namespace MdjamanCommon\Exception;
 
+/**
+ * Class ParseException
+ * @package MdjamanCommon\Exception
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
 class ParseException extends RuntimeException implements ExceptionInterface
-{}
+{
+
+}

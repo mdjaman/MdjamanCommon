@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Application\Validator;
+namespace MdjamanCommon\Validator;
 
 use DoctrineModule\Validator\ObjectExists;
 use Zend\Validator\Exception;

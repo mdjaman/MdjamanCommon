@@ -38,12 +38,20 @@ use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
+/**
+ * Class Module
+ * @package MdjamanCommon
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
 class Module implements
     ConfigProviderInterface, 
     AutoloaderProviderInterface, 
     BootstrapListenerInterface
 {
 
+    /**
+     * @param EventInterface $e
+     */
     public function onBootstrap(EventInterface $e)
     {
         $application = $e->getApplication();
@@ -58,23 +66,10 @@ class Module implements
         if ($objectManager instanceof ObjectManager) {
             $dem = $objectManager->getEventManager();
             $dem->addEventListener(
-                    array(Events::preFlush), new DoctrineExtensionsListener($sm)
+                array(Events::preFlush),
+                new DoctrineExtensionsListener($sm)
             );
         }
-    }
-
-    /**
-     * {@InheritDoc}
-     */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
-                ),
-            ),
-        );
     }
 
     /**

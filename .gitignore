@@ -1,0 +1,9 @@
+.idea
+.vagrant
+.log
+vendor
+phpunit.xml
+.env
+.DS_Store
+nbproject
+*.lock

@@ -69,8 +69,15 @@ interface AbstractServiceInterface
      */
     public function toArray($entity, HydratorInterface $hydrator = null);
 
+    /**
+     * @return mixed
+     */
     public function getSerializer();
 
+    /**
+     * @param mixed $serializer
+     * @return $this
+     */
     public function setSerializer($serializer = null);
 
     /**

@@ -1,18 +1,30 @@
 <?php
 
-namespace Application\Options;
+namespace MdjamanCommon\Options;
 
 use Zend\Stdlib\AbstractOptions;
 
+/**
+ * Class PredisOptions
+ * @package MdjamanCommon\Options
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
 class PredisOptions extends AbstractOptions
 {
 
+    /**
+     * @var array
+     */
     protected $defaultParameter = [
         'host' => '127.0.0.1',
         'port' => 6379,
         'database' => 15,
         'alias' => 'default',
     ];
+
+    /**
+     * @var array
+     */
     protected $defaultSettings = [];
 
     /**

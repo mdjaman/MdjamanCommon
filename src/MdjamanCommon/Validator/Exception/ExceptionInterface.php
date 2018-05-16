@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Validator\Exception;
+namespace MdjamanCommon\Validator\Exception;
 
 interface ExceptionInterface
 {

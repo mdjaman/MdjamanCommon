@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Validator\Exception;
+namespace MdjamanCommon\Validator\Exception;
 
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {

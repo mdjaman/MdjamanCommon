@@ -30,7 +30,7 @@ use Imagine\Image\Box;
 
 /**
  * Class Processor
- * @package Application\Image
+ * @package MdjamanCommon\Image
  */
 class Processor
 {

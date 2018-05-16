@@ -30,6 +30,12 @@
 
 namespace MdjamanCommon\EventManager\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException implements
-    ExceptionInterface
-{}
+/**
+ * Class InvalidArgumentException
+ * @package MdjamanCommon\EventManager\Exception
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
+{
+
+}

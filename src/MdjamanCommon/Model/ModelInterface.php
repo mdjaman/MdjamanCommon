@@ -31,9 +31,8 @@
 namespace MdjamanCommon\Model;
 
 /**
- * Description of ModelInterface
- *
- * @author Marcel Djaman <marceldjaman@gmail.com>
+ * Interface ModelInterface
+ * @package MdjamanCommon\Model
  */
 interface ModelInterface
 {
@@ -47,16 +46,35 @@ interface ModelInterface
      */
     public function PreUpdate();
 
+    /**
+     * @return \DateTime|null
+     */
     public function getUpdatedAt();
 
+    /**
+     * @return \DateTime|null
+     */
     public function getCreatedAt();
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
     public function exchangeArray($data);
 
+    /**
+     * @return array
+     */
     public function getArrayCopy();
 
+    /**
+     * @return array
+     */
     public function toArray();
 
+    /**
+     * @return string
+     */
     public function __toString();
 
     /**

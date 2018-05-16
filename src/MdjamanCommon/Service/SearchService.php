@@ -49,7 +49,7 @@ class SearchService
     /**
      * @var string
      */
-    protected $index = 'ipciidx';
+    protected $index = 'app_idx';
 
     /**
      * @var array

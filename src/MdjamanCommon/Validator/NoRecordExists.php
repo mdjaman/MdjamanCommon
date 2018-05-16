@@ -6,7 +6,7 @@
  * @license WebCorpor8
  */
 
-namespace Application\Validator;
+namespace MdjamanCommon\Validator;
 
 /**
  * Description of NoRecordExists

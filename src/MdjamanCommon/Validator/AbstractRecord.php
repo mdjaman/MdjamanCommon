@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Validator;
+namespace MdjamanCommon\Validator;
 
 use Zend\Validator\AbstractValidator;
 use ZfcUser\Mapper\UserInterface;

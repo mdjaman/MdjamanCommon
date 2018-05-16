@@ -7,8 +7,14 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Application\Exception;
+namespace MdjamanCommon\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException implements
-    ExceptionInterface
-{}
+/**
+ * Class InvalidArgumentException
+ * @package MdjamanCommon\Exception
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
+{
+
+}

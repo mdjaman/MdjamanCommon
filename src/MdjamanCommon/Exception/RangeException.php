@@ -7,7 +7,14 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Application\Exception;
+namespace MdjamanCommon\Exception;
 
+/**
+ * Class RangeException
+ * @package MdjamanCommon\Exception
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
 class RangeException extends \RangeException implements ExceptionInterface
-{}
+{
+
+}
