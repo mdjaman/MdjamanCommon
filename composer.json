@@ -21,8 +21,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
-        "zendframework/zendframework": "2.3.*",
-        "doctrine/doctrine-module": "~1.0",
+        "zendframework/zendframework": "^2.3.9 || ^2.4.9",
+        "doctrine/doctrine-module": "~1.1",
         "sp/jms-serializer-module": "dev-master",
         "gedmo/doctrine-extensions": "dev-master"
     },
