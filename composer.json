@@ -18,11 +18,11 @@
     ],
     "homepage": "https://github.com/mdjaman/MdjamanCommon",
     "license": "MIT",
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "require": {
         "php": ">=5.6",
         "zendframework/zendframework": "~2.5",
-        "doctrine/doctrine-module": "^2.1",
+        "doctrine/doctrine-module": "^2.0",
         "sp/jms-serializer-module": "dev-master",
         "gedmo/doctrine-extensions": "dev-master"
     },
