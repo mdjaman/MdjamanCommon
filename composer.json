@@ -1,6 +1,6 @@
 {
     "name": "mdjaman/mdjaman-common",
-    "description": "Module that provides common functionality and library code for ZF2 applications",
+    "description": "Module that provides common functionality and library code for ZF2 & doctrine applications",
     "type": "library",
     "keywords": [
         "zf2",
@@ -13,7 +13,7 @@
         {
             "name": "Marcel Djaman",
             "email": "marceldjaman@gmail.com",
-            "homepage": "http://github.com/mdjaman/"
+            "homepage": "http://github.com/mdjaman"
         }
     ],
     "homepage": "https://github.com/mdjaman/MdjamanCommon",
