@@ -31,8 +31,9 @@ namespace MdjamanCommon\EventManager;
 
 use Zend\EventManager\ResponseCollection;
 
-/**S
- *
+/**
+ * Trait TriggerEventTrait
+ * @package MdjamanCommon\EventManager
  */
 trait TriggerEventTrait
 {

@@ -7,11 +7,13 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace MdjamanCommon\Exception;
+namespace MdjamanCommon\EventManager\Exception;
 
 /**
  * Interface ExceptionInterface
- * @package MdjamanCommon\Exception
+ * @package MdjamanCommon\EventManager\Exception
  */
 interface ExceptionInterface
-{}
+{
+
+}
