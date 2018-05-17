@@ -21,7 +21,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.6",
-        "zendframework/zendframework": "~2.5",
+        "zendframework/zendframework": "~2.7",
         "doctrine/doctrine-module": "1.2.*",
         "sp/jms-serializer-module": "dev-master",
         "gedmo/doctrine-extensions": "dev-master"
