@@ -85,5 +85,4 @@ class ModuleOptions extends AbstractOptions implements ModuleOptionsInterface
         $this->userEntityClass = $userEntityClass;
         return $this;
     }
-
 }

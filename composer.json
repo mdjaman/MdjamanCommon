@@ -1,10 +1,11 @@
 {
     "name": "mdjaman/mdjaman-common",
-    "description": "Module that provides common functionality and library code for ZF2 & doctrine applications",
+    "description": "Module that provides common functionality and library code for ZF2 & Doctrine applications",
     "type": "library",
     "keywords": [
         "zf2",
         "zend",
+        "doctrine",
         "module",
         "common",
         "abstract"
@@ -21,7 +22,17 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.6",
-        "zendframework/zendframework": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-modulemanager": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-servicemanager": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-mvc": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-view": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-form": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-inputfilter": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-validator": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-authentication": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-eventmanager": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-stdlib": "^2.3.9 || ^2.4.9",
+        "zendframework/zend-i18n": "^2.3.9 || ^2.4.9",
         "doctrine/doctrine-module": "~1.0",
         "sp/jms-serializer-module": "dev-master",
         "gedmo/doctrine-extensions": "dev-master"

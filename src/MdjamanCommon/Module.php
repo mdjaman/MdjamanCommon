@@ -57,6 +57,8 @@ class Module implements
         $application = $e->getApplication();
         $sm = $application->getServiceManager();
 
+        $objectManager = null;
+
         if ($sm->has('doctrine.entitymanager.orm_default')) {
             $objectManager = $sm->get('doctrine.entitymanager.orm_default');
         } elseif ($sm->has('doctrine.documentmanager.odm_default')) {
@@ -73,11 +75,10 @@ class Module implements
     }
 
     /**
-     * {@InheritDoc}
+     * {@inheritDoc}
      */
     public function getConfig()
     {
         return include __DIR__ . '/../../config/module.config.php';
     }
-
 }

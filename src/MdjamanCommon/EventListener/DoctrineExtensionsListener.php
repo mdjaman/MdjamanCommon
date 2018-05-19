@@ -14,6 +14,11 @@ use Gedmo\Loggable\LoggableListener;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class DoctrineExtensionsListener
+ * @package MdjamanCommon\EventListener
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
 class DoctrineExtensionsListener
 {
     /**

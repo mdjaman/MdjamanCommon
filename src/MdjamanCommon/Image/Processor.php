@@ -43,7 +43,6 @@ class Processor
     ];
 
     /**
-     *
      * Resize and create thumbnail from image source
      * @param string $path
      * @param array $resizes list Dimension of new images in array(width, height)
@@ -82,5 +81,4 @@ class Processor
             }
         }
     }
-
 }

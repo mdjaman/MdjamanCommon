@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * The MIT License (MIT)
@@ -34,15 +33,19 @@ namespace MdjamanCommon\Hydrator\Strategy;
 use Zend\Stdlib\Hydrator\Strategy\DefaultStrategy;
 
 /**
- * Description of DateTimeStrategy
- *
- * @author Marcel Djaman <marceldjaman@gmail.com>
+ * Class DateTimeStrategy
+ * @package MdjamanCommon\Hydrator\Strategy
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
  */
 class DateTimeStrategy extends DefaultStrategy
 {
 
     protected $allowNull;
 
+    /**
+     * DateTimeStrategy constructor.
+     * @param bool $allowNull
+     */
     public function __construct($allowNull = true)
     {
         $this->allowNull = (bool) $allowNull;
@@ -62,5 +65,4 @@ class DateTimeStrategy extends DefaultStrategy
         }
         return $value;
     }
-
 }

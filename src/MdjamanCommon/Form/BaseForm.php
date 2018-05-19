@@ -36,12 +36,23 @@ use Zend\Form\Element;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 
+/**
+ * Class BaseForm
+ * @package MdjamanCommon\Form
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
+ */
 class BaseForm extends Form
 {
 
     use ServiceManagerAwareTrait;
     use EventManagerAwareTrait;
 
+    /**
+     * BaseForm constructor.
+     * @param null $name
+     * @param bool $actionsField
+     * @param bool $crsfField
+     */
     public function __construct($name = null, $actionsField = false, $crsfField = false)
     {
         parent::__construct($name);
@@ -86,5 +97,4 @@ class BaseForm extends Form
             $this->add($csrf);
         }
     }
-
 }

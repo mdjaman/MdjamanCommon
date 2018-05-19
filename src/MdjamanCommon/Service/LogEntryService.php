@@ -30,10 +30,10 @@
 
 namespace MdjamanCommon\Service;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Tool\Wrapper\EntityWrapper;
 use MdjamanCommon\Options\ModuleOptionsInterface;
 use Zend\ServiceManager\ServiceManager;
-use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class LogEntryService
@@ -164,5 +164,4 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
         
         return $this->resultWrapper($result);
     }
-
 }

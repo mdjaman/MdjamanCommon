@@ -64,7 +64,6 @@ trait BlameableEntity
     public function setCreatedBy($createdBy)
     {
         $this->createdBy = $createdBy;
-
         return $this;
     }
 
@@ -87,7 +86,6 @@ trait BlameableEntity
     public function setUpdatedBy($updatedBy)
     {
         $this->updatedBy = $updatedBy;
-
         return $this;
     }
 

@@ -27,6 +27,7 @@
  * @copyright 2015 Marcel Djaman
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
+
 namespace MdjamanCommon\Provider;
 
 use Zend\ServiceManager\ServiceManager;
@@ -38,8 +39,8 @@ use Zend\ServiceManager\ServiceManager;
 trait ServiceManagerAwareTrait
 {
     /**
-    * @var ServiceManager
-    */
+     * @var ServiceManager
+     */
     protected $serviceManager;
 
     /**
@@ -63,5 +64,4 @@ trait ServiceManagerAwareTrait
         $this->serviceManager = $serviceManager;
         return $this;
     }
-
 }

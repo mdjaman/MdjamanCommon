@@ -55,7 +55,6 @@ trait SoftDeleteableEntity
     public function setDeletedAt(\DateTime $deletedAt = null)
     {
         $this->deletedAt = $deletedAt;
-
         return $this;
     }
 
