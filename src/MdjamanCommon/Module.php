@@ -31,8 +31,8 @@
 namespace MdjamanCommon;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Events;
 use MdjamanCommon\EventListener\DoctrineExtensionsListener;
+use MdjamanCommon\EventManager\DoctrineEvents;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
@@ -68,7 +68,7 @@ class Module implements
         if ($objectManager instanceof ObjectManager) {
             $dem = $objectManager->getEventManager();
             $dem->addEventListener(
-                array(Events::preFlush),
+                array(DoctrineEvents::preFlush),
                 new DoctrineExtensionsListener($sm)
             );
         }
