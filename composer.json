@@ -34,7 +34,7 @@
         "zendframework/zend-stdlib": "^2.3.9 || ^2.4.9",
         "zendframework/zend-i18n": "^2.3.9 || ^2.4.9",
         "doctrine/doctrine-module": "~1.0",
-        "sp/jms-serializer-module": "dev-master",
+        "mdjaman/jms-serializer-module": "1.*",
         "gedmo/doctrine-extensions": "dev-master"
     },
     "require-dev": {

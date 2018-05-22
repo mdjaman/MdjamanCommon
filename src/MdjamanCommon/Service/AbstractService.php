@@ -83,7 +83,7 @@ abstract class AbstractService implements AbstractServiceInterface
     protected $logEntryEntity = 'Gedmo\\Loggable\\Entity\\LogEntry';
 
     /**
-     * @var LoggerInterface
+     * @var mixed
      */
     protected $logger;
 
@@ -170,7 +170,6 @@ abstract class AbstractService implements AbstractServiceInterface
         if (!$this->serializer) {
             $this->setSerializer();
         }
-
         return $this->serializer;
     }
 
@@ -182,12 +181,11 @@ abstract class AbstractService implements AbstractServiceInterface
         if (!$serializer) {
             $serializer = $this->getServiceManager()->get('jms_serializer.serializer');
         }
-        
         $this->serializer = $serializer;
     }
 
     /**
-     * @param array|\MdjamanCommon\Entity\BaseEntity $entity
+     * @param array|BaseEntity $entity
      * @param string $format
      * @param array|null $groups
      * @return string
@@ -214,8 +212,9 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param array $data
-     * @param \MdjamanCommon\Entity\BaseEntity $entity
-     * @return \MdjamanCommon\Entity\BaseEntity
+     * @param BaseEntity|null $entity
+     * @return BaseEntity|mixed|null
+     * @throws \Exception
      */
     public function hydrate($data, $entity = null)
     {
@@ -246,20 +245,18 @@ abstract class AbstractService implements AbstractServiceInterface
      * one whose FQDN is stored in the className property.
      *
      * @param string $entityName
-     * @return \MdjamanCommon\Entity\BaseEntity
+     * @return BaseEntity|mixed
      * @throws \Exception
      */
     public function createEntity($entityName = null)
     {
         if (null === $entityName) {
             $entityName = $this->getEntity();
-            if ( !$entityName) {
-                // @todo throw good Exception
+            if (!$entityName) {
                 throw new Exception\InvalidArgumentException("entityName not set. Can't create class.");
             }
         } else {
             if (false === class_exists($entityName)) {
-                // @todo throw good Exception
                 throw new Exception\InvalidArgumentException("'".$entityName."' class doesn't exist. Can't create class.");
             }
         }
@@ -300,7 +297,6 @@ abstract class AbstractService implements AbstractServiceInterface
         if (null === $class) {
             $class = $this->getEntityClassName();
         }
-
         return $this->getObjectManager()->getClassMetadata($class);
     }
 
@@ -514,6 +510,7 @@ abstract class AbstractService implements AbstractServiceInterface
         } else {
             $filters->disable('softDeleteable');
         }
+        return $this;
     }
 
     /**
@@ -555,12 +552,12 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param $filters
+     * @param array $filters
      * @return int
      */
     public function countMatchingRecords($filters)
     {
-        $matchings = $this->filters($filters, []);
+        $matchings = $this->filters($filters);
         return count($matchings);
     }
 
@@ -598,8 +595,9 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param mixed $logger
+     * @param string $logger
      * @param bool $isService
+     * @return $this
      */
     public function setLogger($logger = 'Zend\\Log\\Logger', $isService = true)
     {
@@ -609,8 +607,8 @@ abstract class AbstractService implements AbstractServiceInterface
             }
             $logger = $this->getServiceManager()->get($logger);
         }
-        
         $this->logger = $logger;
+        return $this;
     }
 
     /**
@@ -631,5 +629,4 @@ abstract class AbstractService implements AbstractServiceInterface
     {
         return $this->objectManager;
     }
-
 }
