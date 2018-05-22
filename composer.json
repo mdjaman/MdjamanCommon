@@ -33,7 +33,7 @@
         "zendframework/zend-eventmanager": "^3.0",
         "zendframework/zend-stdlib": "^3.0",
         "zendframework/zend-i18n": "2.*",
-        "doctrine/doctrine-module": "2.0.*",
+        "doctrine/doctrine-module": "1.2.*",
         "mdjaman/jms-serializer-module": "2.*",
         "gedmo/doctrine-extensions": "dev-master"
     },
