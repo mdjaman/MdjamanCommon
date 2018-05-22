@@ -66,6 +66,13 @@ class SearchService
         $this->setClient();
     }
 
+    /**
+     * @param $query
+     * @param string $type
+     * @param null $limit
+     * @param int $offset
+     * @return bool
+     */
     public function search($query, $type = 'patient', $limit = null, $offset = 0)
     {
         if (empty($query)) {

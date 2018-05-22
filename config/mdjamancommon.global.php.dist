@@ -15,5 +15,5 @@ $settings = array(
  * You do not need to edit below this line
  */
 return array(
-    'mdjamancommon' => $settings
+    'mdjaman_common' => $settings
 );

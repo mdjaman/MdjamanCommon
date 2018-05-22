@@ -25,9 +25,9 @@
 
 namespace MdjamanCommon\Factory\Options;
 
+use Interop\Container\ContainerInterface;
 use MdjamanCommon\Options\ModuleOptions;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Class ModuleOptionsFactory
@@ -37,13 +37,14 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ModuleOptionsFactory implements FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface $sl
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
      * @return ModuleOptions
      */
-    public function createService(ServiceLocatorInterface $sl)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $sl->get('Config');
+        $config = $container->get('Config');
         return new ModuleOptions(isset($config['mdjaman_common']) ? $config['mdjaman_common'] : []);
     }
-
 }

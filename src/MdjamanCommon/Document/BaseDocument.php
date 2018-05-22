@@ -45,7 +45,14 @@ abstract class BaseDocument implements ModelInterface
 
     use SoftDeleteableDocument;
 
+    /**
+     * @var mixed
+     */
     protected $__fields;
+
+    /**
+     * @var string
+     */
     protected $__name;
 
     /**
@@ -113,6 +120,8 @@ abstract class BaseDocument implements ModelInterface
 
     /**
      * update attributes of an entity by array
+     * @param array $data
+     * @return $this
      */
     public function exchangeArray($data)
     {
@@ -127,6 +136,7 @@ abstract class BaseDocument implements ModelInterface
                 $this->$key = $val;
             }
         }
+        return $this;
     }
 
     /**
@@ -154,7 +164,7 @@ abstract class BaseDocument implements ModelInterface
      */
     public function __toString()
     {
-         return $this->getId();
+         return (string) $this->getId();
     }
 
     /**

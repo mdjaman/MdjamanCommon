@@ -26,7 +26,6 @@
 namespace MdjamanCommon\Options;
 
 use Zend\Stdlib\AbstractOptions;
-use MdjamanBlog\Exception\InvalidArgumentException;
 
 /**
  * Class ModuleOptions

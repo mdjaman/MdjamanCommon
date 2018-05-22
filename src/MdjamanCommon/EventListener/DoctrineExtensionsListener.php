@@ -11,8 +11,7 @@ namespace MdjamanCommon\EventListener;
 use Doctrine\Common\EventArgs;
 use Gedmo\Blameable\BlameableListener;
 use Gedmo\Loggable\LoggableListener;
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Authentication\AuthenticationServiceInterface;
 
 /**
  * Class DoctrineExtensionsListener
@@ -21,10 +20,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class DoctrineExtensionsListener
 {
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $sl;
 
     /**
      * @var BlameableListener
@@ -36,16 +31,18 @@ class DoctrineExtensionsListener
      */
     protected $loggableListener = null;
 
-    protected $authServiceName;
+    /**
+     * @var mixed
+     */
+    protected $authenticationService;
+    
     
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param string $authSceName
+     * @param AuthenticationServiceInterface $authenticationService
      */
-    public function __construct(ServiceLocatorInterface $serviceLocator, $authSceName = 'zfcuser_auth_service')
+    public function __construct(AuthenticationServiceInterface $authenticationService)
     {
-        $this->sl = $serviceLocator;
-        $this->authServiceName = $authSceName;
+        $this->authenticationService = $authenticationService;
     }
 
     /**
@@ -73,21 +70,8 @@ class DoctrineExtensionsListener
     protected function onEvent(EventArgs $event)
     {
         try {
-            if (is_string($this->authServiceName)) {
-                if (!$this->sl->has($this->authServiceName)) {
-                    throw new \Exception(sprintf('Couldn\'t find Service %s', $this->authServiceName));
-                }
-                $authenticationService = $this->sl->get($this->authServiceName);
-            } else {
-                $authenticationService = $this->authServiceName;
-            }
-
-            if (!$authenticationService instanceof AuthenticationService) {
-                return;
-            }
-
-            if ($authenticationService->hasIdentity()) {
-                $identity = $authenticationService->getIdentity();
+            if ($this->authenticationService->hasIdentity()) {
+                $identity = $this->authenticationService->getIdentity();
 
                 if (method_exists($event, 'getEntityManager')) {
                     $objectManager = $event->getEntityManager();
@@ -100,31 +84,29 @@ class DoctrineExtensionsListener
                     foreach ($listeners as $listener) {
                         if ($listener instanceof BlameableListener) {
                             $this->blameableListener = $listener;
-
                             continue;
                         }
                         if ($listener instanceof LoggableListener) {
                             $this->loggableListener = $listener;
-
                             continue;
                         }
                     }
                 }
 
-                if (null != $this->blameableListener) {
+                if (null !== $this->blameableListener) {
                     $this->blameableListener->setUserValue($identity);
                     $evtManager->addEventSubscriber($this->blameableListener);
                 }
 
-                if (null != $this->loggableListener) {
+                if (null !== $this->loggableListener) {
                     $this->loggableListener->setUsername($identity->getId());
                     $evtManager->addEventSubscriber($this->loggableListener);
                 }
             }            
         } catch (\Exception $ex) {
-            return;
         }
-
+        
+        return;
     }
 
 }

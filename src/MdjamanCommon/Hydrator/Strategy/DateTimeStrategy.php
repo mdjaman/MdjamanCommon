@@ -30,7 +30,7 @@
 
 namespace MdjamanCommon\Hydrator\Strategy;
 
-use Zend\Stdlib\Hydrator\Strategy\DefaultStrategy;
+use Zend\Hydrator\Strategy\DefaultStrategy;
 
 /**
  * Class DateTimeStrategy
@@ -54,7 +54,7 @@ class DateTimeStrategy extends DefaultStrategy
     /**
      * {@inheritdoc}
      *
-     * Convert a string value intoa DateTime object
+     * Convert a string value into a DateTime object
      */
     public function hydrate($value)
     {

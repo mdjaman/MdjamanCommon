@@ -25,8 +25,12 @@
 
 namespace MdjamanCommon\Factory\Service;
 
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
 use MdjamanCommon\Service\LogEntryService;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -47,4 +51,23 @@ class LogEntryServiceFactory implements FactoryInterface
         return new LogEntryService($sl, $om, $options);
     }
 
+    /**
+     * Create an object
+     *
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return object
+     * @throws ServiceNotFoundException if unable to resolve the service.
+     * @throws ServiceNotCreatedException if an exception is raised when
+     *     creating a service.
+     * @throws ContainerException if any other error occurs
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $om = $container->has('doctrine.entitymanager.orm_default') ?
+            $container->get('doctrine.entitymanager.orm_default') : $container->get('doctrine.documentmanager.odm_default');
+        $options = $container->get('MdjamanCommon\Options\ModuleOptions');
+        return new LogEntryService($container, $om, $options);
+    }
 }

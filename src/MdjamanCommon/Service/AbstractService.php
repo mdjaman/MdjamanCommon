@@ -31,15 +31,15 @@
 namespace MdjamanCommon\Service;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Persistence\ObjectManager;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use JMS\Serializer\SerializationContext;
 use MdjamanCommon\Entity\BaseEntity;
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
-use MdjamanCommon\Provider\ServiceManagerAwareTrait;
-use JMS\Serializer\SerializationContext;
-use Doctrine\Common\Persistence\ObjectManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
-use Zend\Hydrator\HydratorInterface;
+use MdjamanCommon\Provider\ContainerAwareTrait;
 use MdjamanCommon\Model\ModelInterface;
+use Zend\Hydrator\HydratorInterface;
 
 /**
  * Class AbstractService
@@ -48,7 +48,7 @@ use MdjamanCommon\Model\ModelInterface;
  */
 abstract class AbstractService implements AbstractServiceInterface
 {
-    use ServiceManagerAwareTrait;
+    use ContainerAwareTrait;
     use EventManagerAwareTrait;
     use TriggerEventTrait;
 
@@ -126,7 +126,7 @@ abstract class AbstractService implements AbstractServiceInterface
     public function getHydrator()
     {
         if (!$this->hydrator) {
-            $this->hydrator = new DoctrineObject($this->objectManager, get_class($this->entity));
+            $this->hydrator = new DoctrineObject($this->objectManager);
         }
         return $this->hydrator;
     }
@@ -180,7 +180,7 @@ abstract class AbstractService implements AbstractServiceInterface
     public function setSerializer($serializer = null)
     {
         if (!$serializer) {
-            $serializer = $this->getServiceManager()->get('jms_serializer.serializer');
+            $serializer = $this->getContainer()->get('jms_serializer.serializer');
         }
         $this->serializer = $serializer;
     }
@@ -298,7 +298,7 @@ abstract class AbstractService implements AbstractServiceInterface
         if (null === $class) {
             $class = $this->getEntityClassName();
         }
-        return $this->getObjectManager()->getClassMetadata($class);
+        return $this->objectManager->getClassMetadata($class);
     }
 
     /**
@@ -518,9 +518,10 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * @param array $filters
      * @param array|null $orderBy
-     * @param null $limit
-     * @param null $offset
-     * @return array
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array|mixed
+     * @throws \Exception
      */
     public function filters(array $filters, array $orderBy = null, $limit = null, $offset = null)
     {
@@ -530,9 +531,10 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * @param array $filters
      * @param array|null $orderBy
-     * @param null|int $limit
-     * @param null|int $offset
+     * @param null $limit
+     * @param null $offset
      * @return mixed
+     * @throws \Exception
      */
     protected function getMatchingRecords(array $filters, array $orderBy = null, $limit = null, $offset = null)
     {
@@ -593,7 +595,6 @@ abstract class AbstractService implements AbstractServiceInterface
         } else {
             $class = $this->getEntity();
         }
-
         return $class;
     }
 
@@ -605,10 +606,10 @@ abstract class AbstractService implements AbstractServiceInterface
     public function setLogger($logger = 'Zend\\Log\\Logger', $isService = true)
     {
         if ($isService === true) {
-            if (!$this->getServiceManager()->has($logger)) {
+            if (!$this->getContainer()->has($logger)) {
                 throw new Exception\InvalidArgumentException('Logger service not found!');
             }
-            $logger = $this->getServiceManager()->get($logger);
+            $logger = $this->getContainer()->get($logger);
         }
         $this->logger = $logger;
         return $this;

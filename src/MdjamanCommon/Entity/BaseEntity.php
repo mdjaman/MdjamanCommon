@@ -33,8 +33,8 @@ namespace MdjamanCommon\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use MdjamanCommon\Model\ModelInterface;
-use MdjamanCommon\Traits\SoftDeleteableEntity;
 
 /**
  * @ORM\MappedSuperclass
@@ -46,7 +46,14 @@ abstract class BaseEntity implements ModelInterface
     
     use SoftDeleteableEntity;
 
+    /**
+     * @var mixed
+     */
     protected $__fields;
+
+    /**
+     * @var string
+     */
     protected $__name;
 
     /**
@@ -64,8 +71,16 @@ abstract class BaseEntity implements ModelInterface
     protected $updated_at;
 
 
+    /**
+     * @return int|string
+     */
     public abstract function getId();
 
+
+    /**
+     * BaseEntity constructor.
+     * @throws \ReflectionException
+     */
     public function __construct()
     {
         $reflection = new \ReflectionClass($this);
@@ -94,11 +109,17 @@ abstract class BaseEntity implements ModelInterface
         $this->updated_at = new \DateTime("now");
     }
 
+    /**
+     * @return \DateTime|null
+     */
     public function getUpdatedAt()
     {
         return $this->updated_at;
     }
 
+    /**
+     * @return \DateTime|null
+     */
     public function getCreatedAt()
     {
         return $this->created_at;
@@ -122,12 +143,18 @@ abstract class BaseEntity implements ModelInterface
         }
     }
 
+    /**
+     * @return array
+     */
     public function getArrayCopy()
     {
         $obj_vars = get_object_vars($this);
         return $obj_vars;
     }
 
+    /**
+     * @return array|null
+     */
     public function toArray()
     {
         $data = array();
@@ -137,10 +164,12 @@ abstract class BaseEntity implements ModelInterface
         return (count($data) > 0) ? $data : null;
     }
 
+    /**
+     * @return int|string
+     */
     public function __toString()
     {
-        //return "[" . get_class($this) . " #" . $this->getId() . "]";
-         return $this->getId();
+         return (string) $this->getId();
     }
 
     /**

@@ -32,8 +32,8 @@ namespace MdjamanCommon\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Tool\Wrapper\EntityWrapper;
+use Interop\Container\ContainerInterface;
 use MdjamanCommon\Options\ModuleOptionsInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class LogEntryService
@@ -64,11 +64,11 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
 
     /**
      * LogEntryService constructor.
-     * @param ServiceManager $serviceManager
+     * @param ContainerInterface $container
      * @param ObjectManager $om
      * @param ModuleOptionsInterface $moduleOptions
      */
-    public function __construct(ServiceManager $serviceManager, ObjectManager $om, ModuleOptionsInterface $moduleOptions)
+    public function __construct(ContainerInterface $container, ObjectManager $om, ModuleOptionsInterface $moduleOptions)
     {
         $entityClass = $moduleOptions->getLogEntryEntityClass();
         parent::__construct(new $entityClass, $om);
@@ -76,7 +76,7 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
         $this->options = $moduleOptions;
         $this->userEntity = $moduleOptions->getUserEntityClass();
 
-        $this->setServiceManager($serviceManager);
+        $this->setContainer($container);
     }
 
     /**

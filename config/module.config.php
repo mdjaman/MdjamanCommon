@@ -25,21 +25,23 @@
 
 namespace MdjamanCommon;
 
-return array(
-    'service_manager' => array(
-        'factories' => array(
-            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
-            'MdjamanCommon\Options\ModuleOptions' => Factory\Options\ModuleOptionsFactory::class,
-            'MdjamanCommon\Service\LogEntry' => Factory\Service\LogEntryServiceFactory::class,
-        ),
-        'invokables' => array(
-            'mdjaman_event_manager'   => 'Zend\EventManager\SharedEventManager',
-            'Form\Upload'  => Form\UploadForm::class,
-        ),
-    ),
-    'controller_plugins' => array(
-        'invokables' => array(
-            'translate' => Controller\Plugin\Translate::class,
-        ),
-    ),
-);
+use MdjamanCommon\Options\ModuleOptions;
+use MdjamanCommon\Service\LogEntryService;
+use Zend\EventManager\SharedEventManager;
+use Zend\ServiceManager\Factory\InvokableFactory;
+
+return [
+    'service_manager' => [
+        'aliases' => [
+            'Form\Upload' => Form\UploadForm::class,
+        ],
+        'factories' => [
+            ModuleOptions::class => Factory\Options\ModuleOptionsFactory::class,
+            LogEntryService::class => Factory\Service\LogEntryServiceFactory::class,
+            Form\UploadForm::class => InvokableFactory::class,
+        ],
+        'invokables' => [
+            'mdjaman_event_manager' => SharedEventManager::class,
+        ],
+    ],
+];
