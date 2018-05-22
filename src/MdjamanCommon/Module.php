@@ -34,7 +34,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use MdjamanCommon\EventListener\DoctrineExtensionsListener;
 use MdjamanCommon\EventManager\DoctrineEvents;
 use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
@@ -45,7 +44,6 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
  */
 class Module implements
     ConfigProviderInterface, 
-    AutoloaderProviderInterface, 
     BootstrapListenerInterface
 {
 
