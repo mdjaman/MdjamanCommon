@@ -33,7 +33,7 @@
         "zendframework/zend-eventmanager": "^3.0",
         "zendframework/zend-stdlib": "^3.0",
         "zendframework/zend-i18n": "2.*",
-        "doctrine/doctrine-module": "~2.0",
+        "doctrine/doctrine-module": "2.0.*",
         "mdjaman/jms-serializer-module": "2.*",
         "gedmo/doctrine-extensions": "dev-master"
     },
@@ -54,5 +54,10 @@
         "classmap": [
             "./Module.php"
         ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.4-dev"
+        }
     }
 }
