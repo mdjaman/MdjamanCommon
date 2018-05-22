@@ -28,7 +28,7 @@ namespace MdjamanCommon\Service;
 use Doctrine\Common\Persistence\ObjectManager;
 use MdjamanCommon\Entity\BaseEntity;
 use MdjamanCommon\Model\ModelInterface;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 /**
  * Interface AbstractServiceInterface

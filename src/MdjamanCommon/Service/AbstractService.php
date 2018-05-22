@@ -38,7 +38,7 @@ use MdjamanCommon\Provider\ServiceManagerAwareTrait;
 use JMS\Serializer\SerializationContext;
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 use MdjamanCommon\Model\ModelInterface;
 
 /**
@@ -147,6 +147,7 @@ abstract class AbstractService implements AbstractServiceInterface
      * Use this method to ensure that you're working with an array.
      *
      * @param object $entity
+     * @param HydratorInterface|null $hydrator
      * @return array
      */
     public function toArray($entity, HydratorInterface $hydrator = null)
@@ -163,7 +164,7 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @return \JMS\Serializer\Serializer
+     * @return \JMS\Serializer\SerializerInterface
      */
     public function getSerializer()
     {
@@ -174,7 +175,7 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param null $serializer
+     * @param mixed $serializer
      */
     public function setSerializer($serializer = null)
     {
@@ -425,8 +426,9 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * @param array|BaseEntity $entity
      * @param bool $flush
-     * @param string $event Overrides the default event name
-     * @return BaseEntity
+     * @param null|string $event
+     * @return array|BaseEntity|mixed|null
+     * @throws \Exception
      */
     public function save($entity, $flush = true, $event = null)
     {
@@ -495,7 +497,7 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * enable/disable entityManager softDeleteable
      * @param boolean $enable
-     * @return void
+     * @return $this
      */
     public function enableSoftDeleteableFilter($enable = true)
     {
@@ -564,6 +566,7 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * @param array $filters
      * @return Criteria
+     * @throws \Exception
      */
     protected function buildCriteria(array $filters)
     {

@@ -50,7 +50,7 @@ abstract class AbstractDocumentService
     use EventManagerAwareTrait;
     use TriggerEventTrait;
 
-    /* @var Doctrine\Common\Persistence\ObjectManager */
+    /* @var ObjectManager */
     protected $objectManager;
     protected $document;
     protected $hydrator;
@@ -293,7 +293,7 @@ abstract class AbstractDocumentService
 
     /**
      * @param array $criteria
-     * @return Document\Base
+     * @return BaseDocument
      *
      * @triggers findOneBy.pre
      * @triggers findOneBy.post
@@ -381,7 +381,7 @@ abstract class AbstractDocumentService
      * @param array|BaseDocument $document
      * @param bool $flush
      * @param string $event Overrides the default event name
-     * @return Document\Base
+     * @return BaseDocument
      */
     public function save($document, $flush = false, $event = null)
     {
@@ -416,7 +416,7 @@ abstract class AbstractDocumentService
     /**
      * @param string|array|BaseDocument $document
      * @param bool $flush
-     * @return Document\Base
+     * @return BaseDocument
      */
     public function delete($document, $flush = false)
     {
