@@ -32,13 +32,13 @@ namespace MdjamanCommon\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableDocument;
 use MdjamanCommon\Model\ModelInterface;
+use MdjamanCommon\Traits\SoftDeleteableDocument;
 
 /**
  * @ODM\MappedSuperclass
  * @ODM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ * @Gedmo\SoftDeleteable(fieldName="deleted_at", timeAware=false)
  */
 abstract class BaseDocument implements ModelInterface
 {
@@ -190,5 +190,4 @@ abstract class BaseDocument implements ModelInterface
         $this->updated_at = $updated_at;
         return $this;
     }
-
 }

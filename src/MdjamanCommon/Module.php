@@ -52,23 +52,25 @@ class Module implements
      */
     public function onBootstrap(EventInterface $e)
     {
-        $application = $e->getApplication();
-        $sm = $application->getServiceManager();
+        $sm = $e->getTarget()->getServiceManager();
 
         $objectManager = null;
 
-        if ($sm->has('doctrine.entitymanager.orm_default')) {
-            $objectManager = $sm->get('doctrine.entitymanager.orm_default');
-        } elseif ($sm->has('doctrine.documentmanager.odm_default')) {
-            $objectManager = $sm->get('doctrine.documentmanager.odm_default');
-        }
+        if ($sm->has('mdjaman_auth_service')) {
+            if ($sm->has('doctrine.entitymanager.orm_default')) {
+                $objectManager = $sm->get('doctrine.entitymanager.orm_default');
+            } elseif ($sm->has('doctrine.documentmanager.odm_default')) {
+                $objectManager = $sm->get('doctrine.documentmanager.odm_default');
+            }
 
-        if ($objectManager instanceof ObjectManager) {
-            $dem = $objectManager->getEventManager();
-            $dem->addEventListener(
-                array(DoctrineEvents::preFlush),
-                new DoctrineExtensionsListener($sm)
-            );
+            /* @var $objectManager ObjectManager */
+            if ($objectManager instanceof ObjectManager) {
+                $dem = $objectManager->getEventManager();
+                $dem->addEventListener(
+                    array(DoctrineEvents::preFlush),
+                    new DoctrineExtensionsListener($sm)
+                );
+            }
         }
     }
 
