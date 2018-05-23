@@ -27,6 +27,7 @@ namespace MdjamanCommon\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use MdjamanCommon\Model\ModelInterface;
+use Psr\Log\LoggerInterface;
 use Zend\Hydrator\HydratorInterface;
 
 /**
@@ -217,7 +218,7 @@ interface AbstractServiceInterface
     public function setLogger($logger = null);
 
     /**
-     * @return mixed
+     * @return LoggerInterface
      */
     public function getLogger();
 

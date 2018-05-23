@@ -37,7 +37,6 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
-use MdjamanCommon\Provider\ContainerAwareTrait;
 use MdjamanCommon\Model\ModelInterface;
 use Psr\Log\LoggerInterface;
 use Zend\Hydrator\HydratorInterface;
@@ -52,7 +51,6 @@ use Zend\Log\Writer\Stream;
  */
 abstract class AbstractService implements AbstractServiceInterface
 {
-    use ContainerAwareTrait;
     use EventManagerAwareTrait;
     use TriggerEventTrait;
 
@@ -87,9 +85,10 @@ abstract class AbstractService implements AbstractServiceInterface
     protected $logEntryEntity = 'Gedmo\\Loggable\\Entity\\LogEntry';
 
     /**
-     * @var mixed
+     * @var LoggerInterface
      */
     protected $logger;
+
 
     /**
      * AbstractService constructor.
