@@ -34,12 +34,16 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use JMS\Serializer\SerializationContext;
-use MdjamanCommon\Entity\BaseEntity;
+use JMS\Serializer\SerializerInterface;
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
 use MdjamanCommon\Provider\ContainerAwareTrait;
 use MdjamanCommon\Model\ModelInterface;
+use Psr\Log\LoggerInterface;
 use Zend\Hydrator\HydratorInterface;
+use Zend\Log\Logger;
+use Zend\Log\Processor\PsrPlaceholder;
+use Zend\Log\Writer\Stream;
 
 /**
  * Class AbstractService
@@ -176,20 +180,29 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param mixed $serializer
+     * @return $this
      */
     public function setSerializer($serializer = null)
     {
         if (!$serializer) {
-            $serializer = $this->getContainer()->get('jms_serializer.serializer');
+            $serializer = \JMS\Serializer\SerializerBuilder::create()
+                ->setPropertyNamingStrategy(
+                    new \JMS\Serializer\Naming\SerializedNameAnnotationStrategy(
+                        new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
+                    )
+                )
+                ->build();
         }
         $this->serializer = $serializer;
+        return $this;
     }
 
     /**
-     * @param array|BaseEntity $entity
+     * @param array|ModelInterface $entity
      * @param string $format
-     * @param array|null $groups
-     * @return string
+     * @param null $groups
+     * @return mixed|string
+     * @throws \Exception
      */
     public function serialize($entity, $format = 'json', $groups = null)
     {
@@ -197,6 +210,10 @@ abstract class AbstractService implements AbstractServiceInterface
             throw new Exception\InvalidArgumentException('Format ' . $format . ' is not valid');
         }
         $serializer = $this->getSerializer();
+        
+        if (!$serializer instanceof SerializerInterface) {
+            throw new \Exception('Serializer service must be instance of ' . get_class(SerializerInterface::class));
+        }
         
         $context = SerializationContext::create()->enableMaxDepthChecks();
         $groups = (array) $groups;
@@ -213,8 +230,8 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param array $data
-     * @param BaseEntity|null $entity
-     * @return BaseEntity|mixed|null
+     * @param ModelInterface|null $entity
+     * @return ModelInterface|mixed|null
      * @throws \Exception
      */
     public function hydrate($data, $entity = null)
@@ -246,7 +263,7 @@ abstract class AbstractService implements AbstractServiceInterface
      * one whose FQDN is stored in the className property.
      *
      * @param string $entityName
-     * @return BaseEntity|mixed
+     * @return ModelInterface|mixed
      * @throws \Exception
      */
     public function createEntity($entityName = null)
@@ -306,7 +323,7 @@ abstract class AbstractService implements AbstractServiceInterface
      * From Loggable behavioral extension for Gedmo
      *
      * @param ModelInterface $entity
-     * @return void
+     * @return mixed
      */
     public function getLogEntries(ModelInterface $entity)
     {
@@ -316,7 +333,7 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param string $id
-     * @return BaseEntity
+     * @return ModelInterface
      *
      * @triggers find.pre
      * @triggers find.post
@@ -339,7 +356,7 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param array $criteria
-     * @return BaseEntity
+     * @return ModelInterface
      *
      * @triggers findOneBy.pre
      * @triggers findOneBy.post
@@ -424,10 +441,10 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param array|BaseEntity $entity
+     * @param array|ModelInterface $entity
      * @param bool $flush
      * @param null|string $event
-     * @return array|BaseEntity|mixed|null
+     * @return array|ModelInterface|mixed|null
      * @throws \Exception
      */
     public function save($entity, $flush = true, $event = null)
@@ -464,9 +481,9 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param string|array|BaseEntity $entity
+     * @param string|array|ModelInterface $entity
      * @param bool $flush
-     * @return BaseEntity
+     * @return ModelInterface
      */
     public function delete($entity, $flush = true)
     {
@@ -558,11 +575,12 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * @param array $filters
      * @return int
+     * @throws \Exception
      */
     public function countMatchingRecords($filters)
     {
-        $matchings = $this->filters($filters);
-        return count($matchings);
+        $matches = $this->filters($filters);
+        return count($matches);
     }
 
     /**
@@ -599,24 +617,25 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param string $logger
-     * @param bool $isService
+     * @param mixed $logger
      * @return $this
      */
-    public function setLogger($logger = 'Zend\\Log\\Logger', $isService = true)
+    public function setLogger($logger = null)
     {
-        if ($isService === true) {
-            if (!$this->getContainer()->has($logger)) {
-                throw new Exception\InvalidArgumentException('Logger service not found!');
-            }
-            $logger = $this->getContainer()->get($logger);
+        if (!$logger) {
+            $writer = new Stream([
+                'stream' => 'php://output',
+            ]);
+            $logger = new Logger();
+            $logger->addWriter($writer);
+            $logger->addProcessor(new PsrPlaceholder);
         }
         $this->logger = $logger;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return LoggerInterface
      */
     public function getLogger()
     {

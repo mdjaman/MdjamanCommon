@@ -26,7 +26,6 @@
 namespace MdjamanCommon\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use MdjamanCommon\Entity\BaseEntity;
 use MdjamanCommon\Model\ModelInterface;
 use Zend\Hydrator\HydratorInterface;
 
@@ -81,7 +80,7 @@ interface AbstractServiceInterface
     public function setSerializer($serializer = null);
 
     /**
-     * @param array|\MdjamanCommon\Entity\BaseEntity $entity
+     * @param array|ModelInterface $entity
      * @param string $format
      * @param array|null $groups
      * @return string
@@ -90,8 +89,8 @@ interface AbstractServiceInterface
 
     /**
      * @param array $data
-     * @param \MdjamanCommon\Entity\BaseEntity $entity
-     * @return \MdjamanCommon\Entity\BaseEntity
+     * @param ModelInterface $entity
+     * @return ModelInterface
      */
     public function hydrate($data, $entity = null);
 
@@ -100,7 +99,7 @@ interface AbstractServiceInterface
      * one whose FQDN is stored in the className property.
      *
      * @param string $entityName
-     * @return \MdjamanCommon\Entity\BaseEntity
+     * @return ModelInterface
      * @throws \Exception
      */
     public function createEntity($entityName = null);
@@ -133,7 +132,7 @@ interface AbstractServiceInterface
 
     /**
      * @param string $id
-     * @return BaseEntity
+     * @return ModelInterface
      *
      * @triggers find.pre
      * @triggers find.post
@@ -143,7 +142,7 @@ interface AbstractServiceInterface
 
     /**
      * @param array $criteria
-     * @return BaseEntity
+     * @return ModelInterface
      *
      * @triggers findOneBy.pre
      * @triggers findOneBy.post
@@ -175,17 +174,17 @@ interface AbstractServiceInterface
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * @param array|BaseEntity $entity
+     * @param array|ModelInterface $entity
      * @param bool $flush
      * @param string $event Overrides the default event name
-     * @return BaseEntity
+     * @return ModelInterface
      */
     public function save($entity, $flush = true, $event = null);
 
     /**
-     * @param string|array|BaseEntity $entity
+     * @param string|array|ModelInterface $entity
      * @param bool $flush
-     * @return BaseEntity
+     * @return ModelInterface
      */
     public function delete($entity, $flush = true);
 
@@ -213,9 +212,9 @@ interface AbstractServiceInterface
 
     /**
      * @param mixed $logger
-     * @param bool $isService
+     * @return $this
      */
-    public function setLogger($logger = 'Zend\\Log\\Logger', $isService = true);
+    public function setLogger($logger = null);
 
     /**
      * @return mixed

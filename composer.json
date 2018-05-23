@@ -29,6 +29,7 @@
         "zendframework/zend-authentication": "2.*",
         "zendframework/zend-eventmanager": "^3.0",
         "zendframework/zend-stdlib": "^3.0",
+        "zendframework/zend-log": "2.*",
         "doctrine/doctrine-module": "1.2.*",
         "mdjaman/jms-serializer-module": "2.*",
         "gedmo/doctrine-extensions": "dev-master"
