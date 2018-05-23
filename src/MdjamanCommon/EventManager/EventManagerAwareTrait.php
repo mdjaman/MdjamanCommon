@@ -55,7 +55,7 @@ trait EventManagerAwareTrait
     {
         if (!$this->events instanceof EventManager\EventManagerInterface) {
             $this->setEventManager(new EventManager\EventManager());
-            if ($this instanceof ServiceManager\ServiceManagerAwareInterface) {
+            if ($this instanceof ServiceManager\ServiceLocatorInterface) {
                 $this->getEventManager()->setSharedManager($this->getServiceManager()->get('mdjaman_event_manager'));
             }
         }

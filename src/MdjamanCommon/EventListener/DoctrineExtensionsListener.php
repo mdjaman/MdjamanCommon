@@ -32,7 +32,7 @@ class DoctrineExtensionsListener
     protected $loggableListener = null;
 
     /**
-     * @var mixed
+     * @var AuthenticationServiceInterface
      */
     protected $authenticationService;
     
