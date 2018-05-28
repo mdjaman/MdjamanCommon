@@ -39,7 +39,6 @@ use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
 use MdjamanCommon\Model\ModelInterface;
 use Psr\Log\LoggerInterface;
-use Zend\Hydrator\ClassMethods;
 use Zend\Hydrator\HydratorInterface;
 use Zend\Log\Logger;
 use Zend\Log\Processor\PsrPlaceholder;
@@ -246,11 +245,10 @@ abstract class AbstractService implements AbstractServiceInterface
         extract($argv);
 
         try {
-            $hydrator = new DoctrineObject($this->objectManager);
-            @$hydrator->hydrate($data, $entity);
+            @$this->getHydrator()->hydrate($data, $entity);
         } catch (\Exception $ex) {
-            $hydrator = new ClassMethods();
-            $hydrator->hydrate($data, $entity);
+            $hydrator = $this->objectManager->getHydratorFactory();
+            $hydrator->hydrate($entity, $data);
         }
 
         $this->triggerEvent(__FUNCTION__.'.post', $argv);
