@@ -46,9 +46,9 @@ abstract class BaseDocument implements ModelInterface
     use SoftDeleteableDocument;
 
     /**
-     * @var mixed
+     * @var array
      */
-    protected $__fields;
+    protected $__fields = [];
 
     /**
      * @var string
@@ -81,8 +81,9 @@ abstract class BaseDocument implements ModelInterface
         $this->__name = get_class($this);
         $vars = $reflection->getDefaultProperties();
         foreach ($vars as $name => $val) {
-            if (substr($name, 0, 1) !== '_')
-                $this->__fields[] = strtolower($name);
+            if (substr($name, 0, 1) !== '_') {
+                $this->__fields[] = $name;
+            }
         }
     }
 
@@ -127,16 +128,9 @@ abstract class BaseDocument implements ModelInterface
     {
         foreach ($data as $key => $val) {
             if (in_array($key, $this->__fields)) {
-                if (is_array($val)) {
-                    $iterator = new \RecursiveArrayIterator($val);
-                    if ($iterator->hasChildren()) {
-                        continue;
-                    }
-                }
                 $this->$key = $val;
             }
         }
-        return $this;
     }
 
     /**

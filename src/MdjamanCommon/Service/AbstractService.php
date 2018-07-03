@@ -211,7 +211,8 @@ abstract class AbstractService implements AbstractServiceInterface
         $serializer = $this->getSerializer();
         
         if (!$serializer instanceof SerializerInterface) {
-            throw new \Exception('Serializer service must be instance of ' . get_class(SerializerInterface::class));
+            throw new \Exception('Serializer service must be instance of ' .
+                get_class(SerializerInterface::class));
         }
         
         $context = SerializationContext::create()->enableMaxDepthChecks();
@@ -245,7 +246,7 @@ abstract class AbstractService implements AbstractServiceInterface
         extract($argv);
 
         try {
-            @$this->getHydrator()->hydrate($data, $entity);
+            $entity = $this->getHydrator()->hydrate($data, $entity);
         } catch (\Exception $ex) {
             $hydrator = $this->objectManager->getHydratorFactory();
             $hydrator->hydrate($entity, $data);
