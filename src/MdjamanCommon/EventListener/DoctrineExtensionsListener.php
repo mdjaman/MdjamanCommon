@@ -35,8 +35,8 @@ class DoctrineExtensionsListener
      * @var AuthenticationServiceInterface
      */
     protected $authenticationService;
-    
-    
+
+
     /**
      * @param AuthenticationServiceInterface $authenticationService
      */
@@ -53,7 +53,7 @@ class DoctrineExtensionsListener
     {
         return $this->onEvent($event);
     }
-    
+
     /**
      * @param EventArgs $event
      * @return void
@@ -62,7 +62,7 @@ class DoctrineExtensionsListener
     {
         return $this->onEvent($event);
     }
-    
+
     /**
      * @param EventArgs $event
      * @return void
@@ -108,5 +108,4 @@ class DoctrineExtensionsListener
         
         return;
     }
-
 }

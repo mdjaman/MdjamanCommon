@@ -27,6 +27,7 @@
  * @copyright 2015 Marcel Djaman
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
+
 namespace MdjamanCommon\EventManager;
 
 use Zend\EventManager\ResponseCollection;

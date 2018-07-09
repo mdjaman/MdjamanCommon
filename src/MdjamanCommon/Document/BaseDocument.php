@@ -46,16 +46,6 @@ abstract class BaseDocument implements ModelInterface
     use SoftDeleteableDocument;
 
     /**
-     * @var array
-     */
-    protected $__fields = [];
-
-    /**
-     * @var string
-     */
-    protected $__name;
-
-    /**
      * @var \DateTime
      * @ODM\Field(name="created_at", type="date")
      */
@@ -71,21 +61,6 @@ abstract class BaseDocument implements ModelInterface
      * @return string
      */
     public abstract function getId();
-
-    /**
-     * BaseDocument constructor.
-     */
-    public function __construct()
-    {
-        $reflection = new \ReflectionClass($this);
-        $this->__name = get_class($this);
-        $vars = $reflection->getDefaultProperties();
-        foreach ($vars as $name => $val) {
-            if (substr($name, 0, 1) !== '_') {
-                $this->__fields[] = $name;
-            }
-        }
-    }
 
     /**
      * @ODM\PrePersist
@@ -120,14 +95,14 @@ abstract class BaseDocument implements ModelInterface
     }
 
     /**
-     * update attributes of an entity by array
      * @param array $data
-     * @return $this
+     * @return mixed|void
+     * @throws \ReflectionException
      */
     public function exchangeArray($data)
     {
         foreach ($data as $key => $val) {
-            if (in_array($key, $this->__fields)) {
+            if (in_array($key, $this->getFields())) {
                 $this->$key = $val;
             }
         }
@@ -143,11 +118,12 @@ abstract class BaseDocument implements ModelInterface
 
     /**
      * @return array|null
+     * @throws \ReflectionException
      */
     public function toArray()
     {
         $data = array();
-        foreach ($this->__fields as $field) {
+        foreach ($this->getFields() as $field) {
             $data[$field] = $this->$field;
         }
         return (count($data) > 0) ? $data : null;
@@ -183,5 +159,30 @@ abstract class BaseDocument implements ModelInterface
     {
         $this->updated_at = $updated_at;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentName()
+    {
+        return get_class($this);
+    }
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getDocumentFields()
+    {
+        $reflection = new \ReflectionClass($this);
+        $vars = $reflection->getDefaultProperties();
+        $fields = [];
+        foreach ($vars as $name => $val) {
+            if (substr($name, 0, 1) !== '_') {
+                $fields[] = $name;
+            }
+        }
+        return $fields;
     }
 }

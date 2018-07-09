@@ -92,5 +92,15 @@ interface ModelInterface
      * @return BaseEntity
      */
     public function setUpdatedAt($updatedAt);
-    
+
+    /**
+     * @return string
+     */
+    public function getDocumentName();
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getDocumentFields();
 }

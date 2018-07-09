@@ -185,7 +185,12 @@ class StringUtils
      */
     public static function camelCaseToSnakeCase($input, $splitter = "_")
     {
-        return ctype_lower($input) ? $input : str_replace(array("-", "_", "{$splitter}{$splitter}"), $splitter, ltrim(strtolower(preg_replace("/[A-Z]/", "{$splitter}$0", $input)), $splitter));
+        return ctype_lower($input) ? $input :
+            str_replace(
+                array("-", "_", "{$splitter}{$splitter}"),
+                $splitter,
+                ltrim(strtolower(preg_replace("/[A-Z]/", "{$splitter}$0", $input)), $splitter)
+            );
     }
 
     /**

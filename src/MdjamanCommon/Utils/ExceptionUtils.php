@@ -39,4 +39,35 @@ abstract class ExceptionUtils
     const OBJECT_DELETION_ERR = 'Objet %s ayant pour identifiant "%s" n\'a pu être supprimé!';
     const ID_NOT_FOUND_ERR = 'ID "id" est un champ obligatoire!';
     const PERMISSIONS_DENIED = 'Accès à la ressource %s a été refusé à l\'utilisateur %s';
+    const SYSTEM_MSG = '%s:%d %s (%d) [%s]\n';
+
+
+    /**
+     * @param \Exception $e
+     * @return string
+     */
+    public static function sysMsg(\Exception $e)
+    {
+        return sprintf(
+            static::SYSTEM_MSG,
+            $e->getFile(),
+            $e->getLine(),
+            $e->getMessage(),
+            $e->getCode(),
+            get_class($e)
+        );
+    }
+
+    /**
+     * @param array $messages
+     * @return string
+     */
+    public static function filterValidationMessage(array $messages)
+    {
+        $errMessage = static::FORM_VALIDATE_ERR;
+        foreach ($messages as $k => $invalid) {
+            $errMessage .= sprintf(' [%s] %s.', $k, array_shift($invalid));
+        }
+        return $errMessage;
+    }
 }

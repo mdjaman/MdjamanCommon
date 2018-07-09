@@ -32,7 +32,7 @@ namespace MdjamanCommon\Form;
 
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\Provider\ServiceManagerAwareTrait;
-use Zend\Form\Element;
+use Zend\Form\Element\Csrf;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 
@@ -93,7 +93,7 @@ class BaseForm extends Form
         ));
 
         if ($crsfField === true) {
-            $csrf = new Element\Csrf('csrf');
+            $csrf = new Csrf('csrf');
             $this->add($csrf);
         }
     }
