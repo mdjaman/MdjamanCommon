@@ -102,7 +102,7 @@ abstract class BaseDocument implements ModelInterface
     public function exchangeArray($data)
     {
         foreach ($data as $key => $val) {
-            if (in_array($key, $this->getFields())) {
+            if (in_array($key, $this->getDocumentFields())) {
                 $this->$key = $val;
             }
         }
@@ -123,7 +123,7 @@ abstract class BaseDocument implements ModelInterface
     public function toArray()
     {
         $data = array();
-        foreach ($this->getFields() as $field) {
+        foreach ($this->getDocumentFields() as $field) {
             $data[$field] = $this->$field;
         }
         return (count($data) > 0) ? $data : null;
