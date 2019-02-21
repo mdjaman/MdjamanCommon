@@ -623,7 +623,7 @@ abstract class AbstractService implements AbstractServiceInterface
     {
         if (!$logger) {
             $writer = new Stream([
-                'stream' => 'php://output',
+                'stream' => getcwd() . '/data/log/application.log',
             ]);
             $logger = new Logger();
             $logger->addWriter($writer);
