@@ -13,7 +13,9 @@ class BaseEntityRepository extends EntityRepository
 {
 
     /**
-     * @param $criteria
+     * Count query row results after applied criteria
+     *
+     * @param array|null $criteria
      * @return mixed
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -41,5 +43,55 @@ class BaseEntityRepository extends EntityRepository
             ->useResultCache(true, 3600, $cacheKey);
 
         return $query->getSingleScalarResult();
+    }
+
+    /**
+     * @param array|null $criteria
+     * @param null|string $sort
+     * @param int $dir
+     * @param null|int $limit
+     * @param null|int $offset
+     * @param array $params
+     * @return array
+     */
+    public function fullSearchText(
+        array $criteria = null,
+        $sort = null,
+        $dir = 1,
+        $limit = null,
+        $offset = null,
+        $params = []
+    ) {
+        $qb = $this->createQueryBuilder('e');
+
+        $x = 1;
+        foreach ($criteria as $key => $value) {
+            if ($key !== null) {
+                $qb->orWhere("e.$key = ?$x");
+                $qb->setParameter($x, $value);
+                ++$x;
+            }
+        }
+
+        foreach ($params as $k => $val) {
+            if ($k !== null) {
+                $qb->andWhere("e.$k = ?$x");
+                $qb->setParameter($x, $val);
+                ++$x;
+            }
+        }
+
+        $qb->addOrderBy('e.' . $sort, $dir);
+
+        $query = $qb->getQuery();
+
+        if (null !== $limit) {
+            $query->setMaxResults($limit);
+            if (null !== $offset) {
+                $query->setFirstResult($offset);
+            }
+        }
+
+        return $qb->getResult();
     }
 }

@@ -47,16 +47,6 @@ abstract class BaseEntity implements ModelInterface
     use SoftDeleteableEntity;
 
     /**
-     * @var mixed
-     */
-    protected $__fields;
-
-    /**
-     * @var string
-     */
-    protected $__name;
-
-    /**
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      * @JMS\Groups({"list", "details"})
@@ -70,28 +60,10 @@ abstract class BaseEntity implements ModelInterface
      */
     protected $updated_at;
 
-
     /**
      * @return int|string
      */
     public abstract function getId();
-
-
-    /**
-     * BaseEntity constructor.
-     * @throws \ReflectionException
-     */
-    public function __construct()
-    {
-        $reflection = new \ReflectionClass($this);
-        $this->__name = get_class($this);
-        $vars = $reflection->getDefaultProperties();
-        foreach ($vars as $name => $val) {
-            if (substr($name, 0, 1) !== '_') {
-                $this->__fields[] = $name;
-            }
-        }
-    }
 
     /**
      * @ORM\PrePersist
@@ -131,13 +103,7 @@ abstract class BaseEntity implements ModelInterface
     public function exchangeArray($data)
     {
         foreach ($data as $key => $val) {
-            if (in_array($key, $this->__fields)) {
-                if (is_array($val)) {
-                    $iterator = new \RecursiveArrayIterator($val);
-                    if ($iterator->hasChildren()) {
-                        continue;
-                    }
-                }
+            if (in_array($key, $this->getObjectFields())) {
                 $this->$key = $val;
             }
         }
@@ -148,17 +114,17 @@ abstract class BaseEntity implements ModelInterface
      */
     public function getArrayCopy()
     {
-        $obj_vars = get_object_vars($this);
-        return $obj_vars;
+        return get_object_vars($this);
     }
 
     /**
      * @return array|null
+     * @throws \ReflectionException
      */
     public function toArray()
     {
         $data = array();
-        foreach ($this->__fields as $field) {
+        foreach ($this->getObjectFields() as $field) {
             $data[$field] = $this->$field;
         }
         return (count($data) > 0) ? $data : null;
@@ -194,5 +160,30 @@ abstract class BaseEntity implements ModelInterface
     {
         $this->updated_at = $updatedAt;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassName()
+    {
+        return get_class($this);
+    }
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getClassFields()
+    {
+        $reflection = new \ReflectionClass($this);
+        $vars = $reflection->getDefaultProperties();
+        $fields = [];
+        foreach ($vars as $name => $val) {
+            if (substr($name, 0, 1) !== '_') {
+                $fields[] = $name;
+            }
+        }
+        return $fields;
     }
 }

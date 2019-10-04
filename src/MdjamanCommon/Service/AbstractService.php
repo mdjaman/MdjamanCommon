@@ -541,7 +541,63 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function filters(array $filters, array $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->getMatchingRecords($filters, $orderBy, $limit, $offset);
+        $searchParam = isset($filters['q']) ? $filters['q'] : '';
+        unset($filters['q']);
+        if ($searchParam === '') {
+            return $this->getMatchingRecords($filters, $orderBy, $limit, $offset);
+        }
+
+        if (! method_exists($this->getEntity(), 'getClassFields')) {
+            return $this->getMatchingRecords($filters, $orderBy, $limit, $offset);
+        }
+
+        if (! method_exists($this->getRepository(), 'fullSearchText')) {
+            return $this->getMatchingRecords($filters, $orderBy, $limit, $offset);
+        }
+
+        return $this->search($searchParam, $filters, $orderBy, $limit, $offset);
+    }
+
+
+    /**
+     * @param string $searchTerm
+     * @param array $filters
+     * @param array|null $orderBy
+     * @param null $limit
+     * @param null $offset
+     * @return mixed
+     */
+    public function search(
+        $searchTerm,
+        array $filters = [],
+        array $orderBy = null,
+        $limit = null,
+        $offset = null
+    ) {
+        $entity = $this->getEntity();
+        $fields = $entity->getClassFields();
+        $criteria = [];
+        foreach ($fields as $field) {
+            $criteria[$field] = $searchTerm;
+        }
+
+        $sort = null;
+        $dir = 1;
+        if (count($orderBy)) {
+            foreach ($orderBy as $k => $v) {
+                $sort = $k;
+                $dir = $v;
+            }
+        }
+
+        return $this->getRepository()->fullSearchText(
+            $criteria,
+            $sort,
+            $dir,
+            $limit,
+            $offset,
+            $filters
+        );
     }
 
     /**

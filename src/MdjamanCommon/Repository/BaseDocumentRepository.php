@@ -13,8 +13,9 @@ class BaseDocumentRepository extends DocumentRepository
 {
     /**
      * Count query row results after applied criteria
+     *
      * @param array|null $criteria
-     * @return string
+     * @return mixed
      */
     public function countResult(array $criteria = null)
     {

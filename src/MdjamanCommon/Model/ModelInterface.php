@@ -80,27 +80,27 @@ interface ModelInterface
     /**
      * Set createdAt
      *
-     * @param datetime $createdAt
-     * @return BaseEntity
+     * @param \DateTime $createdAt
+     * @return $this
      */
     public function setCreatedAt($createdAt);
 
     /**
      * Set updatedAt
      *
-     * @param datetime $updatedAt
-     * @return BaseEntity
+     * @param \DateTime $updatedAt
+     * @return $this
      */
     public function setUpdatedAt($updatedAt);
 
     /**
      * @return string
      */
-    public function getDocumentName();
+    public function getClassName();
 
     /**
      * @return array
      * @throws \ReflectionException
      */
-    public function getDocumentFields();
+    public function getClassFields();
 }
