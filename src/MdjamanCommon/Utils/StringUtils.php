@@ -2,7 +2,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Marcel Djaman
+ * Copyright (c) 2020 Marcel Djaman
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -11,22 +11,29 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @author Marcel Djaman <marceldjaman@gmail.com>
+ * @copyright 2020 Marcel Djaman
+ * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\Utils;
 
+use mb_strtoupper;
+
 /**
  * Class StringUtils
+ *
  * @package MdjamanCommon\Utils
  */
 class StringUtils
@@ -64,15 +71,19 @@ class StringUtils
 
         $crypto_rand_secure = function ($min, $max) {
             $range = $max - $min;
-            if ($range < 0) return $min; // not so random...
+            if ($range < 0) {
+                return $min;
+            }
+            // not so random...
             $log = log($range, 2);
-            $bytes = (int)($log / 8) + 1; // length in bytes
+            $bytes = (int) ($log / 8) + 1; // length in bytes
             $bits = (int)$log + 1; // length in bits
             $filter = (int)(1 << $bits) - 1; // set all lower bits to 1
             do {
                 $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
                 $rnd = $rnd & $filter; // discard irrelevant bits
             } while ($rnd >= $range);
+
             return $min + $rnd;
         };
 
@@ -86,6 +97,7 @@ class StringUtils
 
     /**
      * Truncate text
+     *
      * @param string $text
      * @param int $length
      * @param string $ending
@@ -95,6 +107,7 @@ class StringUtils
      */
     public static function truncate($text, $length = 150, $ending = '...', $exact = false, $considerHtml = false)
     {
+        $open_tags = [];
         if ($considerHtml) {
             if (strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
@@ -103,32 +116,50 @@ class StringUtils
             preg_match_all('/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER);
 
             $total_length = strlen($ending);
-            $open_tags = array();
             $truncate = '';
 
+            $htmlPattern =
+            '/^<(\s*.+?\/\s*|\s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(\s.+?)?)>$/is';
             foreach ($lines as $line_matchings) {
-                if (!empty($line_matchings[1])) {
+                if (! empty($line_matchings[1])) {
                     if (preg_match(
-                        '/^<(\s*.+?\/\s*|\s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(\s.+?)?)>$/is', $line_matchings[1])) {
-
-                    } else if (preg_match('/^<\s*\/([^\s]+?)\s*>$/s', $line_matchings[1], $tag_matchings)) {
+                        $htmlPattern,
+                        $line_matchings[1]
+                    )) {
+                    } elseif (preg_match(
+                        '/^<\s*\/([^\s]+?)\s*>$/s',
+                        $line_matchings[1],
+                        $tag_matchings
+                    )) {
                         $pos = array_search($tag_matchings[1], $open_tags);
                         if ($pos !== false) {
                             unset($open_tags[$pos]);
                         }
-                    } else if (preg_match('/^<s*([^s>!]+).*?>$/s', $line_matchings[1], $tag_matchings)) {
+                    } elseif (preg_match(
+                        '/^<s*([^s>!]+).*?>$/s',
+                        $line_matchings[1],
+                        $tag_matchings
+                    )) {
                         array_unshift($open_tags, strtolower($tag_matchings[1]));
                     }
                     $truncate .= $line_matchings[1];
                 }
                 $content_length = strlen(
                     preg_replace(
-                        '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $line_matchings[2]));
+                        '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i',
+                        ' ',
+                        $line_matchings[2]
+                    )
+                );
                 if ($total_length + $content_length > $length) {
                     $left = $length - $total_length;
                     $entities_length = 0;
                     if (preg_match_all(
-                        '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE)) {
+                        '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i',
+                        $line_matchings[2],
+                        $entities,
+                        PREG_OFFSET_CAPTURE
+                    )) {
                         foreach ($entities[0] as $entity) {
                             if ($entity[1] + 1 - $entities_length <= $left) {
                                 $left--;
@@ -156,7 +187,7 @@ class StringUtils
             }
         }
 
-        if (!$exact) {
+        if (! $exact) {
             $spacepos = strrpos($truncate, ' ');
             if (isset($spacepos)) {
                 $truncate = substr($truncate, 0, $spacepos);
@@ -185,7 +216,8 @@ class StringUtils
      */
     public static function camelCaseToSnakeCase($input, $splitter = "_")
     {
-        return ctype_lower($input) ? $input :
+        return ctype_lower($input) ?
+            $input :
             str_replace(
                 array("-", "_", "{$splitter}{$splitter}"),
                 $splitter,
@@ -220,9 +252,9 @@ class StringUtils
         $stringy = preg_replace('/^[-_]+/', '', $stringy);
         $stringy = preg_replace_callback(
             '/[-_\s]+(.)?/u',
-            function ($match) use ($encoding) {
+            function ($match) use (&$encoding) {
                 if (isset($match[1])) {
-                    return \mb_strtoupper($match[1], $encoding);
+                    return mb_strtoupper($match[1], $encoding);
                 }
                 return '';
             },
@@ -230,8 +262,8 @@ class StringUtils
         );
         $stringy = preg_replace_callback(
             '/[\d]+(.)?/u',
-            function ($match) use ($encoding) {
-                return \mb_strtoupper($match[0], $encoding);
+            function ($match) use (&$encoding) {
+                return mb_strtoupper($match[0], $encoding);
             },
             $stringy
         );
@@ -241,7 +273,8 @@ class StringUtils
 
     /**
      * Slugify text
-     * @param $text
+     *
+     * @param string $text
      * @return mixed|string
      */
     public static function slugify($text)
