@@ -26,6 +26,7 @@
         "ext-iconv": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
+        "ext-ctype": "*",
         "zendframework/zend-modulemanager": "2.*",
         "zendframework/zend-servicemanager": "^3.0",
         "zendframework/zend-form": "2.*",
@@ -34,10 +35,9 @@
         "zendframework/zend-eventmanager": "^3.0",
         "zendframework/zend-stdlib": "^3.0",
         "zendframework/zend-log": "2.*",
-        "doctrine/doctrine-module": "^1.2 || ^2.1.7",
+        "doctrine/doctrine-module": "^2.1.7",
         "mdjaman/jms-serializer-module": "2.*",
-        "gedmo/doctrine-extensions": "2.4.*",
-        "ext-ctype": "*"
+        "gedmo/doctrine-extensions": "2.4.*"
     },
     "require-dev": {
         "phpunit/phpunit": "8.*"
