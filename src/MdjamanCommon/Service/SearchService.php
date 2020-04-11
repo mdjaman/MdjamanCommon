@@ -37,7 +37,7 @@ use MdjamanCommon\Provider\ServiceManagerAwareTrait;
  * @package MdjamanCommon\Service
  * @author Marcel Djaman <marceldjaman@gmail.com>
  */
-class SearchService
+class SearchService implements SearchServiceInterface
 {
     use ServiceManagerAwareTrait;
 
@@ -66,11 +66,13 @@ class SearchService
     }
 
     /**
-     * @param $query
+     * Performs a search
+     *
+     * @param string $query
      * @param string $type
      * @param null $limit
      * @param int $offset
-     * @return bool
+     * @return mixed
      */
     public function search($query, $type = 'patient', $limit = null, $offset = 0)
     {
@@ -110,19 +112,21 @@ class SearchService
 
     /**
      * Save a user search to redis db
+     *
      * @param string $query
      * @param $user
      */
     public function saveSearch($query, $user)
     {
-    	$r_key = 'usr_src:' . $user->getId();
+        $r_key = 'usr_src:' . $user->getId();
 
-    	$redis = $this->getPredis();
-    	$redis->lpush($r_key, $query);
+        $redis = $this->getPredis();
+        $redis->lpush($r_key, $query);
     }
 
     /**
      * Get a user saved searches
+     *
      * @param $user
      * @param integer|null $limit
      * @param integer $offset
@@ -130,26 +134,26 @@ class SearchService
      */
     public function getUserSearch($user, $limit = null, $offset = 0)
     {
-    	$r_key = 'usr_src:' . $user->getId();
+        $r_key = 'usr_src:' . $user->getId();
 
-    	$redis = $this->getPredis();
+        $redis = $this->getPredis();
 
-    	if ($limit == null) {
+        if ($limit == null) {
             $limit = $redis->llen($r_key);
         }
 
         $search = $redis->lrange($r_key, $offset, $limit);
 
-    	return $search;
+        return $search;
     }
 
     /**
-     *
+     * @return mixed
      */
     public function getClient()
     {
         if (!$this->client) {
-            $this->client = $this->setClient();
+            $this->setClient();
         }
 
         return $this->client;
@@ -157,6 +161,7 @@ class SearchService
 
     /**
      * @param array|null $config
+     * @return $this
      */
     public function setClient(array $config = null)
     {
@@ -164,14 +169,17 @@ class SearchService
             $config = ['url' => 'http://localhost:9200/'];
         }
         $this->client = new \Elastica\Client($config);
+        return $this;
     }
 
     /**
-     * @param $index
+     * @param string $index
+     * @return $this
      */
     public function setIndex($index)
     {
         $this->index = $index;
+        return $this;
     }
 
     /**
@@ -190,6 +198,7 @@ class SearchService
      *
      * @param array $parameters the connection parameters
      * @param array $options the profile options
+     * @return $this
      */
     public function setPredis($parameters = null, $options = null)
     {
@@ -204,5 +213,6 @@ class SearchService
         }
 
         $this->predis = new \Predis\Client($parameters, $options);
+        return $this;
     }
 }

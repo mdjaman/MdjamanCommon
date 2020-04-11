@@ -27,73 +27,73 @@
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
-namespace MdjamanCommon\Model;
+namespace MdjamanCommon\Service;
 
 /**
- * Interface ModelInterface
- * @package MdjamanCommon\Model
+ * Interface SearchServiceInterface
+ *
+ * @package MdjamanCommon\Service
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
  */
-interface ModelInterface
+interface SearchServiceInterface
 {
-    public function prePersist();
-
-    public function preUpdate();
-
     /**
-     * @return \DateTime|null
-     */
-    public function getUpdatedAt();
-
-    /**
-     * @return \DateTime|null
-     */
-    public function getCreatedAt();
-
-    /**
-     * @param array $data
+     * Performs a search
+     *
+     * @param string $query
+     * @param string $type
+     * @param null $limit
+     * @param int $offset
      * @return mixed
      */
-    public function exchangeArray($data);
+    public function search($query, $type = 'patient', $limit = null, $offset = 0);
 
     /**
-     * @return array
-     */
-    public function getArrayCopy();
-
-    /**
-     * @return array
-     */
-    public function toArray();
-
-    /**
-     * @return string
-     */
-    public function __toString();
-
-    /**
-     * Set createdAt
+     * Save a user search to redis db
      *
-     * @param \DateTime $createdAt
+     * @param string $query
+     * @param $user
+     */
+    public function saveSearch($query, $user);
+
+    /**
+     * Get a user saved searches
+     *
+     * @param $user
+     * @param integer|null $limit
+     * @param integer $offset
+     * @return array
+     */
+    public function getUserSearch($user, $limit = null, $offset = 0);
+
+    /**
+     * @return mixed
+     */
+    public function getClient();
+
+    /**
+     * @param array|null $config
      * @return $this
      */
-    public function setCreatedAt($createdAt);
+    public function setClient(array $config = null);
 
     /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updatedAt
+     * @param string $index
      * @return $this
      */
-    public function setUpdatedAt($updatedAt);
+    public function setIndex($index);
 
     /**
-     * @return string
+     * Get predis client
      */
-    public function getClassName();
+    public function getPredis();
 
     /**
-     * @return array
-     * @throws \ReflectionException
+     * Set predis client
+     *
+     * @param array $parameters the connection parameters
+     * @param array $options the profile options
+     * @return $this
      */
-    public function getClassFields();
+    public function setPredis($parameters = null, $options = null);
 }

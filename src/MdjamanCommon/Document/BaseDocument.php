@@ -59,12 +59,12 @@ abstract class BaseDocument implements ModelInterface
     /**
      * @return string
      */
-    public abstract function getId();
+    abstract public function getId();
 
     /**
      * @ODM\PrePersist
      */
-    public function PrePersist()
+    public function prePersist()
     {
         $this->created_at = new \DateTime("now");
     }
@@ -72,7 +72,7 @@ abstract class BaseDocument implements ModelInterface
     /**
      * @ODM\PreUpdate
      */
-    public function PreUpdate()
+    public function preUpdate()
     {
         $this->updated_at = new \DateTime("now");
     }

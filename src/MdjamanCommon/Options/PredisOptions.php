@@ -85,5 +85,4 @@ class PredisOptions extends AbstractOptions
     {
         $this->defaultSettings = $defaultSettings;
     }
-
 }

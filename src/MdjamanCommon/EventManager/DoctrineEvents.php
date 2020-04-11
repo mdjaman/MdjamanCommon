@@ -44,7 +44,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const preRemove = 'preRemove';
+    const PRE_REMOVE = 'preRemove';
 
     /**
      * The postRemove event occurs for a document/entity after the document/entity has
@@ -54,7 +54,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const postRemove = 'postRemove';
+    const POST_REMOVE = 'postRemove';
 
     /**
      * The prePersist event occurs for a given document/entity before the respective
@@ -64,7 +64,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const prePersist = 'prePersist';
+    const PRE_PERSIST = 'prePersist';
 
     /**
      * The postPersist event occurs for a document/entity after the document/entity has
@@ -75,7 +75,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const postPersist = 'postPersist';
+    const POST_PERSIST = 'postPersist';
 
     /**
      * The preUpdate event occurs before the database update operations to
@@ -85,7 +85,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const preUpdate = 'preUpdate';
+    const PRE_UPDATE = 'preUpdate';
 
     /**
      * The postUpdate event occurs after the database update operations to
@@ -95,7 +95,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const postUpdate = 'postUpdate';
+    const POST_UPDATE = 'postUpdate';
 
     /**
      * The preLoad event occurs for a document/entity before the document/entity has been loaded
@@ -106,7 +106,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const preLoad = 'preLoad';
+    const PRE_LOAD = 'preLoad';
 
     /**
      * The postLoad event occurs for a document/entity after the document/entity has been loaded
@@ -121,14 +121,14 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const postLoad = 'postLoad';
+    const POST_LOAD = 'postLoad';
 
     /**
      * The preFlush event occurs when the DocumentManager#flush() operation is invoked,
      * but before any changes to managed documents/entities have been calculated. This event is
      * always raised right after DocumentManager#flush() call.
      */
-    const preFlush = 'preFlush';
+    const PRE_FLUSH = 'preFlush';
 
     /**
      * The onFlush event occurs when the DocumentManager#flush() operation is invoked,
@@ -139,7 +139,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const onFlush = 'onFlush';
+    const ON_FLUSH = 'onFlush';
 
     /**
      * The postFlush event occurs when the DocumentManager#flush() operation is invoked and
@@ -150,7 +150,7 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const postFlush = 'postFlush';
+    const POST_FLUSH = 'postFlush';
 
     /**
      * The onClear event occurs when the DocumentManager#clear() operation is invoked,
@@ -158,5 +158,5 @@ final class DoctrineEvents
      *
      * @var string
      */
-    const onClear = 'onClear';
+    const ON_CLEAR = 'onClear';
 }

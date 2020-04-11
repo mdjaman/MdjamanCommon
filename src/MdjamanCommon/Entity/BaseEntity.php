@@ -62,12 +62,12 @@ abstract class BaseEntity implements ModelInterface
     /**
      * @return int|string
      */
-    public abstract function getId();
+    abstract  public function getId();
 
     /**
      * @ORM\PrePersist
      */
-    public function PrePersist()
+    public function prePersist()
     {
         $this->created_at = new \DateTime("now");
     }
@@ -75,7 +75,7 @@ abstract class BaseEntity implements ModelInterface
     /**
      * @ORM\PreUpdate
      */
-    public function PreUpdate()
+    public function preUpdate()
     {
         $this->updated_at = new \DateTime("now");
     }
@@ -97,12 +97,16 @@ abstract class BaseEntity implements ModelInterface
     }
 
     /**
-     * update attributes of an entity by array
+     * Update attributes of an entity by array
+     *
+     * @param array $data
+     * @return mixed|void
+     * @throws \ReflectionException
      */
     public function exchangeArray($data)
     {
         foreach ($data as $key => $val) {
-            if (in_array($key, $this->getObjectFields())) {
+            if (in_array($key, $this->getClassFields())) {
                 $this->$key = $val;
             }
         }
@@ -123,7 +127,7 @@ abstract class BaseEntity implements ModelInterface
     public function toArray()
     {
         $data = array();
-        foreach ($this->getObjectFields() as $field) {
+        foreach ($this->getClassFields() as $field) {
             $data[$field] = $this->$field;
         }
         return (count($data) > 0) ? $data : null;

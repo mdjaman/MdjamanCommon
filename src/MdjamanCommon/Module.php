@@ -66,7 +66,7 @@ class Module implements
             if ($objectManager instanceof ObjectManager) {
                 $dem = $objectManager->getEventManager();
                 $dem->addEventListener(
-                    array(DoctrineEvents::preFlush),
+                    array(DoctrineEvents::PRE_FLUSH),
                     new DoctrineExtensionsListener($sm)
                 );
             }

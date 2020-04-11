@@ -64,22 +64,22 @@ abstract class AbstractService implements AbstractServiceInterface
     protected $entity;
     
     /**
-     * @var DoctrineObject 
+     * @var DoctrineObject
      */
     protected $hydrator;
     
     /**
-     * @var \JMS\Serializer\Serializer 
+     * @var \JMS\Serializer\Serializer
      */
     protected $serializer;
     
     /**
-     * @var array 
+     * @var array
      */
     protected $serializerFormat = array('json', 'xml', 'yml');
     
     /**
-     * @var string 
+     * @var string
      */
     protected $logEntryEntity = 'Gedmo\\Loggable\\Entity\\LogEntry';
 
@@ -271,10 +271,10 @@ abstract class AbstractService implements AbstractServiceInterface
             if (!$entityName) {
                 throw new Exception\InvalidArgumentException("entityName not set. Can't create class.");
             }
-        } else {
-            if (false === class_exists($entityName)) {
-                throw new Exception\InvalidArgumentException("'".$entityName."' class doesn't exist. Can't create class.");
-            }
+        } elseif (false === class_exists($entityName)) {
+            throw new Exception\InvalidArgumentException(
+                "'".$entityName."' class doesn't exist. Can't create class."
+            );
         }
 
         return new $entityName;
@@ -291,7 +291,7 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * Get Entity Reference
-     * 
+     *
      * @param string|int $id
      * @param string|null $class
      * @return mixed

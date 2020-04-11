@@ -92,37 +92,39 @@ class DoctrineExtensionsListener
     {
         try {
             if ($this->authenticationService->hasIdentity()) {
-                $identity = $this->authenticationService->getIdentity();
+                return;
+            }
 
-                if (method_exists($event, 'getEntityManager')) {
-                    $objectManager = $event->getEntityManager();
-                } else {
-                    $objectManager = $event->getDocumentManager();
-                }
+            $identity = $this->authenticationService->getIdentity();
 
-                $evtManager = $objectManager->getEventManager();
-                foreach ($evtManager->getListeners() as $listeners) {
-                    foreach ($listeners as $listener) {
-                        if ($listener instanceof BlameableListener) {
-                            $this->blameableListener = $listener;
-                            continue;
-                        }
-                        if ($listener instanceof LoggableListener) {
-                            $this->loggableListener = $listener;
-                            continue;
-                        }
+            if (method_exists($event, 'getEntityManager')) {
+                $objectManager = $event->getEntityManager();
+            } else {
+                $objectManager = $event->getDocumentManager();
+            }
+
+            $evtManager = $objectManager->getEventManager();
+            foreach ($evtManager->getListeners() as $listeners) {
+                foreach ($listeners as $listener) {
+                    if ($listener instanceof BlameableListener) {
+                        $this->blameableListener = $listener;
+                        continue;
+                    }
+                    if ($listener instanceof LoggableListener) {
+                        $this->loggableListener = $listener;
+                        continue;
                     }
                 }
+            }
 
-                if (null !== $this->blameableListener) {
-                    $this->blameableListener->setUserValue($identity);
-                    $evtManager->addEventSubscriber($this->blameableListener);
-                }
+            if (null !== $this->blameableListener) {
+                $this->blameableListener->setUserValue($identity);
+                $evtManager->addEventSubscriber($this->blameableListener);
+            }
 
-                if (null !== $this->loggableListener) {
-                    $this->loggableListener->setUsername($identity->getId());
-                    $evtManager->addEventSubscriber($this->loggableListener);
-                }
+            if (null !== $this->loggableListener) {
+                $this->loggableListener->setUsername($identity);
+                $evtManager->addEventSubscriber($this->loggableListener);
             }
         } catch (\Exception $ex) {
         }

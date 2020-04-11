@@ -29,7 +29,7 @@
 
 namespace MdjamanCommon\Repository;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
 /**
  * Class BaseDocumentRepository
@@ -43,6 +43,7 @@ class BaseDocumentRepository extends DocumentRepository
      *
      * @param array|null $criteria
      * @return mixed
+     * @throws \Doctrine\ODM\MongoDB\MongoDBException
      */
     public function countResult(array $criteria = null)
     {
