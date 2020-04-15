@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerInterface;
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
@@ -45,6 +46,7 @@ use Zend\Log\Writer\Stream;
 
 /**
  * Class AbstractService
+ *
  * @package MdjamanCommon\Service
  * @author Marcel Djaman <marceldjaman@gmail.com>
  */
@@ -69,14 +71,14 @@ abstract class AbstractService implements AbstractServiceInterface
     protected $hydrator;
     
     /**
-     * @var \JMS\Serializer\Serializer
+     * @var Serializer
      */
     protected $serializer;
     
     /**
      * @var array
      */
-    protected $serializerFormat = array('json', 'xml', 'yml');
+    protected $serializerFormat = ['json', 'xml', 'yml'];
     
     /**
      * @var string
@@ -96,7 +98,7 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function __construct($entityName = null, ObjectManager $objectManager)
     {
-        if (!is_null($entityName)) {
+        if (! is_null($entityName)) {
             $this->setEntity($entityName);
         }
 
@@ -157,7 +159,7 @@ abstract class AbstractService implements AbstractServiceInterface
         if (is_array($entity)) {
             return $entity; // cut down on duplicate code
         } elseif (is_object($entity)) {
-            if (!$hydrator) {
+            if (! $hydrator) {
                 $hydrator = $this->getHydrator();
             }
             return $hydrator->extract($entity);
@@ -170,7 +172,7 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function getSerializer()
     {
-        if (!$this->serializer) {
+        if (! $this->serializer) {
             $this->setSerializer();
         }
         return $this->serializer;
@@ -182,13 +184,14 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function setSerializer($serializer = null)
     {
-        if (!$serializer) {
+        if (! $serializer) {
             $serializer = \JMS\Serializer\SerializerBuilder::create()
                 ->setPropertyNamingStrategy(
                     new \JMS\Serializer\Naming\SerializedNameAnnotationStrategy(
                         new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
                     )
                 )
+                ->setCacheDir(getcwd() . '/data/JMSSerializer')
                 ->build();
         }
         $this->serializer = $serializer;
@@ -204,12 +207,12 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function serialize($entity, $format = 'json', $groups = null)
     {
-        if (!in_array($format, $this->serializerFormat)) {
+        if (! in_array($format, $this->serializerFormat)) {
             throw new Exception\InvalidArgumentException('Format ' . $format . ' is not valid');
         }
         $serializer = $this->getSerializer();
         
-        if (!$serializer instanceof SerializerInterface) {
+        if (! $serializer instanceof SerializerInterface) {
             throw new \Exception('Serializer service must be instance of ' .
                 get_class(SerializerInterface::class));
         }
@@ -331,7 +334,7 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param string $id
-     * @return ModelInterface
+     * @return ModelInterface|mixed
      *
      * @triggers find.pre
      * @triggers find.post
@@ -459,7 +462,7 @@ abstract class AbstractService implements AbstractServiceInterface
             if (array_key_exists('id', $data) && !empty($data['id'])) {
                 # We have an id here > it's an update !
                 $entity = $this->find($data['id']);
-                unset($data['id']);
+                //unset($data['id']);
             }
             $entity = $this->hydrate($data, $entity);
         }
@@ -676,7 +679,7 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function setLogger($logger = null)
     {
-        if (!$logger) {
+        if (! $logger) {
             $writer = new Stream([
                 'stream' => getcwd() . '/data/log/application.log',
             ]);

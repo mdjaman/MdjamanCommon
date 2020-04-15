@@ -29,8 +29,9 @@
 
 namespace MdjamanCommon\Service;
 
-use Zend\ServiceManager\ServiceManager;
+use Elastica\Client;
 use MdjamanCommon\Provider\ServiceManagerAwareTrait;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class SearchService
@@ -41,8 +42,14 @@ class SearchService implements SearchServiceInterface
 {
     use ServiceManagerAwareTrait;
 
+    /**
+     * @var Client
+     */
     protected $client;
 
+    /**
+     * @var \Predis\Client
+     */
     protected $predis;
 
     /**
@@ -148,7 +155,7 @@ class SearchService implements SearchServiceInterface
     }
 
     /**
-     * @return mixed
+     * @return Client
      */
     public function getClient()
     {
@@ -168,7 +175,7 @@ class SearchService implements SearchServiceInterface
         if (!$config) {
             $config = ['url' => 'http://localhost:9200/'];
         }
-        $this->client = new \Elastica\Client($config);
+        $this->client = new Client($config);
         return $this;
     }
 

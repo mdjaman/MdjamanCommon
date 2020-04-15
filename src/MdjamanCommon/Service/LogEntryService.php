@@ -44,7 +44,7 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
     /**
      * @var array
      */
-    protected $allowed_method = array('find', 'findAll', 'findBy', 'findOneBy');
+    protected $allowed_method = ['find', 'findAll', 'findBy', 'findOneBy'];
 
     /**
      * @var string
@@ -79,7 +79,7 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
     }
 
     /**
-     * @param $resultset
+     * @param mixed $resultset
      * @return array
      */
     public function resultWrapper($resultset)
@@ -91,7 +91,7 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
         $results = [];
         if ($resultset) {
             $filled = false;
-            while (($log = array_pop($resultset)) && !$filled) {
+            while (($log = array_pop($resultset)) && ! $filled) {
                 $wrapped = new EntityWrapper($log, $this->objectManager);
                 //$objectMeta = $wrapped->getMetadata();
 

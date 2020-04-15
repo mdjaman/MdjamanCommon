@@ -96,5 +96,4 @@ class UploadForm extends Form
 
         $this->setInputFilter($inputFilter);
     }
-
 }

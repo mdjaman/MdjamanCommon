@@ -44,8 +44,9 @@ interface LogEntryServiceInterface extends AbstractServiceInterface
 
     /**
      * Filter
+     *
      * @param array $filters
-     * @return multitype:
+     * @return mixed
      */
     public function filter(array $filters = null);
 }
