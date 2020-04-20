@@ -30,6 +30,7 @@
 namespace MdjamanCommon\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 use Gedmo\Mapping\Annotation as Gedmo;
 use MdjamanCommon\Model\ModelInterface;
 use MdjamanCommon\Traits\SoftDeleteableDocument;
@@ -47,12 +48,14 @@ abstract class BaseDocument implements ModelInterface
     /**
      * @var \DateTime
      * @ODM\Field(name="created_at", type="date")
+     * @JMS\Groups({"list", "details"})
      */
     protected $created_at;
 
     /**
      * @var \DateTime
      * @ODM\Field(name="updated_at", type="date")
+     * @JMS\Groups({"list", "details"})
      */
     protected $updated_at;
 
