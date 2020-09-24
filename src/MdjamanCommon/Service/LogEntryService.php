@@ -74,8 +74,6 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
 
         $this->options = $moduleOptions;
         $this->userEntity = $moduleOptions->getUserEntityClass();
-
-        $this->setContainer($container);
     }
 
     /**

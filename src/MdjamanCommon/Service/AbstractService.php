@@ -284,7 +284,7 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @return \Doctrine\Common\Persistence\ObjectRepository
+     * @return \Doctrine\Persistence\ObjectRepository
      */
     public function getRepository()
     {
@@ -309,7 +309,7 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param null $class
-     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
+     * @return \Doctrine\Persistence\Mapping\ClassMetadata
      */
     public function getEntityClassMetadata($class = null)
     {
@@ -357,7 +357,7 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param array $criteria
-     * @return ModelInterface
+     * @return ModelInterface|mixed
      *
      * @triggers findOneBy.pre
      * @triggers findOneBy.post
@@ -459,10 +459,12 @@ abstract class AbstractService implements AbstractServiceInterface
             # Means we only have an array of data here
             $data = $entity;
             $entity = null;
-            if (array_key_exists('id', $data) && !empty($data['id'])) {
+            if (array_key_exists('id', $data) && ! empty($data['id'])) {
                 # We have an id here > it's an update !
                 $entity = $this->find($data['id']);
-                //unset($data['id']);
+                if ($entity) {
+                    unset($data['id']);
+                }
             }
             $entity = $this->hydrate($data, $entity);
         }
@@ -585,7 +587,7 @@ abstract class AbstractService implements AbstractServiceInterface
 
         $sort = null;
         $dir = 1;
-        if (count($orderBy)) {
+        if (is_array($orderBy) && count($orderBy)) {
             foreach ($orderBy as $k => $v) {
                 $sort = $k;
                 $dir = $v;

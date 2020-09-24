@@ -29,8 +29,6 @@
 
 namespace MdjamanCommon\Utils;
 
-use mb_strtoupper;
-
 /**
  * Class StringUtils
  *
@@ -123,10 +121,6 @@ class StringUtils
             foreach ($lines as $line_matchings) {
                 if (! empty($line_matchings[1])) {
                     if (preg_match(
-                        $htmlPattern,
-                        $line_matchings[1]
-                    )) {
-                    } elseif (preg_match(
                         '/^<\s*\/([^\s]+?)\s*>$/s',
                         $line_matchings[1],
                         $tag_matchings

@@ -90,7 +90,6 @@ class SearchService implements SearchServiceInterface
         $index = $this->index;
 
         $query = (string) $query;
-        $search = new \Elastica\Search($this->getClient());
 
         // Define a Query. We want a string query.
         $esQueryString = new \Elastica\Query\QueryString($query);
@@ -113,14 +112,13 @@ class SearchService implements SearchServiceInterface
 
         $esIdx->refresh();
         //Search on the index.
-        $esResultSet = $esIdx->search($esQuery);
-        return $esResultSet;
+        return $esIdx->search($esQuery);
     }
 
     /**
      * Save a user search to redis db
      *
-     * @param string $query
+     * @param array|string $query
      * @param $user
      */
     public function saveSearch($query, $user)
@@ -128,7 +126,7 @@ class SearchService implements SearchServiceInterface
         $r_key = 'usr_src:' . $user->getId();
 
         $redis = $this->getPredis();
-        $redis->lpush($r_key, $query);
+        $redis->lpush($r_key, (array) $query);
     }
 
     /**
@@ -149,9 +147,7 @@ class SearchService implements SearchServiceInterface
             $limit = $redis->llen($r_key);
         }
 
-        $search = $redis->lrange($r_key, $offset, $limit);
-
-        return $search;
+        return $redis->lrange($r_key, $offset, $limit);
     }
 
     /**

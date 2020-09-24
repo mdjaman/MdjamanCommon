@@ -72,7 +72,7 @@ class DoctrineExtensionsListener
      */
     public function preFlush(EventArgs $event)
     {
-        return $this->onEvent($event);
+        $this->onEvent($event);
     }
 
     /**
@@ -81,7 +81,7 @@ class DoctrineExtensionsListener
      */
     public function onFlush(EventArgs $event)
     {
-        return $this->onEvent($event);
+        $this->onEvent($event);
     }
 
     /**

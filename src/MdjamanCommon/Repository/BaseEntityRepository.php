@@ -67,7 +67,7 @@ class BaseEntityRepository extends EntityRepository
 
         $cacheKey = md5(__FUNCTION__ . json_encode(func_get_args()));
         $query->useQueryCache(true)
-            ->useResultCache(true, 3600, $cacheKey);
+            ->enableResultCache(3600, $cacheKey);
 
         return $query->getSingleScalarResult();
     }

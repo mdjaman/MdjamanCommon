@@ -69,6 +69,7 @@ interface AbstractServiceInterface
      * Use this method to ensure that you're working with an array.
      *
      * @param object $entity
+     * @param HydratorInterface|null $hydrator
      * @return array
      */
     public function toArray($entity, HydratorInterface $hydrator = null);
