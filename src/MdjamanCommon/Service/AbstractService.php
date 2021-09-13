@@ -654,9 +654,23 @@ abstract class AbstractService implements AbstractServiceInterface
         $expr = Criteria::expr();
         $criteria = Criteria::create();
 
+        $methodPrefixes = ['get', 'is'];
         foreach ($filters as $key => $value) {
-            $method = 'get' . ucfirst($key);
-            $criteria->andWhere($expr->eq($key, $entity->{$method}()));
+            $exists = false;
+            $i = 0;
+            $getter = null;
+            while ($i < count($methodPrefixes)) {
+                $getter = $methodPrefixes[$i] . ucfirst($key);
+                if (method_exists($entity, $getter)) {
+                    $exists = true;
+                    break;
+                }
+                $i++;
+            }
+
+            if ($exists) {
+                $criteria->andWhere($expr->eq($key, $entity->{$getter}()));
+            }
         }
 
         return $criteria;
