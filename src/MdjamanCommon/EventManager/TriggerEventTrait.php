@@ -29,7 +29,7 @@
 
 namespace MdjamanCommon\EventManager;
 
-use Zend\EventManager\ResponseCollection;
+use Laminas\EventManager\ResponseCollection;
 
 /**
  * Trait TriggerEventTrait
@@ -52,7 +52,7 @@ trait TriggerEventTrait
         if (! method_exists($this, 'getEventManager')) {
             throw new Exception\InvalidArgumentException(
                 'MdjamanCommon\EventManager\TriggerEventTrait requires the class that uses it to implement 
-                Zend\EventManager\EventManagerAwareInterface'
+                Laminas\EventManager\EventManagerAwareInterface'
             );
         }
 

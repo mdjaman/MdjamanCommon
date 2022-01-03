@@ -31,9 +31,9 @@ namespace MdjamanCommon\Form;
 
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\Provider\ServiceManagerAwareTrait;
-use Zend\Form\Element\Csrf;
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
+use Laminas\Form\Element\Csrf;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
 
 /**
  * Class BaseForm

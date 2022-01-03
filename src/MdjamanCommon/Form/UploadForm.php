@@ -29,8 +29,8 @@
 
 namespace MdjamanCommon\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter;
+use Laminas\Form\Form;
+use Laminas\InputFilter;
 
 /**
  * Class UploadForm

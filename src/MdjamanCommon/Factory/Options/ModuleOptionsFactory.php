@@ -31,7 +31,7 @@ namespace MdjamanCommon\Factory\Options;
 
 use Interop\Container\ContainerInterface;
 use MdjamanCommon\Options\ModuleOptions;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Class ModuleOptionsFactory

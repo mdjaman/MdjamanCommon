@@ -31,7 +31,7 @@ namespace MdjamanCommon\Service;
 
 use Elastica\Client;
 use MdjamanCommon\Provider\ServiceManagerAwareTrait;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Class SearchService

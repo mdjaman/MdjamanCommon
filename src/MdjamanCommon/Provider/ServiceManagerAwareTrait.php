@@ -29,7 +29,7 @@
 
 namespace MdjamanCommon\Provider;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Trait ServiceManagerAwareTrait

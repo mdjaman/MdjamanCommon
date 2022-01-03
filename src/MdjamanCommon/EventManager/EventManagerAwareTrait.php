@@ -29,8 +29,8 @@
 
 namespace MdjamanCommon\EventManager;
 
-use Zend\EventManager;
-use Zend\ServiceManager;
+use Laminas\EventManager;
+use Laminas\ServiceManager;
 
 /**
  * Trait EventManagerAwareTrait

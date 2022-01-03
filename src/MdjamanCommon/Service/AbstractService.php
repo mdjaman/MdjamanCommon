@@ -39,10 +39,10 @@ use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
 use MdjamanCommon\Model\ModelInterface;
 use Psr\Log\LoggerInterface;
-use Zend\Hydrator\HydratorInterface;
-use Zend\Log\Logger;
-use Zend\Log\Processor\PsrPlaceholder;
-use Zend\Log\Writer\Stream;
+use Laminas\Hydrator\HydratorInterface;
+use Laminas\Log\Logger;
+use Laminas\Log\Processor\PsrPlaceholder;
+use Laminas\Log\Writer\Stream;
 
 /**
  * Class AbstractService

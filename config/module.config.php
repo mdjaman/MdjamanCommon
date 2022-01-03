@@ -31,8 +31,8 @@ namespace MdjamanCommon;
 
 use MdjamanCommon\Options\ModuleOptions;
 use MdjamanCommon\Service\LogEntryService;
-use Zend\EventManager\SharedEventManager;
-use Zend\ServiceManager\Factory\InvokableFactory;
+use Laminas\EventManager\SharedEventManager;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return [
     'service_manager' => [

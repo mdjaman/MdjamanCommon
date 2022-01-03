@@ -32,7 +32,7 @@ namespace MdjamanCommon\Service;
 use Doctrine\Common\Persistence\ObjectManager;
 use MdjamanCommon\Model\ModelInterface;
 use Psr\Log\LoggerInterface;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 /**
  * Interface AbstractServiceInterface

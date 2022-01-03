@@ -32,9 +32,9 @@ namespace MdjamanCommon;
 use Doctrine\Common\Persistence\ObjectManager;
 use MdjamanCommon\EventListener\DoctrineExtensionsListener;
 use MdjamanCommon\EventManager\DoctrineEvents;
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Laminas\EventManager\EventInterface;
+use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
+use Laminas\ModuleManager\Feature\ConfigProviderInterface;
 
 /**
  * Class Module

@@ -32,7 +32,7 @@ namespace MdjamanCommon\EventListener;
 use Doctrine\Common\EventArgs;
 use Gedmo\Blameable\BlameableListener;
 use Gedmo\Loggable\LoggableListener;
-use Zend\Authentication\AuthenticationServiceInterface;
+use Laminas\Authentication\AuthenticationServiceInterface;
 
 /**
  * Class DoctrineExtensionsListener

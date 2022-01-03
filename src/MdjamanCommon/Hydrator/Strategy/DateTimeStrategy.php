@@ -29,7 +29,7 @@
 
 namespace MdjamanCommon\Hydrator\Strategy;
 
-use Zend\Hydrator\Strategy\DefaultStrategy;
+use Laminas\Hydrator\Strategy\DefaultStrategy;
 
 /**
  * Class DateTimeStrategy

@@ -29,7 +29,7 @@
 
 namespace MdjamanCommon\Options;
 
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Stdlib\AbstractOptions;
 
 /**
  * Class PredisOptions
