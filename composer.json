@@ -33,8 +33,8 @@
         "laminas/laminas-eventmanager": "^3.0",
         "laminas/laminas-stdlib": "^3.0",
         "laminas/laminas-log": "2.*",
-        "doctrine/doctrine-module": "^5.0",
-        "mdjaman/jms-serializer-module": "3.0",
+        "doctrine/doctrine-module": "^4.4",
+        "mdjaman/jms-serializer-module": "^3.0",
         "gedmo/doctrine-extensions": "3.*",
         "laminas/laminas-dependency-plugin": "^2.1"
     },
@@ -58,7 +58,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.5-dev"
+            "dev-master": "6-0.x-dev"
         }
     }
 }
