@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -45,10 +45,12 @@ class ModuleOptionsFactory implements FactoryInterface
      * @param string $requestedName
      * @param array|null $options
      * @return ModuleOptions
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $config = $container->get('Config');
-        return new ModuleOptions(isset($config['mdjaman_common']) ? $config['mdjaman_common'] : []);
+        return new ModuleOptions($config['mdjaman_common'] ?? []);
     }
 }

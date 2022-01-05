@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,19 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
+namespace MdjamanCommon\Service\Exception;
+
 /**
- * This file is placed here for compatibility with Zendframework 2's ModuleManager.
- * It allows usage of this module even without composer.
- * The original Module.php is in 'src/AssetManager' in order to respect PSR-0
+ * Class LogEntryRepositoryException
+ *
+ * @package MdjamanCommon\Service\Exception
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
  */
-require_once  __DIR__ . '/src/MdjamanCommon/Module.php';
+class LogEntryRepositoryException extends \DomainException
+{
+
+}

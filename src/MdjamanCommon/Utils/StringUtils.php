@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -36,13 +36,15 @@ namespace MdjamanCommon\Utils;
  */
 class StringUtils
 {
+
     /**
      * @param string $type
      * @param int $length
      * @return string
      */
-    public static function randomString($type = 'alnum', $length = 8)
+    public static function randomString(string $type = 'alnum', int $length = 8): string
     {
+        $pool = '';
         switch ($type) {
             case 'alnum':
                 $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -62,9 +64,6 @@ class StringUtils
             case 'distinct':
                 $pool = '2345679ACDEFHJKLMNPRSTUVWXYZ';
                 break;
-            default:
-                $pool = (string)$type;
-                break;
         }
 
         $crypto_rand_secure = function ($min, $max) {
@@ -76,7 +75,7 @@ class StringUtils
             $log = log($range, 2);
             $bytes = (int) ($log / 8) + 1; // length in bytes
             $bits = (int)$log + 1; // length in bits
-            $filter = (int)(1 << $bits) - 1; // set all lower bits to 1
+            $filter = (1 << $bits) - 1; // set all lower bits to 1
             do {
                 $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
                 $rnd = $rnd & $filter; // discard irrelevant bits
@@ -103,8 +102,13 @@ class StringUtils
      * @param bool $considerHtml
      * @return string
      */
-    public static function truncate($text, $length = 150, $ending = '...', $exact = false, $considerHtml = false)
-    {
+    public static function truncate(
+        string $text,
+        int $length = 150,
+        string $ending = '...',
+        bool $exact = false,
+        bool $considerHtml = false
+    ): string {
         $open_tags = [];
         if ($considerHtml) {
             if (strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
@@ -116,8 +120,6 @@ class StringUtils
             $total_length = strlen($ending);
             $truncate = '';
 
-            $htmlPattern =
-            '/^<(\s*.+?\/\s*|\s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(\s.+?)?)>$/is';
             foreach ($lines as $line_matchings) {
                 if (! empty($line_matchings[1])) {
                     if (preg_match(
@@ -183,7 +185,7 @@ class StringUtils
 
         if (! $exact) {
             $spacepos = strrpos($truncate, ' ');
-            if (isset($spacepos)) {
+            if ($spacepos !== false) {
                 $truncate = substr($truncate, 0, $spacepos);
             }
         }
@@ -208,7 +210,7 @@ class StringUtils
      * @param  string $splitter - splitter to use
      * @return string        - string converted to snake_case
      */
-    public static function camelCaseToSnakeCase($input, $splitter = "_")
+    public static function camelCaseToSnakeCase(string $input, string $splitter = "_"): string
     {
         return ctype_lower($input) ?
             $input :
@@ -221,10 +223,10 @@ class StringUtils
 
     /**
      * Converts camelCase string to have spaces between each.
-     * @param $camelCaseString
+     * @param string $camelCaseString
      * @return string
      */
-    public static function camelCaseToTitle($camelCaseString)
+    public static function camelCaseToTitle(string $camelCaseString): string
     {
         $re = '/(?<=[a-z])(?=[A-Z])/x';
         $a = preg_split($re, $camelCaseString);
@@ -240,7 +242,7 @@ class StringUtils
      * @param null|string $encoding
      * @return string
      */
-    public static function camelize($string, $encoding = null)
+    public static function camelize(string $string, string $encoding = null): string
     {
         $stringy = lcfirst(trim($string));
         $stringy = preg_replace('/^[-_]+/', '', $stringy);
@@ -269,9 +271,9 @@ class StringUtils
      * Slugify text
      *
      * @param string $text
-     * @return mixed|string
+     * @return string
      */
-    public static function slugify($text)
+    public static function slugify(string $text): string
     {
         // replace non letter or digits by -
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);

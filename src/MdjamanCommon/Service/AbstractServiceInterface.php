@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,45 +23,49 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\Service;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
+use JMS\Serializer\SerializerInterface;
+use Laminas\Hydrator\HydratorInterface;
 use MdjamanCommon\Model\ModelInterface;
 use Psr\Log\LoggerInterface;
-use Laminas\Hydrator\HydratorInterface;
 
 /**
  * Interface AbstractServiceInterface
+ *
  * @package MdjamanCommon\Service
- * @author Marcel Djaman <marceldjaman@gmail.com>
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
  */
 interface AbstractServiceInterface
 {
     /**
-     * @return mixed
+     * @return string|object
      */
     public function getEntity();
 
     /**
-     * @param string $entity
+     * @param string|object $entity
      * @return $this
      */
-    public function setEntity($entity);
+    public function setEntity($entity): AbstractService;
 
     /**
      * @return HydratorInterface
      */
-    public function getHydrator();
+    public function getHydrator(): HydratorInterface;
 
     /**
      * @param HydratorInterface $hydrator
      * @return $this
      */
-    public function setHydrator(HydratorInterface $hydrator);
+    public function setHydrator(HydratorInterface $hydrator): AbstractService;
 
     /**
      * Uses the hydrator to convert the entity to an array.
@@ -72,73 +76,79 @@ interface AbstractServiceInterface
      * @param HydratorInterface|null $hydrator
      * @return array
      */
-    public function toArray($entity, HydratorInterface $hydrator = null);
+    public function toArray(object $entity, HydratorInterface $hydrator = null): array;
 
     /**
-     * @return mixed
+     * @return SerializerInterface
      */
-    public function getSerializer();
+    public function getSerializer(): SerializerInterface;
 
     /**
      * @param mixed $serializer
      * @return $this
      */
-    public function setSerializer($serializer = null);
+    public function setSerializer($serializer = null): AbstractService;
 
     /**
      * @param array|ModelInterface $entity
      * @param string $format
-     * @param array|null $groups
-     * @return string
+     * @param string|null $groups
+     * @return mixed|string
+     * @throws \Exception
      */
-    public function serialize($entity, $format = 'json', $groups = null);
+    public function serialize($entity, string $format = 'json', string $groups = null);
 
     /**
      * @param array $data
-     * @param ModelInterface $entity
-     * @return ModelInterface
+     * @param ModelInterface|null $entity
+     * @return ModelInterface|mixed
+     * @throws \Exception
      */
-    public function hydrate($data, $entity = null);
+    public function hydrate(array $data, ModelInterface $entity = null);
 
     /**
      * Creates a new instance of the given entityName or of the already known
      * one whose FQDN is stored in the className property.
      *
-     * @param string $entityName
-     * @return ModelInterface
+     * @param string|null $entityName
+     * @return ModelInterface|mixed
      * @throws \Exception
      */
-    public function createEntity($entityName = null);
+    public function createEntity(string $entityName = null);
 
-    public function getRepository();
+    /**
+     * @return ObjectRepository
+     */
+    public function getRepository(): ObjectRepository;
 
     /**
      * Get Entity Reference
      *
      * @param string|int $id
      * @param string|null $class
-     * @return mixed
+     * @return object
      */
-    public function getReference($id, $class = null);
+    public function getReference($id, string $class = null): object;
 
     /**
      * @param null $class
-     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
+     * @return ClassMetadata
      */
-    public function getEntityClassMetadata($class = null);
+    public function getEntityClassMetadata($class = null): ClassMetadata;
 
     /**
      * Return log entries
      * From Loggable behavioral extension for Gedmo
      *
      * @param ModelInterface $entity
-     * @return void
+     * @return mixed
+     * @throws Exception\LogEntryRepositoryException
      */
     public function getLogEntries(ModelInterface $entity);
 
     /**
-     * @param string $id
-     * @return ModelInterface
+     * @param string|int $id
+     * @return ModelInterface|mixed
      *
      * @triggers find.pre
      * @triggers find.post
@@ -148,7 +158,7 @@ interface AbstractServiceInterface
 
     /**
      * @param array $criteria
-     * @return ModelInterface
+     * @return ModelInterface|mixed
      *
      * @triggers findOneBy.pre
      * @triggers findOneBy.post
@@ -164,71 +174,96 @@ interface AbstractServiceInterface
      * @triggers findAll.post
      * @triggers find
      */
-    public function findAll($orderBy = null);
+    public function findAll($orderBy = null): array;
 
     /**
      * @param array $criteria
-     * @param array|string $orderBy
-     * @param int $limit
-     * @param int $offset
+     * @param array|null $orderBy
+     * @param null $limit
+     * @param null $offset
      * @return array
      *
      * @triggers findBy.pre
      * @triggers findBy.post
      * @triggers find
      */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null): array;
 
     /**
      * @param array|ModelInterface $entity
      * @param bool $flush
-     * @param string $event Overrides the default event name
-     * @return ModelInterface
+     * @param null|string $event
+     * @return array|ModelInterface|mixed|null
+     * @throws \Exception
      */
-    public function save($entity, $flush = true, $event = null);
+    public function save($entity, bool $flush = true, string $event = null);
 
     /**
      * @param string|array|ModelInterface $entity
      * @param bool $flush
      * @return ModelInterface
      */
-    public function delete($entity, $flush = true);
+    public function delete($entity, bool $flush = true): ModelInterface;
 
     /**
      * enable/disable entityManager softDeleteable
-     * @param boolean $enable
-     * @return void
+     *
+     * @param bool $enable
+     * @return $this
      */
-    public function enableSoftDeleteableFilter($enable = true);
+    public function enableSoftDeleteableFilter(bool $enable = true): AbstractService;
 
     /**
      * @param array $filters
      * @param array|null $orderBy
-     * @param null $limit
-     * @param null $offset
-     * @return array
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array|mixed
+     * @throws \Exception
      */
-    public function filters(array $filters, array $orderBy = null, $limit = null, $offset = null);
+    public function filters(
+        array $filters,
+        array $orderBy = null,
+        int $limit = null,
+        int $offset = null
+    );
 
     /**
-     * @param $filters
-     * @return int
+     * @param string $searchTerm
+     * @param array $filters
+     * @param array|null $orderBy
+     * @param null $limit
+     * @param null $offset
+     * @return mixed
      */
-    public function countMatchingRecords($filters);
+    public function search(
+        string $searchTerm,
+        array $filters = [],
+        array $orderBy = null,
+        $limit = null,
+        $offset = null
+    );
+
+    /**
+     * @param array $filters
+     * @return int
+     * @throws \Exception
+     */
+    public function countMatchingRecords(array $filters): int;
 
     /**
      * @param mixed $logger
      * @return $this
      */
-    public function setLogger($logger = null);
+    public function setLogger($logger = null): AbstractService;
 
     /**
      * @return LoggerInterface
      */
-    public function getLogger();
+    public function getLogger(): LoggerInterface;
 
     /**
      * @return ObjectManager
      */
-    public function getObjectManager();
+    public function getObjectManager(): ObjectManager;
 }

@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -41,12 +41,11 @@ interface SearchServiceInterface
      * Performs a search
      *
      * @param string $query
-     * @param string $type
      * @param null $limit
      * @param int $offset
-     * @return mixed
+     * @return
      */
-    public function search($query, $type = 'patient', $limit = null, $offset = 0);
+    public function search(string $query, $limit = null, int $offset = 0);
 
     /**
      * Save a user search to redis db
@@ -54,17 +53,17 @@ interface SearchServiceInterface
      * @param string $query
      * @param $user
      */
-    public function saveSearch($query, $user);
+    public function saveSearch(string $query, $user);
 
     /**
      * Get a user saved searches
      *
-     * @param $user
-     * @param integer|null $limit
-     * @param integer $offset
+     * @param string $user
+     * @param int|null $limit
+     * @param int|null $offset
      * @return array
      */
-    public function getUserSearch($user, $limit = null, $offset = 0);
+    public function getUserSearch(string $user, int $limit = null, ?int $offset = 0): array;
 
     /**
      * @return mixed
@@ -81,7 +80,7 @@ interface SearchServiceInterface
      * @param string $index
      * @return $this
      */
-    public function setIndex($index);
+    public function setIndex(string $index);
 
     /**
      * Get predis client
@@ -91,9 +90,9 @@ interface SearchServiceInterface
     /**
      * Set predis client
      *
-     * @param array $parameters the connection parameters
-     * @param array $options the profile options
+     * @param array|null $parameters the connection parameters
+     * @param array|null $options the profile options
      * @return $this
      */
-    public function setPredis($parameters = null, $options = null);
+    public function setPredis(array $parameters = null, array $options = null);
 }

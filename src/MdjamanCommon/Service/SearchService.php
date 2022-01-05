@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,14 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\Service;
 
 use Elastica\Client;
+use Elastica\ResultSet;
 use MdjamanCommon\Provider\ServiceManagerAwareTrait;
 use Laminas\ServiceManager\ServiceManager;
 
@@ -55,12 +56,8 @@ class SearchService implements SearchServiceInterface
     /**
      * @var string
      */
-    protected $index = 'app_idx';
+    protected string $index = 'app_idx';
 
-    /**
-     * @var array
-     */
-    protected $types = [];
 
     /**
      * SearchService constructor.
@@ -76,20 +73,12 @@ class SearchService implements SearchServiceInterface
      * Performs a search
      *
      * @param string $query
-     * @param string $type
-     * @param null $limit
+     * @param int|null $limit
      * @param int $offset
-     * @return mixed
+     * @return ResultSet
      */
-    public function search($query, $type = 'patient', $limit = null, $offset = 0)
+    public function search(string $query, int $limit = null, int $offset = 0): ResultSet
     {
-        if (empty($query)) {
-            return false;
-        }
-
-        $index = $this->index;
-
-        $query = (string) $query;
 
         // Define a Query. We want a string query.
         $esQueryString = new \Elastica\Query\QueryString($query);
@@ -101,17 +90,9 @@ class SearchService implements SearchServiceInterface
         }
 
         // Load index
-        $esIdx = $this->getClient()->getIndex($index);
-        $type = $esIdx->getType($type);
-
-        /* if (!in_array($type, $this->types) || $type == 'all') {
-            foreach ($this->types as $t) {
-                $esIdx->addType($t);
-            }
-        } */
+        $esIdx = $this->getClient()->getIndex($this->index);
 
         $esIdx->refresh();
-        //Search on the index.
         return $esIdx->search($esQuery);
     }
 
@@ -132,14 +113,14 @@ class SearchService implements SearchServiceInterface
     /**
      * Get a user saved searches
      *
-     * @param $user
+     * @param string $user
      * @param integer|null $limit
      * @param integer $offset
      * @return array
      */
-    public function getUserSearch($user, $limit = null, $offset = 0)
+    public function getUserSearch(string $user, int $limit = null, $offset = 0): array
     {
-        $r_key = 'usr_src:' . $user->getId();
+        $r_key = 'usr_src:' . $user;
 
         $redis = $this->getPredis();
 
@@ -179,7 +160,7 @@ class SearchService implements SearchServiceInterface
      * @param string $index
      * @return $this
      */
-    public function setIndex($index)
+    public function setIndex(string $index)
     {
         $this->index = $index;
         return $this;
@@ -199,22 +180,12 @@ class SearchService implements SearchServiceInterface
     /**
      * Set predis client
      *
-     * @param array $parameters the connection parameters
-     * @param array $options the profile options
+     * @param array|null $parameters the connection parameters
+     * @param array|null $options the profile options
      * @return $this
      */
-    public function setPredis($parameters = null, $options = null)
+    public function setPredis(array $parameters = null, array $options = null): SearchService
     {
-        $predisOptions = $this->getServiceManager()->get('ipci_predis_options');
-
-        if (null == $parameters) {
-            $parameters = $predisOptions->getDefaultParameter();
-        }
-
-        if (null == $options) {
-            $options = $predisOptions->getDefaultSettings();
-        }
-
         $this->predis = new \Predis\Client($parameters, $options);
         return $this;
     }

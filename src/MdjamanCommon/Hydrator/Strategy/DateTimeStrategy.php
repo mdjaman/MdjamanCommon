@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -39,23 +39,30 @@ use Laminas\Hydrator\Strategy\DefaultStrategy;
 class DateTimeStrategy extends DefaultStrategy
 {
 
-    protected $allowNull;
+    /**
+     * @var bool
+     */
+    protected bool $allowNull;
+
 
     /**
      * DateTimeStrategy constructor.
+     *
      * @param bool $allowNull
      */
-    public function __construct($allowNull = true)
+    public function __construct(bool $allowNull = true)
     {
-        $this->allowNull = (bool) $allowNull;
+        $this->allowNull = $allowNull;
     }
 
     /**
      * {@inheritdoc}
      *
      * Convert a string value into a DateTime object
+     *
+     * @throws \Exception
      */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data = null)
     {
         if (empty($value) && true === $this->allowNull) {
             $value = null;

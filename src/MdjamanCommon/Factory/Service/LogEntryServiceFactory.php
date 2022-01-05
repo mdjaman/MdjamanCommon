@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,16 +23,15 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\Factory\Service;
 
 use Interop\Container\ContainerInterface;
+use MdjamanCommon\Options\ModuleOptions;
 use MdjamanCommon\Service\LogEntryService;
-use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
-use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 
@@ -46,19 +45,18 @@ class LogEntryServiceFactory implements FactoryInterface
     /**
      * Create LogEntryService
      *
-     * @param  ContainerInterface $container
-     * @param  string $requestedName
-     * @param  null|array $options
-     * @return object
-     * @throws ServiceNotFoundException if unable to resolve the service.
-     * @throws ServiceNotCreatedException if an exception is raised when
-     *     creating a service.
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param null|array $options
+     * @return LogEntryService
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $om = $container->has('doctrine.entitymanager.orm_default') ?
             $container->get('doctrine.entitymanager.orm_default') : $container->get('doctrine.documentmanager.odm_default');
-        $options = $container->get('MdjamanCommon\Options\ModuleOptions');
+        $options = $container->get(ModuleOptions::class);
         return new LogEntryService($container, $om, $options);
     }
 }

@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -48,11 +48,12 @@ class BaseForm extends Form
 
     /**
      * BaseForm constructor.
+     *
      * @param null $name
      * @param bool $actionsField
      * @param bool $crsfField
      */
-    public function __construct($name = null, $actionsField = false, $crsfField = false)
+    public function __construct($name = null, $actionsField = false, bool $crsfField = false)
     {
         parent::__construct($name);
 

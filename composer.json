@@ -20,11 +20,12 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.4",
+        "php": "^7.4 || ^8.0",
         "ext-iconv": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-ctype": "*",
+        "ext-json": "*",
         "laminas/laminas-modulemanager": "2.*",
         "laminas/laminas-servicemanager": "^3.0",
         "laminas/laminas-form": "^3.1",
@@ -49,12 +50,9 @@
         "predis/predis": "If you want to use redis"
     },
     "autoload": {
-        "psr-0": {
-            "MdjamanCommon": "src/"
-        },
-        "classmap": [
-            "./Module.php"
-        ]
+        "psr-4": {
+            "MdjamanCommon\\": "src/MdjamanCommon/"
+        }
     },
     "extra": {
         "branch-alias": {

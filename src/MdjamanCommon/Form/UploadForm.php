@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -57,17 +57,17 @@ class UploadForm extends Form
      */
     public function addElements()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'file',
             'type' => 'File',
-            'attributes' => array(
+            'attributes' => [
                 'id' => 'file',
                 'multiple' => true,
-            ),
-            'options' => array(
+            ],
+            'options' => [
                 'label' => 'Fichiers',
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
@@ -81,7 +81,7 @@ class UploadForm extends Form
         $fileInput->setRequired(true);
 
         $fileInput->getValidatorChain()
-                  ->attachByName('filesize', array('max' => 51200000));
+                  ->attachByName('filesize', ['max' => 51200000]);
                   //->attachByName('filemimetype', array('mimeType' => 'image/png,image/x-png,image/jpeg'));
                   //->attachByName('fileimagesize', array('maxWidth' => 100, 'maxHeight' => 100));
 

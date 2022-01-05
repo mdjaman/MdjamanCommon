@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2022 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,13 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2022 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\Service;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Gedmo\Tool\Wrapper\EntityWrapper;
 use Interop\Container\ContainerInterface;
 use MdjamanCommon\Options\ModuleOptionsInterface;
@@ -44,22 +44,22 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
     /**
      * @var array
      */
-    protected $allowed_method = ['find', 'findAll', 'findBy', 'findOneBy'];
+    protected array $allowed_method = ['find', 'findAll', 'findBy', 'findOneBy'];
 
     /**
      * @var string
      */
-    protected $userEntity;
+    protected string $userEntity;
 
     /**
      * @var array
      */
-    protected $allowed_filter = [];
+    protected array $allowed_filter = [];
 
     /**
      * @var ModuleOptionsInterface
      */
-    protected $options;
+    protected ModuleOptionsInterface $options;
 
     /**
      * LogEntryService constructor.
@@ -93,17 +93,16 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
                 $wrapped = new EntityWrapper($log, $this->objectManager);
                 //$objectMeta = $wrapped->getMetadata();
 
-                if ($userData = $log->getUsername()) {
-                    $field = 'username';
-                    $userData = $userData ? $this->objectManager->getReference($this->userEntity, $userData) : null;
-                    $wrapped->setPropertyValue($field, $userData);
-                }
-                if ($objectClassData = $log->getObjectClass()) {
-                    $field = 'objectClass';
-                    $objectClassData = $objectClassData ?
-                        $this->objectManager->getReference($objectClassData, $log->getObjectId()) : null;
-                    $wrapped->setPropertyValue($field, $objectClassData);
-                }
+                $userData = $log->getUsername();
+                $field = 'username';
+                $userData = $userData ? $this->objectManager->getReference($this->userEntity, $userData) : null;
+                $wrapped->setPropertyValue($field, $userData);
+
+                $objectClassData = $log->getObjectClass();
+                $field = 'objectClass';
+                $objectClassData = $objectClassData ?
+                    $this->objectManager->getReference($objectClassData, $log->getObjectId()) : null;
+                $wrapped->setPropertyValue($field, $objectClassData);
 
                 $results[] = $wrapped;
                 $filled = count($log) === 0;
@@ -115,8 +114,8 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
 
     /**
      * Filter
-     * @param array $filters
-     * @return mixed
+     * @param array|null $filters
+     * @return array
      */
     public function filter(array $filters = null)
     {
@@ -145,20 +144,14 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
             		$class = $this->allowed_filter[$value];
             		$criteria = ['objectClass' => $class];
             	}
-            	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
-            	break;
+                break;
             case 'action':
             	$criteria = ['action' => $value];
-            	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
-            	break;
-            default:
-                /*if (in_array($filter, $this->allowed_filter)) {
-                    $criteria = [$filter => $value];
-                }*/
-                $result = $this->findBy($criteria, $orderBy, $limit, $offset);
                 break;
         }
-        
+
+        $result = $this->findBy($criteria, $orderBy, $limit, $offset);
+
         return $this->resultWrapper($result);
     }
 }
