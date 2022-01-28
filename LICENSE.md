@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) $today.year Marcel DJAMAN
+Copyright (c) $today.year Marcel Djaman
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,5 +21,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 @author Marcel Djaman <marceldjaman@gmail.com>
-@copyright $today.year Marcel DJAMAN
+@copyright $today.year Marcel Djaman
 @license http://www.opensource.org/licenses/MIT MIT License

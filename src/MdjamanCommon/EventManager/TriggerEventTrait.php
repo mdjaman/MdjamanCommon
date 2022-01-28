@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 Marcel DJAMAN
+ * Copyright (c) 2020 Marcel Djaman
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,13 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2022 Marcel DJAMAN
+ * @copyright 2020 Marcel Djaman
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\EventManager;
 
-use Laminas\EventManager\ResponseCollection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Zend\EventManager\ResponseCollection;
 
 /**
  * Trait TriggerEventTrait
@@ -43,24 +41,18 @@ trait TriggerEventTrait
      * Trigger an event more easily :
      * - $target is $this by default
      *
-     * @param string $event
-     * @param array|object $argv
-     * @param null $target
-     * @param null|callable $callback
+     * @param  string $event
+     * @param  array|object $argv
+     * @param  object|string $target
+     * @param  null|callable $callback
      * @return ResponseCollection
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function triggerEvent(
-        string $event,
-        $argv = [],
-        $target = null,
-        callable $callback = null
-    ): ResponseCollection {
+    public function triggerEvent($event, $argv = array(), $target = null, $callback = null)
+    {
         if (! method_exists($this, 'getEventManager')) {
             throw new Exception\InvalidArgumentException(
                 'MdjamanCommon\EventManager\TriggerEventTrait requires the class that uses it to implement 
-                Laminas\EventManager\EventManagerAwareInterface'
+                Zend\EventManager\EventManagerAwareInterface'
             );
         }
 

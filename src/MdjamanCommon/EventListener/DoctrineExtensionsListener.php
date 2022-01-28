@@ -91,7 +91,7 @@ class DoctrineExtensionsListener
     protected function onEvent(EventArgs $event)
     {
         try {
-            if ($this->authenticationService->hasIdentity()) {
+            if (! $this->authenticationService->hasIdentity()) {
                 return;
             }
 

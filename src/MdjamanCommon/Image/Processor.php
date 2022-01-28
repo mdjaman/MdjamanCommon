@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 Marcel DJAMAN
+ * Copyright (c) 2020 Marcel Djaman
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2022 Marcel DJAMAN
+ * @copyright 2020 Marcel Djaman
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -41,18 +41,17 @@ class Processor
     /**
      * @var array
      */
-    protected array $defaultSizes = [
+    protected $defaultSizes = [
         'mini' => [24, 24],
         'thumb' => [60, 60],
     ];
 
     /**
      * Resize and create thumbnail from image source
-     *
      * @param string $path
      * @param array $resizes list Dimension of new images in array(width, height)
      */
-    public function __construct(string $path, array $resizes = [])
+    public function __construct($path, $resizes = array())
     {
         $path = realpath($path);
         $basename = pathinfo($path, PATHINFO_DIRNAME);

@@ -1,9 +1,11 @@
 {
     "name": "mdjaman/mdjaman-common",
-    "description": "Module that provides common functionality and library code for Laminas & Doctrine applications",
+    "description": "Module that provides common functionality and library code for ZF2/ZF3 & Doctrine applications",
     "type": "library",
     "keywords": [
-        "laminas",
+        "zf2",
+        "zf3",
+        "zend",
         "doctrine",
         "module",
         "common",
@@ -20,23 +22,22 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^7.1 || ^7.2",
         "ext-iconv": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-ctype": "*",
-        "ext-json": "*",
         "laminas/laminas-modulemanager": "2.*",
         "laminas/laminas-servicemanager": "^3.0",
-        "laminas/laminas-form": "^3.1",
+        "laminas/laminas-form": "2.*",
         "laminas/laminas-inputfilter": "2.*",
         "laminas/laminas-authentication": "2.*",
         "laminas/laminas-eventmanager": "^3.0",
         "laminas/laminas-stdlib": "^3.0",
         "laminas/laminas-log": "2.*",
-        "doctrine/doctrine-module": "^4.4",
-        "mdjaman/jms-serializer-module": "^3.0",
-        "gedmo/doctrine-extensions": "3.*",
+        "doctrine/doctrine-module": "^2.1",
+        "mdjaman/jms-serializer-module": "2.*",
+        "gedmo/doctrine-extensions": "2.4.*",
         "laminas/laminas-dependency-plugin": "^2.1"
     },
     "require-dev": {
@@ -50,13 +51,16 @@
         "predis/predis": "If you want to use redis"
     },
     "autoload": {
-        "psr-4": {
-            "MdjamanCommon\\": "src/MdjamanCommon/"
-        }
+        "psr-0": {
+            "MdjamanCommon": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.0-dev"
+            "dev-master": "2.5-dev"
         }
     }
 }

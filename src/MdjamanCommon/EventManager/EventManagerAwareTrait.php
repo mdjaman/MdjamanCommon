@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 Marcel DJAMAN
+ * Copyright (c) 2020 Marcel Djaman
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,14 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2022 Marcel DJAMAN
+ * @copyright 2020 Marcel Djaman
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\EventManager;
 
-use Laminas\EventManager;
-use Laminas\ServiceManager;
+use Zend\EventManager;
+use Zend\ServiceManager;
 
 /**
  * Trait EventManagerAwareTrait
@@ -49,8 +49,6 @@ trait EventManagerAwareTrait
      * event manager to it.
      *
      * @return EventManager\EventManagerInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function getEventManager()
     {
