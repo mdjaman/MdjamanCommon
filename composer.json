@@ -25,6 +25,7 @@
         "php": "^7.1 || ^7.2",
         "ext-iconv": "*",
         "ext-mbstring": "*",
+        "ext-json": "*",
         "ext-openssl": "*",
         "ext-ctype": "*",
         "zendframework/zend-modulemanager": "2.*",
