@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2023 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,17 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2023 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\Service;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Persistence\ObjectManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use Doctrine\Laminas\Hydrator\DoctrineObject;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerInterface;
@@ -39,10 +41,10 @@ use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
 use MdjamanCommon\Model\ModelInterface;
 use Psr\Log\LoggerInterface;
-use Zend\Hydrator\HydratorInterface;
-use Zend\Log\Logger;
-use Zend\Log\Processor\PsrPlaceholder;
-use Zend\Log\Writer\Stream;
+use Laminas\Hydrator\HydratorInterface;
+use Laminas\Log\Logger;
+use Laminas\Log\Processor\PsrPlaceholder;
+use Laminas\Log\Writer\Stream;
 
 /**
  * Class AbstractService
@@ -50,7 +52,7 @@ use Zend\Log\Writer\Stream;
  * @package MdjamanCommon\Service
  * @author Marcel Djaman <marceldjaman@gmail.com>
  */
-abstract class AbstractService implements AbstractServiceInterface
+abstract class AbstractService
 {
     use EventManagerAwareTrait;
     use TriggerEventTrait;
@@ -58,7 +60,7 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * @var ObjectManager
      */
-    protected $objectManager;
+    protected ObjectManager $objectManager;
 
     /**
      * @var string
@@ -66,48 +68,45 @@ abstract class AbstractService implements AbstractServiceInterface
     protected $entity;
     
     /**
-     * @var DoctrineObject
+     * @var HydratorInterface
      */
-    protected $hydrator;
+    protected HydratorInterface $hydrator;
     
     /**
      * @var Serializer
      */
-    protected $serializer;
+    protected Serializer $serializer;
     
     /**
      * @var array
      */
-    protected $serializerFormat = ['json', 'xml', 'yml'];
+    protected array $serializerFormat = ['json', 'xml', 'yml'];
     
     /**
      * @var string
      */
-    protected $logEntryEntity = 'Gedmo\\Loggable\\Entity\\LogEntry';
+    protected string $logEntryEntity = 'Gedmo\\Loggable\\Entity\\LogEntry';
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
 
     /**
      * AbstractService constructor.
-     * @param null $entityName
+     * @param string $entityName
      * @param ObjectManager $objectManager
      */
-    public function __construct($entityName = null, ObjectManager $objectManager)
+    public function __construct(string $entityName, ObjectManager $objectManager)
     {
-        if (! is_null($entityName)) {
-            $this->setEntity($entityName);
-        }
-
+        $this->setEntity($entityName);
         $this->objectManager = $objectManager;
         $this->enableSoftDeleteableFilter(true);
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEntity()
     {
@@ -118,7 +117,7 @@ abstract class AbstractService implements AbstractServiceInterface
      * @param string $entity
      * @return $this
      */
-    public function setEntity($entity)
+    public function setEntity(string $entity)
     {
         $this->entity = $entity;
         return $this;
@@ -127,9 +126,9 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * @return HydratorInterface
      */
-    public function getHydrator()
+    public function getHydrator(): HydratorInterface
     {
-        if (!$this->hydrator) {
+        if (! $this->hydrator) {
             $this->hydrator = new DoctrineObject($this->objectManager);
         }
         return $this->hydrator;
@@ -150,11 +149,11 @@ abstract class AbstractService implements AbstractServiceInterface
      *
      * Use this method to ensure that you're working with an array.
      *
-     * @param object $entity
+     * @param mixed $entity
      * @param HydratorInterface|null $hydrator
      * @return array
      */
-    public function toArray($entity, HydratorInterface $hydrator = null)
+    public function toArray($entity, ?HydratorInterface $hydrator)
     {
         if (is_array($entity)) {
             return $entity; // cut down on duplicate code
@@ -168,7 +167,7 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @return \JMS\Serializer\SerializerInterface
+     * @return SerializerInterface
      */
     public function getSerializer()
     {
@@ -200,12 +199,12 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param array|ModelInterface $entity
-     * @param string $format
-     * @param null $groups
+     * @param string|null $format
+     * @param array|string|null $groups
      * @return mixed|string
      * @throws \Exception
      */
-    public function serialize($entity, $format = 'json', $groups = null)
+    public function serialize($entity, ?string $format = 'json', $groups = null)
     {
         if (! in_array($format, $this->serializerFormat)) {
             throw new Exception\InvalidArgumentException('Format ' . $format . ' is not valid');
@@ -263,11 +262,10 @@ abstract class AbstractService implements AbstractServiceInterface
      * Creates a new instance of the given entityName or of the already known
      * one whose FQDN is stored in the className property.
      *
-     * @param string $entityName
+     * @param string|null $entityName
      * @return ModelInterface|mixed
-     * @throws \Exception
      */
-    public function createEntity($entityName = null)
+    public function createEntity(?string $entityName)
     {
         if (null === $entityName) {
             $entityName = $this->getEntity();
@@ -284,7 +282,7 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @return \Doctrine\Persistence\ObjectRepository
+     * @return ObjectRepository
      */
     public function getRepository()
     {
@@ -297,9 +295,9 @@ abstract class AbstractService implements AbstractServiceInterface
      *
      * @param string|int $id
      * @param string|null $class
-     * @return mixed
+     * @return object
      */
-    public function getReference($id, $class = null)
+    public function getReference($id, ?string $class)
     {
         if (null === $class) {
             $class = $this->getEntityClassName();
@@ -308,10 +306,10 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param null $class
-     * @return \Doctrine\Persistence\Mapping\ClassMetadata
+     * @param string|null $class
+     * @return ClassMetadata
      */
-    public function getEntityClassMetadata($class = null)
+    public function getEntityClassMetadata(?string $class)
     {
         if (null === $class) {
             $class = $this->getEntityClassName();
@@ -333,7 +331,7 @@ abstract class AbstractService implements AbstractServiceInterface
     }
 
     /**
-     * @param string $id
+     * @param string|int $id
      * @return ModelInterface|mixed
      *
      * @triggers find.pre
@@ -410,16 +408,16 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param array $criteria
-     * @param array|string $orderBy
-     * @param int $limit
-     * @param int $offset
+     * @param null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
      * @return array
      *
      * @triggers findBy.pre
      * @triggers findBy.post
      * @triggers find
      */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, $orderBy = null, int $limit = null, int $offset = null)
     {
         if (is_string($orderBy)) {
             $orderBy = [$orderBy => 'asc'];
@@ -448,7 +446,7 @@ abstract class AbstractService implements AbstractServiceInterface
      * @return array|ModelInterface|mixed|null
      * @throws \Exception
      */
-    public function save($entity, $flush = true, $event = null)
+    public function save($entity, bool $flush = true, $event = null)
     {
         # Gives the possibility to change $argv in listeners
         $argv = ['entity' => &$entity, 'flush' => &$flush];
@@ -488,7 +486,7 @@ abstract class AbstractService implements AbstractServiceInterface
      * @param bool $flush
      * @return ModelInterface
      */
-    public function delete($entity, $flush = true)
+    public function delete($entity, bool $flush = true)
     {
         # Gives the possibility to change $argv in listeners
         $argv = ['entity' => &$entity, 'flush' => &$flush];
@@ -515,11 +513,11 @@ abstract class AbstractService implements AbstractServiceInterface
     }
     
     /**
-     * enable/disable entityManager softDeleteable
+     * Enable/Disable entityManager softDeleteable
      * @param boolean $enable
      * @return $this
      */
-    public function enableSoftDeleteableFilter($enable = true)
+    public function enableSoftDeleteableFilter(bool $enable = true)
     {
         if (method_exists($this->objectManager, 'getFilterCollection')) {
             $filters = $this->objectManager->getFilterCollection();
@@ -527,7 +525,7 @@ abstract class AbstractService implements AbstractServiceInterface
             $filters = $this->objectManager->getFilters();
         }
         
-        if (true === $enable) {
+        if ($enable) {
             $filters->enable('softDeleteable');
         } else {
             $filters->disable('softDeleteable');
@@ -543,9 +541,9 @@ abstract class AbstractService implements AbstractServiceInterface
      * @return array|mixed
      * @throws \Exception
      */
-    public function filters(array $filters, array $orderBy = null, $limit = null, $offset = null)
+    public function filters(array $filters, array $orderBy = [], int $limit = null, int $offset = null)
     {
-        $searchParam = isset($filters['q']) ? $filters['q'] : '';
+        $searchParam = $filters['q'] ?? '';
         unset($filters['q']);
         if ($searchParam === '') {
             return $this->getMatchingRecords($filters, $orderBy, $limit, $offset);
@@ -572,7 +570,7 @@ abstract class AbstractService implements AbstractServiceInterface
      * @return mixed
      */
     public function search(
-        $searchTerm,
+        string $searchTerm,
         array $filters = [],
         array $orderBy = null,
         $limit = null,
@@ -681,12 +679,7 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     private function getEntityClassName()
     {
-        if (is_object($this->getEntity())) {
-            $class = get_class($this->getEntity());
-        } else {
-            $class = $this->getEntity();
-        }
-        return $class;
+        return is_string($this->getEntity()) ? $this->getEntity() : get_class($this->getEntity());
     }
 
     /**

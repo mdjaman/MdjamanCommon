@@ -5,6 +5,7 @@
     "keywords": [
         "zf2",
         "zf3",
+        "laminas",
         "zend",
         "doctrine",
         "module",
@@ -20,25 +21,26 @@
     ],
     "homepage": "https://github.com/mdjaman/MdjamanCommon",
     "license": "MIT",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
-        "php": "^7.1 || ^7.2",
+        "php": "^7.4",
         "ext-iconv": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-ctype": "*",
         "laminas/laminas-modulemanager": "2.*",
         "laminas/laminas-servicemanager": "^3.0",
-        "laminas/laminas-form": "2.*",
+        "laminas/laminas-form": "^3.1",
         "laminas/laminas-inputfilter": "2.*",
         "laminas/laminas-authentication": "2.*",
         "laminas/laminas-eventmanager": "^3.0",
         "laminas/laminas-stdlib": "^3.0",
         "laminas/laminas-log": "2.*",
-        "doctrine/doctrine-module": "^2.1",
-        "mdjaman/jms-serializer-module": "2.*",
-        "gedmo/doctrine-extensions": "2.4.*",
-        "laminas/laminas-dependency-plugin": "^2.1"
+        "doctrine/doctrine-module": "^5.0",
+        "mdjaman/jms-serializer-module": "3.*",
+        "gedmo/doctrine-extensions": "^3.11",
+        "laminas/laminas-dependency-plugin": "^2.1",
+        "ext-json": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "8.*"

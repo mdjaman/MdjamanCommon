@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2023 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,13 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2023 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\EventManager;
 
-use Zend\EventManager\ResponseCollection;
+use Laminas\EventManager\ResponseCollection;
 
 /**
  * Trait TriggerEventTrait
@@ -52,7 +52,7 @@ trait TriggerEventTrait
         if (! method_exists($this, 'getEventManager')) {
             throw new Exception\InvalidArgumentException(
                 'MdjamanCommon\EventManager\TriggerEventTrait requires the class that uses it to implement 
-                Zend\EventManager\EventManagerAwareInterface'
+                Laminas\EventManager\EventManagerAwareInterface'
             );
         }
 
