@@ -48,17 +48,12 @@
     "suggest": {
         "doctrine/doctrine-orm-module": "If you want to use Doctrine ORM",
         "doctrine/doctrine-mongo-odm-module": "If you want to use Doctrine ODM",
-        "imagine/imagine": "If you need image manipulation after uploading image",
-        "ruflin/elastica": "If you want to use elasticsearch as search server",
-        "predis/predis": "If you want to use redis"
+        "imagine/imagine": "If you need image manipulation after uploading image"
     },
     "autoload": {
-        "psr-0": {
-            "MdjamanCommon": "src/"
-        },
-        "classmap": [
-            "./Module.php"
-        ]
+        "psr-4": {
+            "MdjamanCommon\\": "src/MdjamanCommon/"
+        }
     },
     "extra": {
         "branch-alias": {

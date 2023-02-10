@@ -29,9 +29,9 @@
 
 namespace MdjamanCommon\Factory\Options;
 
-use Interop\Container\ContainerInterface;
 use MdjamanCommon\Options\ModuleOptions;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ModuleOptionsFactory

@@ -49,13 +49,15 @@ trait EventManagerAwareTrait
      * event manager to it.
      *
      * @return EventManager\EventManagerInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function getEventManager()
     {
-        if (!$this->events instanceof EventManager\EventManagerInterface) {
+        if (! $this->events instanceof EventManager\EventManagerInterface) {
             $this->setEventManager(new EventManager\EventManager());
             if ($this instanceof ServiceManager\ServiceLocatorInterface) {
-                $this->getEventManager()->setSharedManager($this->getServiceManager()->get('mdjaman_event_manager'));
+                $this->setEventManager($this->getServiceManager()->get('mdjaman_event_manager'));
             }
         }
         return $this->events;

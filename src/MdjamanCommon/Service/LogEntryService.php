@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2023 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,16 +23,16 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2023 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\Service;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Gedmo\Tool\Wrapper\EntityWrapper;
-use Interop\Container\ContainerInterface;
 use MdjamanCommon\Options\ModuleOptionsInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class LogEntryService
@@ -44,7 +44,7 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
     /**
      * @var array
      */
-    protected $allowed_method = ['find', 'findAll', 'findBy', 'findOneBy'];
+    protected array $allowed_method = ['find', 'findAll', 'findBy', 'findOneBy'];
 
     /**
      * @var string
@@ -63,6 +63,7 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
 
     /**
      * LogEntryService constructor.
+     *
      * @param ContainerInterface $container
      * @param ObjectManager $om
      * @param ModuleOptionsInterface $moduleOptions
@@ -77,15 +78,11 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
     }
 
     /**
-     * @param mixed $resultset
+     * @param array $resultset
      * @return array
      */
-    public function resultWrapper($resultset)
+    public function resultWrapper(array $resultset): array
     {
-        /*if ($resultset instanceof Cursor) {
-            $resultset = $resultset->toArray();
-        }*/
-
         $results = [];
         if ($resultset) {
             $filled = false;
@@ -115,10 +112,11 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
 
     /**
      * Filter
-     * @param array $filters
-     * @return mixed
+     *
+     * @param array|null $filters
+     * @return array
      */
-    public function filter(array $filters = null)
+    public function filter(?array $filters = null): array
     {
         $filter = null;
         $value = null;

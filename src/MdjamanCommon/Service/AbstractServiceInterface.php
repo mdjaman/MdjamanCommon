@@ -46,15 +46,15 @@ use Psr\Log\LoggerInterface;
 interface AbstractServiceInterface
 {
     /**
-     * @return string|object
+     * @return ModelInterface
      */
-    public function getEntity();
+    public function getEntity(): ModelInterface;
 
     /**
-     * @param string|object $entity
+     * @param ModelInterface $entity
      * @return $this
      */
-    public function setEntity($entity): AbstractService;
+    public function setEntity(ModelInterface $entity): AbstractServiceInterface;
 
     /**
      * @return HydratorInterface
@@ -65,18 +65,18 @@ interface AbstractServiceInterface
      * @param HydratorInterface $hydrator
      * @return $this
      */
-    public function setHydrator(HydratorInterface $hydrator): AbstractService;
+    public function setHydrator(HydratorInterface $hydrator): AbstractServiceInterface;
 
     /**
      * Uses the hydrator to convert the entity to an array.
      *
      * Use this method to ensure that you're working with an array.
      *
-     * @param object $entity
+     * @param mixed $entity
      * @param HydratorInterface|null $hydrator
      * @return array
      */
-    public function toArray(object $entity, HydratorInterface $hydrator = null): array;
+    public function toArray($entity, ?HydratorInterface $hydrator = null): array;
 
     /**
      * @return SerializerInterface
@@ -91,30 +91,29 @@ interface AbstractServiceInterface
 
     /**
      * @param array|ModelInterface $entity
-     * @param string $format
-     * @param string|null $groups
+     * @param string|null $format
+     * @param array|string|null $groups
      * @return mixed|string
      * @throws \Exception
      */
-    public function serialize($entity, string $format = 'json', string $groups = null);
+    public function serialize($entity, ?string $format = 'json', $groups = null);
 
     /**
      * @param array $data
      * @param ModelInterface|null $entity
-     * @return ModelInterface|mixed
+     * @return ModelInterface|mixed|null
      * @throws \Exception
      */
-    public function hydrate(array $data, ModelInterface $entity = null);
+    public function hydrate(array $data, ?ModelInterface $entity = null);
 
     /**
      * Creates a new instance of the given entityName or of the already known
      * one whose FQDN is stored in the className property.
      *
-     * @param string|null $entityName
-     * @return ModelInterface|mixed
-     * @throws \Exception
+     * @param string|\object|null $entityName
+     * @return ModelInterface
      */
-    public function createEntity(string $entityName = null);
+    public function createEntity($entityName = null): ModelInterface;
 
     /**
      * @return ObjectRepository
@@ -128,13 +127,13 @@ interface AbstractServiceInterface
      * @param string|null $class
      * @return object
      */
-    public function getReference($id, string $class = null): object;
+    public function getReference($id, ?string $class): object;
 
     /**
      * @param string|null $class
      * @return ClassMetadata
      */
-    public function getEntityClassMetadata(string $class = null): ClassMetadata;
+    public function getEntityClassMetadata(?string $class = null): ClassMetadata;
 
     /**
      * Return log entries
@@ -157,13 +156,13 @@ interface AbstractServiceInterface
 
     /**
      * @param array $criteria
-     * @return ModelInterface|mixed
+     * @return ModelInterface|null
      *
      * @triggers findOneBy.pre
      * @triggers findOneBy.post
      * @triggers find
      */
-    public function findOneBy(array $criteria);
+    public function findOneBy(array $criteria = []): ?ModelInterface;
 
     /**
      * @param array|string $orderBy
@@ -177,7 +176,7 @@ interface AbstractServiceInterface
 
     /**
      * @param array $criteria
-     * @param array|string|null $orderBy
+     * @param null $orderBy
      * @param int|null $limit
      * @param int|null $offset
      * @return array
@@ -186,31 +185,31 @@ interface AbstractServiceInterface
      * @triggers findBy.post
      * @triggers find
      */
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null): array;
+    public function findBy(array $criteria, $orderBy = null, int $limit = null, int $offset = null): array;
 
     /**
      * @param array|ModelInterface $entity
      * @param bool $flush
-     * @param null|string $event
-     * @return array|ModelInterface|mixed|null
+     * @param string|null $event
+     * @return ModelInterface
      * @throws \Exception
      */
-    public function save($entity, bool $flush = true, string $event = null);
+    public function save($entity, bool $flush = true, string $event = null): ModelInterface;
 
     /**
      * @param string|array|ModelInterface $entity
-     * @param bool $flush
+     * @param bool|null $flush
      * @return ModelInterface
      */
-    public function delete($entity, bool $flush = true): ModelInterface;
+    public function delete($entity, ?bool $flush = true): ModelInterface;
 
     /**
-     * enable/disable entityManager softDeleteable
+     * Enable/Disable entityManager softDeleteable
      *
-     * @param bool $enable
+     * @param boolean|null $enable
      * @return $this
      */
-    public function enableSoftDeleteableFilter(bool $enable = true): AbstractService;
+    public function enableSoftDeleteableFilter(?bool $enable = true): AbstractServiceInterface;
 
     /**
      * @param array $filters
@@ -220,46 +219,41 @@ interface AbstractServiceInterface
      * @return array|mixed
      * @throws \Exception
      */
-    public function filters(
-        array $filters,
-        array $orderBy = null,
-        int $limit = null,
-        int $offset = null
-    );
+    public function filters(array $filters, ?array $orderBy = [], ?int $limit = null, ?int $offset = null);
 
     /**
      * @param string $searchTerm
-     * @param array $filters
+     * @param array|null $filters
      * @param array|null $orderBy
-     * @param null $limit
-     * @param null $offset
+     * @param int|null $limit
+     * @param int|null $offset
      * @return mixed
      */
     public function search(
         string $searchTerm,
-        array $filters = [],
-        array $orderBy = null,
-               $limit = null,
-               $offset = null
+        ?array $filters = [],
+        ?array $orderBy = null,
+        ?int $limit = null,
+        ?int $offset = null
     );
 
     /**
-     * @param array $filters
+     * @param array|null $filters
      * @return int
      * @throws \Exception
      */
-    public function countMatchingRecords(array $filters): int;
+    public function countMatchingRecords(?array $filters = []): int;
 
     /**
      * @param mixed $logger
      * @return $this
      */
-    public function setLogger($logger = null): AbstractService;
+    public function setLogger($logger = null): AbstractServiceInterface;
 
     /**
-     * @return LoggerInterface
+     * @return mixed
      */
-    public function getLogger(): LoggerInterface;
+    public function getLogger();
 
     /**
      * @return ObjectManager

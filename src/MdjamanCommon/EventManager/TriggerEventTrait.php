@@ -47,7 +47,7 @@ trait TriggerEventTrait
      * @param  null|callable $callback
      * @return ResponseCollection
      */
-    public function triggerEvent($event, $argv = array(), $target = null, $callback = null)
+    public function triggerEvent($event, ?array $argv = [], $target = null, ?callable $callback = null)
     {
         if (! method_exists($this, 'getEventManager')) {
             throw new Exception\InvalidArgumentException(
