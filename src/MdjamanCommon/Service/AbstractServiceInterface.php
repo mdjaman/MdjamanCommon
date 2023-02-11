@@ -251,7 +251,7 @@ interface AbstractServiceInterface
     public function setLogger($logger = null): AbstractServiceInterface;
 
     /**
-     * @return mixed
+     * @return object
      */
     public function getLogger();
 

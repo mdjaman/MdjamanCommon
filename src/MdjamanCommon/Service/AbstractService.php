@@ -642,7 +642,7 @@ abstract class AbstractService implements AbstractServiceInterface
      * @param mixed $logger
      * @return AbstractServiceInterface
      */
-    public function setLogger(?object $logger = null): AbstractServiceInterface
+    public function setLogger($logger = null): AbstractServiceInterface
     {
         if (! $logger) {
             $writer = new Stream([
