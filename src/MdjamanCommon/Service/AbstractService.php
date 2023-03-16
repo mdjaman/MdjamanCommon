@@ -35,7 +35,6 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerInterface;
 use MdjamanCommon\EventManager\EventManagerAwareTrait;
 use MdjamanCommon\EventManager\TriggerEventTrait;
@@ -44,6 +43,7 @@ use Laminas\Hydrator\HydratorInterface;
 use Laminas\Log\Logger;
 use Laminas\Log\Processor\PsrPlaceholder;
 use Laminas\Log\Writer\Stream;
+use MdjamanCommon\Repository\LogEntryRepositoryInterface;
 
 abstract class AbstractService implements AbstractServiceInterface
 {
@@ -59,22 +59,22 @@ abstract class AbstractService implements AbstractServiceInterface
      * @var ModelInterface
      */
     protected ModelInterface $entity;
-    
+
     /**
      * @var HydratorInterface
      */
     protected HydratorInterface $hydrator;
-    
+
     /**
-     * @var Serializer
+     * @var SerializerInterface
      */
-    protected Serializer $serializer;
-    
+    protected SerializerInterface $serializer;
+
     /**
-     * @var array
+     * @var string[]
      */
     protected array $serializerFormat = ['json', 'xml', 'yml'];
-    
+
     /**
      * @var string
      */
@@ -84,6 +84,11 @@ abstract class AbstractService implements AbstractServiceInterface
      * @var mixed
      */
     protected $logger;
+
+    /**
+     * @var bool
+     */
+    protected bool $eventTriggered = false;
 
 
     /**
@@ -97,6 +102,17 @@ abstract class AbstractService implements AbstractServiceInterface
         $this->setEntity($entity);
         $this->objectManager = $objectManager;
         $this->enableSoftDeleteableFilter(true);
+
+        $this->serializer = \JMS\Serializer\SerializerBuilder::create()
+            ->setPropertyNamingStrategy(
+                new \JMS\Serializer\Naming\SerializedNameAnnotationStrategy(
+                    new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
+                )
+            )
+            ->setCacheDir(getcwd() . '/data/JMSSerializer')
+            ->build();
+
+        $this->hydrator = new DoctrineObject($this->objectManager);
     }
 
     /**
@@ -119,9 +135,6 @@ abstract class AbstractService implements AbstractServiceInterface
 
     public function getHydrator(): HydratorInterface
     {
-        if (! $this->hydrator) {
-            $this->hydrator = new DoctrineObject($this->objectManager);
-        }
         return $this->hydrator;
     }
 
@@ -150,7 +163,9 @@ abstract class AbstractService implements AbstractServiceInterface
             }
             return $hydrator->extract($entity);
         }
-        throw new Exception\InvalidArgumentException('Entity passed to db mapper should be an array or object.');
+        throw new Exception\InvalidArgumentException(
+            'Entity passed to db mapper should be an array or object.'
+        );
     }
 
     /**
@@ -158,28 +173,15 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function getSerializer(): SerializerInterface
     {
-        if (! $this->serializer) {
-            $this->setSerializer();
-        }
         return $this->serializer;
     }
 
     /**
-     * @param object|null $serializer
+     * @param mixed $serializer
      * @return AbstractServiceInterface
      */
-    public function setSerializer($serializer = null): AbstractServiceInterface
+    public function setSerializer($serializer): AbstractServiceInterface
     {
-        if (! $serializer) {
-            $serializer = \JMS\Serializer\SerializerBuilder::create()
-                ->setPropertyNamingStrategy(
-                    new \JMS\Serializer\Naming\SerializedNameAnnotationStrategy(
-                        new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
-                    )
-                )
-                ->setCacheDir(getcwd() . '/data/JMSSerializer')
-                ->build();
-        }
         $this->serializer = $serializer;
         return $this;
     }
@@ -187,7 +189,7 @@ abstract class AbstractService implements AbstractServiceInterface
     /**
      * @param ModelInterface $entity
      * @param string|null $format
-     * @param array|string $groups
+     * @param array|string|null $groups
      * @return mixed|string
      * @throws \Exception
      */
@@ -197,7 +199,7 @@ abstract class AbstractService implements AbstractServiceInterface
             throw new Exception\InvalidArgumentException('Format ' . $format . ' is not valid');
         }
         $serializer = $this->getSerializer();
-        
+
         $context = SerializationContext::create()->enableMaxDepthChecks();
         $groups = (array) $groups;
         if (count($groups)) {
@@ -222,10 +224,12 @@ abstract class AbstractService implements AbstractServiceInterface
             $entity = $this->createEntity();
         }
 
-        # Gives the possibility to change $argv in listeners
         $argv = ['data' => &$data, 'entity' => $entity];
-        $this->triggerEvent(__FUNCTION__.'.pre', $argv);
-        extract($argv);
+        if ($this->eventTriggered) {
+            # Gives the possibility to change $argv in listeners
+            $this->triggerEvent(__FUNCTION__.'.pre', $argv);
+            extract($argv);
+        }
 
         try {
             $entity = $this->getHydrator()->hydrate($data, $entity);
@@ -234,7 +238,9 @@ abstract class AbstractService implements AbstractServiceInterface
             $hydrator->hydrate($entity, $data);
         }
 
-        $this->triggerEvent(__FUNCTION__.'.post', $argv);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.post', $argv);
+        }
 
         return $entity;
     }
@@ -272,7 +278,7 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function getReference($id, ?string $class = null): object
     {
-        if (null === $class) {
+        if ($class === null) {
             $class = $this->getEntityClassName();
         }
         return $this->objectManager->getReference($class, $id);
@@ -284,7 +290,7 @@ abstract class AbstractService implements AbstractServiceInterface
      */
     public function getEntityClassMetadata(?string $class = null): ClassMetadata
     {
-        if (null === $class) {
+        if ($class === null) {
             $class = $this->getEntityClassName();
         }
         return $this->objectManager->getClassMetadata($class);
@@ -292,10 +298,11 @@ abstract class AbstractService implements AbstractServiceInterface
 
     /**
      * @param ModelInterface $entity
-     * @return mixed
+     * @return \Gedmo\Loggable\Document\LogEntry[]|mixed
      */
     public function getLogEntries(ModelInterface $entity)
     {
+        /** @var LogEntryRepositoryInterface $logEntryRepository */
         $logEntryRepository = $this->objectManager->getRepository($this->logEntryEntity);
         return $logEntryRepository->getLogEntries($entity);
     }
@@ -308,13 +315,17 @@ abstract class AbstractService implements AbstractServiceInterface
     {
         # Gives the possibility to change $argv in listeners
         $argv = ['id' => &$id];
-        $this->triggerEvent(__FUNCTION__.'.pre', $argv);
-        extract($argv);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__.'.pre', $argv);
+            extract($argv);
+        }
 
         $entity = $this->getRepository()->find($id);
 
-        $this->triggerEvent(__FUNCTION__, ['entity' => $entity]);
-        $this->triggerEvent(__FUNCTION__.'.post', ['id' => $id, 'entity' => $entity]);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__, ['entity' => $entity]);
+            $this->triggerEvent(__FUNCTION__ . '.post', ['id' => $id, 'entity' => $entity]);
+        }
 
         return $entity;
     }
@@ -327,13 +338,17 @@ abstract class AbstractService implements AbstractServiceInterface
     {
         # Gives the possibility to change $argv in listeners
         $argv = ['criteria' => &$criteria];
-        $this->triggerEvent(__FUNCTION__ .'.pre', $argv);
-        extract($argv);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.pre', $argv);
+            extract($argv);
+        }
 
         $entity = $this->getRepository()->findOneBy($criteria);
 
-        $this->triggerEvent('find', ['entity' => $entity]);
-        $this->triggerEvent(__FUNCTION__.'.post', ['criteria' => $criteria, 'entity' => $entity]);
+        if ($this->eventTriggered) {
+            $this->triggerEvent('find', ['entity' => $entity]);
+            $this->triggerEvent(__FUNCTION__.'.post', ['criteria' => $criteria, 'entity' => $entity]);
+        }
 
         return $entity;
     }
@@ -350,8 +365,10 @@ abstract class AbstractService implements AbstractServiceInterface
 
         # Gives the possibility to change $argv in listeners
         $argv = ['orderBy' => &$orderBy];
-        $this->triggerEvent(__FUNCTION__.'.pre', $argv);
-        extract($argv);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.pre', $argv);
+            extract($argv);
+        }
 
         $entities = $this->getRepository()->findBy(array(), $orderBy);
 
@@ -359,7 +376,9 @@ abstract class AbstractService implements AbstractServiceInterface
             $this->triggerEvent('find', ['entity' => $entity]);
         }*/
 
-        $this->triggerEvent(__FUNCTION__.'.post', ['orderBy' => $orderBy, 'entities' => $entities]);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.post', ['orderBy' => $orderBy, 'entities' => $entities]);
+        }
 
         return $entities;
     }
@@ -379,16 +398,19 @@ abstract class AbstractService implements AbstractServiceInterface
 
         # Gives the possibility to change $argv in listeners
         $argv = ['criteria' => &$criteria, 'orderBy' => &$orderBy, 'limit' => &$limit, 'offset' => &$offset];
-        $this->triggerEvent(__FUNCTION__.'.pre', $argv);
-        extract($argv);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.pre', $argv);
+            extract($argv);
+        }
 
         $entities = $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
 
-        /*foreach ($entities as $entity) {
-            $this->triggerEvent('find', ['entity' => $entity]);
-        }*/
-
-        $this->triggerEvent(__FUNCTION__ . '.post', array_merge($argv, ['entities' => $entities]));
+        if ($this->eventTriggered) {
+            /*foreach ($entities as $entity) {
+                $this->triggerEvent('find', ['entity' => $entity]);
+            }*/
+            $this->triggerEvent(__FUNCTION__ . '.post', array_merge($argv, ['entities' => $entities]));
+        }
 
         return $entities;
     }
@@ -403,8 +425,10 @@ abstract class AbstractService implements AbstractServiceInterface
     {
         # Gives the possibility to change $argv in listeners
         $argv = ['entity' => &$entity, 'flush' => &$flush];
-        $this->triggerEvent(__FUNCTION__ . '.pre', $argv);
-        extract($argv);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.pre', $argv);
+            extract($argv);
+        }
 
         if (is_array($entity)) {
             # Means we only have an array of data here
@@ -429,7 +453,10 @@ abstract class AbstractService implements AbstractServiceInterface
         if (null !== $event && $event !== __FUNCTION__) {
             $this->triggerEvent($event, array_merge($argv, ['saved' => $entity]));
         }
-        $this->triggerEvent(__FUNCTION__.'.post', array_merge($argv, ['saved' => $entity]));
+
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.post', array_merge($argv, ['saved' => $entity]));
+        }
 
         return $entity;
     }
@@ -443,8 +470,10 @@ abstract class AbstractService implements AbstractServiceInterface
     {
         # Gives the possibility to change $argv in listeners
         $argv = ['entity' => &$entity, 'flush' => &$flush];
-        $this->triggerEvent(__FUNCTION__.'.pre', $argv);
-        extract($argv);
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.pre', $argv);
+            extract($argv);
+        }
 
         if (is_string($entity)) {
             # Means we only have the id of the entity
@@ -460,7 +489,9 @@ abstract class AbstractService implements AbstractServiceInterface
             $this->objectManager->flush();
         }
 
-        $this->triggerEvent(__FUNCTION__.'.post', array_merge($argv, ['deleted' => $entity]));
+        if ($this->eventTriggered) {
+            $this->triggerEvent(__FUNCTION__ . '.post', array_merge($argv, ['deleted' => $entity]));
+        }
 
         return $entity;
     }
@@ -476,7 +507,7 @@ abstract class AbstractService implements AbstractServiceInterface
         } else {
             $filters = $this->objectManager->getFilters();
         }
-        
+
         if ($enable) {
             $filters->enable('softDeleteable');
         } else {
@@ -673,5 +704,39 @@ abstract class AbstractService implements AbstractServiceInterface
     public function getObjectManager(): ObjectManager
     {
         return $this->objectManager;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogEntryEntity(): string
+    {
+        return $this->logEntryEntity;
+    }
+
+    /**
+     * @param string $logEntryEntity
+     * @return $this
+     */
+    public function setLogEntryEntity(string $logEntryEntity): AbstractServiceInterface
+    {
+        $this->logEntryEntity = $logEntryEntity;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEventTriggered(): bool
+    {
+        return $this->eventTriggered;
+    }
+
+    /**
+     * @param bool $eventTriggered
+     */
+    public function setEventTriggered(bool $eventTriggered): void
+    {
+        $this->eventTriggered = $eventTriggered;
     }
 }

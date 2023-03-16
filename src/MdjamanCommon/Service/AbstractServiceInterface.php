@@ -35,7 +35,6 @@ use Doctrine\Persistence\ObjectRepository;
 use JMS\Serializer\SerializerInterface;
 use Laminas\Hydrator\HydratorInterface;
 use MdjamanCommon\Model\ModelInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Interface AbstractServiceInterface
@@ -87,10 +86,10 @@ interface AbstractServiceInterface
      * @param mixed $serializer
      * @return $this
      */
-    public function setSerializer($serializer = null): AbstractServiceInterface;
+    public function setSerializer($serializer): AbstractServiceInterface;
 
     /**
-     * @param array|ModelInterface $entity
+     * @param ModelInterface $entity
      * @param string|null $format
      * @param array|string|null $groups
      * @return mixed|string

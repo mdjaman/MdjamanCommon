@@ -1,0 +1,7 @@
+parameters:
+	paths:
+		- src
+	level: 6
+	scanFiles:
+	    - ../../vendor/doctrine/mongodb-odm/lib/Doctrine/ODM/MongoDB/Repository/DocumentRepository.php
+	    - ../../vendor/doctrine/orm/lib/Doctrine/ORM/EntityRepository.php

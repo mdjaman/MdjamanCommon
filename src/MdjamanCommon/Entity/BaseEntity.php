@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2023 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2023 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -46,6 +46,7 @@ abstract class BaseEntity implements ModelInterface
     use SoftDeleteableEntity;
 
     /**
+     * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      * @JMS\Groups({"list", "details"})
@@ -53,6 +54,7 @@ abstract class BaseEntity implements ModelInterface
     protected $created_at;
 
     /**
+     * @var \DateTime
      * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
      * @JMS\Groups({"details"})
@@ -66,18 +68,22 @@ abstract class BaseEntity implements ModelInterface
 
     /**
      * @ORM\PrePersist
+     * @return $this
      */
     public function prePersist()
     {
         $this->created_at = new \DateTime("now");
+        return $this;
     }
 
     /**
      * @ORM\PreUpdate
+     * @return $this
      */
     public function preUpdate()
     {
         $this->updated_at = new \DateTime("now");
+        return $this;
     }
 
     /**
@@ -99,8 +105,8 @@ abstract class BaseEntity implements ModelInterface
     /**
      * Update attributes of an entity by array
      *
-     * @param array $data
-     * @return mixed|void
+     * @param array<string, mixed> $data
+     * @return $this
      * @throws \ReflectionException
      */
     public function exchangeArray($data)
@@ -110,10 +116,11 @@ abstract class BaseEntity implements ModelInterface
                 $this->$key = $val;
             }
         }
+        return $this;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getArrayCopy()
     {
@@ -121,7 +128,7 @@ abstract class BaseEntity implements ModelInterface
     }
 
     /**
-     * @return array|null
+     * @return array<string, mixed>
      * @throws \ReflectionException
      */
     public function toArray()
@@ -174,7 +181,7 @@ abstract class BaseEntity implements ModelInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      * @throws \ReflectionException
      */
     public function getClassFields()

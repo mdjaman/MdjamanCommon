@@ -27,79 +27,41 @@
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
-namespace MdjamanCommon\Model;
+namespace MdjamanCommon\Repository;
+
+use Gedmo\Loggable\Entity\LogEntry;
 
 /**
- * Interface ModelInterface
- * @package MdjamanCommon\Model
+ * Interface LogEntryRepositoryInterface
+ *
+ * @package MdjamanCommon\Repository
+ * @author Marcel DJAMAN <marceldjaman@gmail.com>
  */
-interface ModelInterface
+interface LogEntryRepositoryInterface
 {
-    /**
-     * @return $this
-     */
-    public function prePersist();
 
     /**
-     * @return $this
-     */
-    public function preUpdate();
-
-    /**
-     * @return \DateTime|null
-     */
-    public function getUpdatedAt();
-
-    /**
-     * @return \DateTime|null
-     */
-    public function getCreatedAt();
-
-    /**
-     * @param array<string, mixed> $data
-     * @return $this
-     */
-    public function exchangeArray(array $data);
-
-    /**
-     * @return array
-     */
-    public function getArrayCopy();
-
-    /**
-     * @return array
-     */
-    public function toArray();
-
-    /**
-     * @return string
-     */
-    public function __toString();
-
-    /**
-     * Set createdAt
+     * Loads all log entries for the
+     * given $document
      *
-     * @param \DateTime $createdAt
-     * @return $this
-     */
-    public function setCreatedAt($createdAt);
-
-    /**
-     * Set updatedAt
+     * @param object $document
      *
-     * @param \DateTime $updatedAt
-     * @return $this
+     * @return \Gedmo\Loggable\Document\LogEntry[]|\Gedmo\Loggable\Document\LogEntry[]
      */
-    public function setUpdatedAt($updatedAt);
+    public function getLogEntries($document);
 
     /**
-     * @return string
+     * Reverts given $document to $revision by
+     * restoring all fields from that $revision.
+     * After this operation you will need to
+     * persist and flush the $document.
+     *
+     * @param object $document
+     * @param int    $version
+     *
+     * @throws \Gedmo\Exception\UnexpectedValueException
+     *
+     * @return void
      */
-    public function getClassName();
-
-    /**
-     * @return array
-     * @throws \ReflectionException
-     */
-    public function getClassFields();
+    public function revert($document, $version = 1);
 }

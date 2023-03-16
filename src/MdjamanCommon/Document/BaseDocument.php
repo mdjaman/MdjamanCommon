@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2023 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2023 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -66,18 +66,22 @@ abstract class BaseDocument implements ModelInterface
 
     /**
      * @ODM\PrePersist
+     * @return $this
      */
     public function prePersist()
     {
         $this->created_at = new \DateTime("now");
+        return $this;
     }
 
     /**
      * @ODM\PreUpdate
+     * @return $this
      */
     public function preUpdate()
     {
         $this->updated_at = new \DateTime("now");
+        return $this;
     }
 
     /**
@@ -97,21 +101,22 @@ abstract class BaseDocument implements ModelInterface
     }
 
     /**
-     * @param array $data
-     * @return mixed|void
+     * @param array<string, mixed> $data
+     * @return $this
      * @throws \ReflectionException
      */
-    public function exchangeArray($data)
+    public function exchangeArray(array $data)
     {
         foreach ($data as $key => $val) {
             if (in_array($key, $this->getClassFields())) {
                 $this->$key = $val;
             }
         }
+        return $this;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getArrayCopy()
     {
@@ -119,7 +124,7 @@ abstract class BaseDocument implements ModelInterface
     }
 
     /**
-     * @return array|null
+     * @return array<string, mixed>
      * @throws \ReflectionException
      */
     public function toArray()
@@ -172,7 +177,7 @@ abstract class BaseDocument implements ModelInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      * @throws \ReflectionException
      */
     public function getClassFields()

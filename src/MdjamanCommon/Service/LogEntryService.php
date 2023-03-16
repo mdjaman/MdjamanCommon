@@ -29,8 +29,11 @@
 
 namespace MdjamanCommon\Service;
 
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Gedmo\Tool\Wrapper\EntityWrapper;
+use Gedmo\Tool\Wrapper\MongoDocumentWrapper;
 use MdjamanCommon\Options\ModuleOptionsInterface;
 use Psr\Container\ContainerInterface;
 
@@ -42,24 +45,19 @@ use Psr\Container\ContainerInterface;
 class LogEntryService extends AbstractService implements LogEntryServiceInterface
 {
     /**
-     * @var array
-     */
-    protected array $allowed_method = ['find', 'findAll', 'findBy', 'findOneBy'];
-
-    /**
      * @var string
      */
-    protected $userEntity;
+    protected string $userEntity;
 
     /**
      * @var array
      */
-    protected $allowed_filter = [];
+    protected array $allowed_filter = [];
 
     /**
      * @var ModuleOptionsInterface
      */
-    protected $options;
+    protected ModuleOptionsInterface $options;
 
     /**
      * LogEntryService constructor.
@@ -86,8 +84,20 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
         $results = [];
         if ($resultset) {
             $filled = false;
+            if ($this->objectManager instanceof EntityManagerInterface) {
+                $entityWrapperClass = EntityWrapper::class;
+            } elseif ($this->objectManager instanceof DocumentManager) {
+                $entityWrapperClass = MongoDocumentWrapper::class;
+            } else {
+                $entityWrapperClass = null;
+            }
+
+            if (! $entityWrapperClass) {
+                return $results;
+            }
+
             while (($log = array_pop($resultset)) && ! $filled) {
-                $wrapped = new EntityWrapper($log, $this->objectManager);
+                $wrapped = new $entityWrapperClass($log, $this->objectManager);
                 //$objectMeta = $wrapped->getMetadata();
 
                 if ($userData = $log->getUsername()) {
@@ -124,12 +134,14 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
         $limit = 20;
         $sort_df = 'loggedAt';
         $offset = null;
+        $sort = null;
+        $dir = null;
 
         if (is_array($filters)) {
-            extract($filters, EXTR_OVERWRITE);
+            extract($filters);
         }
 
-        $sort = !isset($sort) ? $sort_df : $sort;
+        $sort = ($sort === null) ? $sort_df : $sort;
 
         if (!isset($dir) || !in_array($dir, ['asc', 'desc'])) {
             $dir = 'desc';
@@ -139,16 +151,16 @@ class LogEntryService extends AbstractService implements LogEntryServiceInterfac
 
         switch ($filter) {
             case 'class':
-            	if (array_key_exists($value, $this->allowed_filter) ) {
-            		$class = $this->allowed_filter[$value];
-            		$criteria = ['objectClass' => $class];
-            	}
-            	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
-            	break;
+                if (array_key_exists($value, $this->allowed_filter)) {
+                    $class = $this->allowed_filter[$value];
+                    $criteria = ['objectClass' => $class];
+                }
+                $result = $this->findBy($criteria, $orderBy, $limit, $offset);
+                break;
             case 'action':
-            	$criteria = ['action' => $value];
-            	$result = $this->findBy($criteria, $orderBy, $limit, $offset);
-            	break;
+                $criteria = ['action' => $value];
+                $result = $this->findBy($criteria, $orderBy, $limit, $offset);
+                break;
             default:
                 /*if (in_array($filter, $this->allowed_filter)) {
                     $criteria = [$filter => $value];

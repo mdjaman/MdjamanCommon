@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2023 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2023 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -183,7 +183,7 @@ class StringUtils
 
         if (! $exact) {
             $spacepos = strrpos($truncate, ' ');
-            if (isset($spacepos)) {
+            if ($spacepos) {
                 $truncate = substr($truncate, 0, $spacepos);
             }
         }
@@ -201,14 +201,14 @@ class StringUtils
     /**
      * Converts a CamelCase word into snake_case
      *
-     * @author Exadra37 exadra37 in gmail point com
+     * @param string $input - string to convert to snake_case
+     * @param string|null $splitter - splitter to use
+     * @return string        - string converted to snake_case
      * @since  12/02/2014 - v.1.0.0
      *
-     * @param  string $input - string to convert to snake_case
-     * @param  string $splitter - splitter to use
-     * @return string        - string converted to snake_case
+     * @author Exadra37 exadra37 in gmail point com
      */
-    public static function camelCaseToSnakeCase($input, $splitter = "_")
+    public static function camelCaseToSnakeCase(string $input, ?string $splitter = "_")
     {
         return ctype_lower($input) ?
             $input :
@@ -221,14 +221,17 @@ class StringUtils
 
     /**
      * Converts camelCase string to have spaces between each.
-     * @param $camelCaseString
+     * @param string $camelCaseString
      * @return string
      */
-    public static function camelCaseToTitle($camelCaseString)
+    public static function camelCaseToTitle(string $camelCaseString)
     {
         $re = '/(?<=[a-z])(?=[A-Z])/x';
         $a = preg_split($re, $camelCaseString);
-        return join($a, " ");
+        if (! $a) {
+            return '';
+        }
+        return join($a, []);
     }
 
     /**
@@ -237,10 +240,10 @@ class StringUtils
      * and removes spaces, dashes, as well as underscores.
      *
      * @param string $string
-     * @param null|string $encoding
+     * @param string|null $encoding
      * @return string
      */
-    public static function camelize($string, $encoding = null)
+    public static function camelize(string $string, ?string $encoding = null)
     {
         $stringy = lcfirst(trim($string));
         $stringy = preg_replace('/^[-_]+/', '', $stringy);

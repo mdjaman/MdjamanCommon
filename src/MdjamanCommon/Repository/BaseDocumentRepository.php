@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Marcel Djaman
+ * Copyright (c) 2023 Marcel DJAMAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  * @author Marcel Djaman <marceldjaman@gmail.com>
- * @copyright 2020 Marcel Djaman
+ * @copyright 2023 Marcel DJAMAN
  * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
@@ -58,7 +58,6 @@ class BaseDocumentRepository extends DocumentRepository
         }
 
         $qb->count();
-        $qb->eagerCursor(true);
         $query = $qb->getQuery();
 
         return $query->execute();
@@ -81,7 +80,7 @@ class BaseDocumentRepository extends DocumentRepository
         $offset = null,
         $params = []
     ) {
-        $qb = $this->createQueryBuilder()->eagerCursor(true);
+        $qb = $this->createQueryBuilder();
 
         foreach ($criteria as $key => $value) {
             if ($key !== null) {
