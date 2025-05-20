@@ -1,12 +1,30 @@
 <?php
-/**
- * This file is part of the RIRGH project
- * Copyright (c) 2022 RIGRH
- * @author Marcel Djaman <marceldjaman@gmail.com>
- * @author Fabrys Sahiry <fsahiry@gmail.com>
+/*
+ * The MIT License (MIT)
  *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * Copyright (c) 2025 Marcel DJAMAN
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @author Marcel Djaman <marceldjaman@gmail.com>
+ * @copyright 2023 Marcel DJAMAN
+ * @license http://www.opensource.org/licenses/MIT MIT License
  */
 
 namespace MdjamanCommon\Document;
@@ -31,6 +49,7 @@ abstract class BaseDocument implements ModelInterface
      * @var \DateTime
      * @ODM\Field(name="created_at", type="date")
      * @JMS\Groups({"list", "details"})
+     * @JMS\Type("DateTimeImmutable")
      */
     protected $created_at;
 
@@ -38,6 +57,7 @@ abstract class BaseDocument implements ModelInterface
      * @var \DateTime
      * @ODM\Field(name="updated_at", type="date")
      * @JMS\Groups({"list", "details"})
+     * @JMS\Type("DateTimeImmutable")
      */
     protected $updated_at;
 
@@ -48,18 +68,22 @@ abstract class BaseDocument implements ModelInterface
 
     /**
      * @ODM\PrePersist
+     * @return $this
      */
     public function prePersist()
     {
         $this->created_at = new \DateTime("now");
+        return $this;
     }
 
     /**
      * @ODM\PreUpdate
+     * @return $this
      */
     public function preUpdate()
     {
         $this->updated_at = new \DateTime("now");
+        return $this;
     }
 
     /**
@@ -79,21 +103,22 @@ abstract class BaseDocument implements ModelInterface
     }
 
     /**
-     * @param array $data
-     * @return mixed|void
+     * @param array<string, mixed> $data
+     * @return $this
      * @throws \ReflectionException
      */
-    public function exchangeArray($data)
+    public function exchangeArray(array $data)
     {
         foreach ($data as $key => $val) {
             if (in_array($key, $this->getClassFields())) {
                 $this->$key = $val;
             }
         }
+        return $this;
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getArrayCopy()
     {
@@ -101,7 +126,7 @@ abstract class BaseDocument implements ModelInterface
     }
 
     /**
-     * @return array|null
+     * @return array<string, mixed>
      * @throws \ReflectionException
      */
     public function toArray()
@@ -111,6 +136,14 @@ abstract class BaseDocument implements ModelInterface
             $data[$field] = $this->$field;
         }
         return (count($data) > 0) ? $data : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+         return (string) $this->getId();
     }
 
     /**
@@ -146,7 +179,7 @@ abstract class BaseDocument implements ModelInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      * @throws \ReflectionException
      */
     public function getClassFields()

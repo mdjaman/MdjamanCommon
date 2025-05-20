@@ -35,7 +35,7 @@ interface ModelInterface
      * @param array $data
      * @return mixed
      */
-    public function exchangeArray($data);
+    public function exchangeArray(array $data);
 
     /**
      * @return array
