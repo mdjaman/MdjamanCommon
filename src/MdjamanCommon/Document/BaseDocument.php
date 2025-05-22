@@ -49,7 +49,7 @@ abstract class BaseDocument implements ModelInterface
      * @var \DateTime
      * @ODM\Field(name="created_at", type="date")
      * @JMS\Groups({"list", "details"})
-     * @JMS\Type("DateTimeImmutable")
+     * @JMS\Type("DateTimeInterface")
      */
     protected $created_at;
 
@@ -57,7 +57,7 @@ abstract class BaseDocument implements ModelInterface
      * @var \DateTime
      * @ODM\Field(name="updated_at", type="date")
      * @JMS\Groups({"list", "details"})
-     * @JMS\Type("DateTimeImmutable")
+     * @JMS\Type("DateTimeInterface")
      */
     protected $updated_at;
 

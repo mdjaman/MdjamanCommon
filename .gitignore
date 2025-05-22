@@ -7,3 +7,4 @@ phpunit.xml
 .DS_Store
 nbproject
 *.lock
+.history
