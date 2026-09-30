@@ -38,7 +38,7 @@ use MdjamanCommon\Traits\SoftDeleteableDocument;
 /**
  * @ODM\MappedSuperclass
  * @ODM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(fieldName="deleted_at", timeAware=false)
+ * @Gedmo\SoftDeleteable(fieldName="deleted_at", timeAware=false, hardDelete=false)
  */
 abstract class BaseDocument implements ModelInterface
 {
