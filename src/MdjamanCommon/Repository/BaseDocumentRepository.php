@@ -29,7 +29,9 @@
 
 namespace MdjamanCommon\Repository;
 
+use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use MongoDB\BSON\Regex;
 
 /**
  * Class BaseDocumentRepository
@@ -64,12 +66,27 @@ class BaseDocumentRepository extends DocumentRepository
     }
 
     /**
-     * @param array|null $criteria
+     * A "contains, ignoring case" expression that matches $term literally: what a search box needs, so a dot, a star
+     * or an unbalanced parenthesis the user typed is text, not pattern syntax.
+     *
+     * @param string $term
+     * @return Regex
+     */
+    public static function containsRegex(string $term): Regex
+    {
+        return new Regex(preg_quote($term), 'i');
+    }
+
+    /**
+     * Documents where ANY of the criteria fields contains its text (ignoring case), narrowed by $params (exact
+     * matches), sorted and paged.
+     *
+     * @param array|null $criteria field => text
      * @param null|string $sort
      * @param int $dir
      * @param null|int $limit
      * @param null|int $offset
-     * @param array $params
+     * @param array $params field => exact value
      * @return array
      */
     public function fullSearchText(
@@ -80,15 +97,31 @@ class BaseDocumentRepository extends DocumentRepository
         $offset = null,
         $params = []
     ) {
+        $qb = $this->buildFullSearchTextQuery($criteria, $sort, $dir, $limit, $offset, $params);
+
+        return array_values($qb->getQuery()->toArray());
+    }
+
+    /**
+     * The query fullSearchText() runs, apart so it can be checked without a database.
+     */
+    protected function buildFullSearchTextQuery(
+        array $criteria = null,
+        $sort = null,
+        $dir = 1,
+        $limit = null,
+        $offset = null,
+        $params = []
+    ): Builder {
         $qb = $this->createQueryBuilder();
 
-        foreach ($criteria as $key => $value) {
+        foreach ((array) $criteria as $key => $value) {
             if ($key !== null) {
-                $qb->addOr($qb->expr()->field($key)->equals(new \MongoRegex('/.*' . $value . '.*/i')));
+                $qb->addOr($qb->expr()->field($key)->equals(self::containsRegex((string) $value)));
             }
         }
 
-        foreach ($params as $k => $val) {
+        foreach ((array) $params as $k => $val) {
             if ($k !== null) {
                 $qb->field($k)->equals($val);
             }
@@ -99,16 +132,9 @@ class BaseDocumentRepository extends DocumentRepository
         }
 
         if ($limit !== null) {
-            $qb->limit($limit)->skip($offset);
+            $qb->limit($limit)->skip((int) $offset);
         }
 
-        $cursor = $qb->getQuery()->toArray();
-
-        $result = array();
-        foreach ($cursor as $cur) {
-            array_push($result, $cur);
-        }
-
-        return $result;
+        return $qb;
     }
 }

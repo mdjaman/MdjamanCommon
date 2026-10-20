@@ -57,8 +57,14 @@
             "MdjamanCommon\\": "src/MdjamanCommon/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "MdjamanCommonTest\\": "tests/"
+        }
+    },
     "scripts": {
-        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G"
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
+        "test": "vendor/bin/phpunit"
     },
     "extra": {
         "branch-alias": {
